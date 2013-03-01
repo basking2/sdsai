@@ -1,7 +1,5 @@
 package org.sdsai.util;
 
-import java.util.Comparator;
-
 /**
  * Representation of a dot-separated version string.
  *
@@ -10,6 +8,18 @@ import java.util.Comparator;
 public class Version
     implements Comparable<Version>
 {
+    /**
+     * Special object value to mean represent the maximum value.
+     * All versions compared to this one are less.
+     */
+    public static final Version MAX = new Version("MAX");
+
+    /**
+     * Special object value to mean represent the minimum value.
+     * All versions compared to this one are greater.
+     */
+    public static final Version MIN = new Version("MIN");
+
     private String version;
     private String[] versionStrings;
     private Integer[] versionDigits;
@@ -58,11 +68,66 @@ public class Version
     }
 
     /**
+     * Proxy hashCode to {@link String#hashCode()}.
+     *
+     * @return the hash code.
+     */
+    public int hashCode()
+    {
+        return version.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj != null && obj instanceof Version)
+        {
+            // Identical objects are equal.
+            if (obj == this)
+            {
+                return true;
+            }
+
+            // Of the objects are not identical and one is MAX or MIN,
+            // it cannot be the same.
+            if (obj == MAX || obj == MIN || this == MIN || this == MAX)
+            {
+                return false;
+            }
+
+            return ((Version)obj).version.equals(version);
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public int compareTo(final Version that)
     {
+        // Trivial equals case.
+        if (this == that)
+        {
+            return 0;
+        }
+
+        // Cases where that is always smaller.
+        if (that == null || that == MIN || this == MAX)
+        {
+            return 1;
+        }
+
+        // Cases where this is always smaller.
+        if (this == MIN || that == MAX)
+        {
+            return -1;
+        }
+
         /**
          * If this and that share a common prefix, but one is longer than the other,
          * this integer is returned. The shorter value is "less" than the longer 
@@ -100,6 +165,7 @@ public class Version
     /**
      * Return the original version string.
      */
+    @Override
     public String toString()
     {
         return version;
