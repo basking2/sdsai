@@ -69,7 +69,7 @@ public class Psk31
 
         /* Sin filter the wave. */
         for (int i = 0; i < buffer.length; ++i) {
-            buffer[i] = (byte)((double)buffer[i] * Math.sin(i * 2*Math.PI/buffer.length));
+            buffer[i] = (byte)((double)buffer[i] * Math.sin(i * Math.PI/buffer.length));
         }
 
         return buffer;
