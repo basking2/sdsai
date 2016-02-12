@@ -21,7 +21,7 @@ public class ArrayTree<T> implements Iterable<T> {
     public ArrayTree(final int capacity, final int branchiness) {
         this.tree = new ArrayList<T>(capacity);
         this.branchiness = branchiness;
-    }
+    }	
 
     public T get(final int index) {
         return tree.get(index);
@@ -52,23 +52,11 @@ public class ArrayTree<T> implements Iterable<T> {
     }
 
     public static int parent(final int index, final int branchiness) {
-        final int level       = indexLevel(index, branchiness);
-        final int levelOffset = levelOffset(level, branchiness);
-
-        // Previous siblings to the parent node.
-        final int previousSiblings = (index - levelOffset) / branchiness;
-
-        return levelOffset(level-1, branchiness) + previousSiblings; 
+        return (index-1)/branchiness;
     }
 
     public static int child0(final int index, final int branchiness) {
-        final int level       = indexLevel(index, branchiness);
-        final int levelOffset = levelOffset(level, branchiness);
-
-        // Previous siblings to the child node.
-        final int previousSiblings = branchiness * (index - levelOffset);
-
-        return (int) (levelOffset(level+1, branchiness)  + previousSiblings);
+        return index * branchiness + 1;
     }
 
     public static int child(final int index, final int childNum, final int branchiness) {
