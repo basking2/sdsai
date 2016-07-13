@@ -17,9 +17,6 @@ import java.lang.Math;
  * The results array is complex because it must hold every combination of
  * dimension values. That is, 2^dimension^ values.
  *
- * @param startPoints The x_1 etc points.
- * @param stopPoints The x_2 etc points.
- * @param results The result of all combinations of start-stop data points.
  */
 public class MultilinearInterpolator {
 	
@@ -27,7 +24,12 @@ public class MultilinearInterpolator {
 	private final Double[] stopPoints;
 	private final Double[] results;
 	private final Double term_denominator;
-	
+
+	/**
+	 * @param startPoints The x_1 etc points.
+	 * @param stopPoints The x_2 etc points.
+	 * @param results The result of all combinations of start-stop data points.
+     */
 	public MultilinearInterpolator(
 		final Double[] startPoints,
 		final Double[] stopPoints,
