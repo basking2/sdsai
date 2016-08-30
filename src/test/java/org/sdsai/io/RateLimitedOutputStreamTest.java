@@ -3,21 +3,19 @@ package org.sdsai.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 import org.junit.Ignore;
 import org.junit.runners.Parameterized;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Ignore
 @RunWith(Parameterized.class)
 public class RateLimitedOutputStreamTest
 {
-    private Logger _logger;
+    private Logger _logger = LoggerFactory.getLogger(RateLimitedOutputStreamTest.class);
     
     /** 
      * A bit-bucket. Throw it all away.
@@ -36,10 +34,6 @@ public class RateLimitedOutputStreamTest
     {
         this.rate = rate;
         this.time = time;
-        BasicConfigurator.configure();
-        Logger.getRootLogger().removeAllAppenders();
-        Logger.getRootLogger().addAppender(new ConsoleAppender(new PatternLayout("%r %C{1} %m%n")));
-        _logger = Logger.getLogger(RateLimitedOutputStreamTest.class);
     }
 
     @Parameterized.Parameters
