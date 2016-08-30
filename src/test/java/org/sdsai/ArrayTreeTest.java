@@ -1,12 +1,11 @@
 package org.sdsai;
 
-import org.testng.annotations.Test;
-
-import org.testng.Assert;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ArrayTreeTest
 {
-  @Test(groups = {"sdsai"})
+  @Test
   public void testIndexLevel() 
   {
     Assert.assertEquals(0, ArrayTree.indexLevel(0, 3));
@@ -18,7 +17,7 @@ public class ArrayTreeTest
     Assert.assertEquals(3, ArrayTree.indexLevel(13, 3));
   }
 
-  @Test(groups={"sdsai"})
+  @Test
   public void testLevelOffset() 
   {
     Assert.assertEquals(0, ArrayTree.levelOffset(0, 3));
@@ -27,7 +26,7 @@ public class ArrayTreeTest
     Assert.assertEquals(13, ArrayTree.levelOffset(3, 3));
   }
 
-  @Test(groups={"sdsai"})
+  @Test
   public void testParent() 
   {
     Assert.assertEquals(0, ArrayTree.parent(0, 3));

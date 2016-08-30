@@ -2,11 +2,11 @@
 
 package org.sdsai;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 public class HeapTest
 {
-  @Test(groups = {"sdsai"})
+  @Test
   public void generalHeapTest() 
   {
     MinHeap<Long> h1 = new MinHeap<Long>(4);

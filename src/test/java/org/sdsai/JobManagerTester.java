@@ -3,7 +3,7 @@ package org.sdsai;
 
 import org.sdsai.jobproc.Job;
 import org.sdsai.jobproc.JobManager;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 
 public class JobManagerTester implements Job
@@ -16,7 +16,6 @@ public class JobManagerTester implements Job
 
   int index;
 
-  @Test(enabled=false)
   public long start()
   {
     if(started){
@@ -29,7 +28,6 @@ public class JobManagerTester implements Job
     return 0;
   }
   
-  @Test(enabled=false)
   public long process()
   {
     if(runs>100)
@@ -41,7 +39,7 @@ public class JobManagerTester implements Job
     return 10;
   }
   
-  @Test(testName="jobmanager", groups="sdsai")
+  @Test
   public void main()
   {
     JobManager jm = new JobManager(4);
@@ -62,13 +60,11 @@ public class JobManagerTester implements Job
     
   }
   
-  @Test(enabled=false)
   public void sleep()
   {
     System.err.println("Sleeping.");
   }
   
-  @Test(enabled=false)
   public boolean isDone()
   {
     if(runs>100){

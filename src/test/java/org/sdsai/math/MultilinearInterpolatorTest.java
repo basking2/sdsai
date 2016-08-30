@@ -1,8 +1,7 @@
 package org.sdsai.math;
 
-import org.testng.annotations.Test;
-
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class MultilinearInterpolatorTest {
 

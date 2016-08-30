@@ -7,11 +7,14 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.Ignore;
+import org.junit.runners.Parameterized;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-@Test
+@Ignore
+@RunWith(Parameterized.class)
 public class RateLimitedOutputStreamTest
 {
     private Logger _logger;
@@ -26,17 +29,21 @@ public class RateLimitedOutputStreamTest
         public void write(byte[] b, int off, int len) throws IOException { ; }
     };
 
+    final int rate;
+    final int time;
     
-    public RateLimitedOutputStreamTest()
+    public RateLimitedOutputStreamTest(final Integer rate, final Integer time)
     {
+        this.rate = rate;
+        this.time = time;
         BasicConfigurator.configure();
         Logger.getRootLogger().removeAllAppenders();
         Logger.getRootLogger().addAppender(new ConsoleAppender(new PatternLayout("%r %C{1} %m%n")));
         _logger = Logger.getLogger(RateLimitedOutputStreamTest.class);
     }
-    
-    @DataProvider(name="rateTestDP")
-    public Object[][] rateTestDP()
+
+    @Parameterized.Parameters
+    public static Object[][] rateTestDP()
     {
         return new Object[][]
         {
@@ -54,9 +61,8 @@ public class RateLimitedOutputStreamTest
         };
     }
     
-    @Test(testName="rateTest", dataProvider="rateTestDP", groups={"perf"}, enabled=false)
-    public void rateTest(int rate, int time)
-    throws IOException
+    @Test
+    public void rateTest() throws IOException
     {
         byte[] buffer      = new byte[102400];
         long   written     = 0;
@@ -90,14 +96,18 @@ public class RateLimitedOutputStreamTest
         _logger.info(String.format("Apparent: %5.2f Instant: %5.2f Requested: %d", apparentRate, r.getRate(), rate));
         
         // Ensure that our overall computed value is close enough.
-        Assert.assertTrue(Math.abs(apparentRate - rate) <= (rate * allowedSkew), 
-                        "Err%: "+(Math.abs(apparentRate - rate)/(rate * allowedSkew))+"  Apparent("+apparentRate+") vs. "+rate);
+        Assert.assertTrue(
+                "Err%: "+(Math.abs(apparentRate - rate)/(rate * allowedSkew))+"  Apparent("+apparentRate+") vs. "+rate,
+                Math.abs(apparentRate - rate) <= (rate * allowedSkew)
+        );
         
         // Ensure that our perceived rate in our class is close enough.
         // There are many real-world examples where this will trend much lower, but here it 
         // should be close.
-        Assert.assertTrue(Math.abs(r.getRate()  - rate) <= (rate * allowedSkew), 
-                        "Err%: "+(Math.abs(r.getRate()  - rate)/(rate * allowedSkew))+"  Computed("+r.getRate()+") vs. "+rate);
+        Assert.assertTrue(
+                "Err%: "+(Math.abs(r.getRate()  - rate)/(rate * allowedSkew))+"  Computed("+r.getRate()+") vs. "+rate,
+                Math.abs(r.getRate()  - rate) <= (rate * allowedSkew)
+        );
         
         
     }
@@ -111,9 +121,8 @@ public class RateLimitedOutputStreamTest
      * 
      * There is a minimum rate test which should be checked against machine load if failure is observed.
      */
-    @Test(enabled=false)
-    public void sendingWithWayToHighDatarateTest()
-    throws IOException
+    @Test
+    public void sendingWithWayToHighDatarateTest() throws IOException
     {
         byte[] buffer = new byte[10240];
         long   written = 0;
