@@ -1,0 +1,2 @@
+rootProject.name = 'sdsai'
+include 'sdsai-common'
