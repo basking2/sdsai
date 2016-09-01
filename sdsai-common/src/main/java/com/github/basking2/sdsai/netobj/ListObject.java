@@ -4,11 +4,11 @@ package com.github.basking2.sdsai.netobj;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-import com.github.basking2.sdsai.DynamicTable;
 import com.github.basking2.sdsai.Key;
-import com.github.basking2.sdsai.List;
 import com.github.basking2.sdsai.ListVisitor;
 import com.github.basking2.sdsai.RedBlackTree;
 
@@ -331,8 +331,8 @@ public class ListObject extends NetObject implements Iterable<NetObject>
   * Returns a list of Key objects which contain the user data.
   * To access the user data call getData() on the key object.
   */
-  public List<NetObject> toList(){ 
-    List<NetObject> nol = new DynamicTable<NetObject>(list.size());
+  public List<NetObject> toList(){
+    List<NetObject> nol = new ArrayList<NetObject>(list.size());
 
     for ( Key<NetObject> k : list )
       nol.add(k.getData());
@@ -434,7 +434,6 @@ public class ListObject extends NetObject implements Iterable<NetObject>
   /**
    * 
    * @param path
-   * @param name
    * @param def default value added if name is not found.
    * @return
    */

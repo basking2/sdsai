@@ -8,9 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.github.basking2.sdsai.List;
+import java.util.List;
 
-public class NetObjMgr 
+public class NetObjMgr
 {
 
   public static final int WRITE = 0;

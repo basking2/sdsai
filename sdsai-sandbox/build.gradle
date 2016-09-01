@@ -6,9 +6,6 @@ apply plugin: 'signing'
 // archiveBaseName = defined by parent and project name.
 version = '2.0-SNAPSHOT'
 
-compileJava {
-	options.compilerArgs << '-Xlint:unchecked'
-}
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -32,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.21'
+    compile project(':sdsai-common')
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version:'1.7.21'
 }

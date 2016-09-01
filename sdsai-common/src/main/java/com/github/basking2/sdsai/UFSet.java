@@ -13,8 +13,8 @@ package com.github.basking2.sdsai;
 public class UFSet 
 {
 
-  int   rank;
-  UFSet parent;
+  private int   rank;
+  private UFSet parent;
 
   public UFSet() { rank=0; parent=this; }
 
@@ -52,20 +52,6 @@ public class UFSet
 
     return obj;
   }
-
-  /*
-   * This is simply a recursive version of find().  It does not ever need
-   * to be used, but was too pretty not to include for developers to look at.
-   * Note that it is not tail recursive and is MUCH less efficient than
-   * simply using find as far as work the computer must do.
-   */
-  /*
-  public UFSet rfind(){
-    if(this!=parent)
-      parent=parent.find();
-    return parent;
-  }
-  */
 
   /**
    * Union two sets of object together in constant time.

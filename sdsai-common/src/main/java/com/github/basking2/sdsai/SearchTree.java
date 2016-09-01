@@ -2,6 +2,8 @@
 
 package com.github.basking2.sdsai;
 
+import java.util.Stack;
+
 /**
  * This class implements a standard search three.  
  * We add abstraction for n-branching.
@@ -44,7 +46,7 @@ public class SearchTree {
    */
   public EObject del(double k){
     SearchTree prev   = null;
-    Stack<SearchTree> update = new LStack<SearchTree>();
+    Stack<SearchTree> update = new Stack<SearchTree>();
     SearchTree s      = this;
 
     while(s!=null){

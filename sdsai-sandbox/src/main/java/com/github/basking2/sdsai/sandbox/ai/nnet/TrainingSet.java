@@ -2,21 +2,21 @@
 
 package com.github.basking2.sdsai.ai.nnet;
 
-import com.github.basking2.sdsai.DynamicTable;
-import com.github.basking2.sdsai.List;
+import java.util.List;
+import java.util.ArrayList;
 
-public class TrainingSet 
+public class TrainingSet
 {
   List<TrainingInstance> instance;
 
   public TrainingSet()
   {
-    instance = new DynamicTable<TrainingInstance>();
+    instance = new ArrayList<TrainingInstance>();
   }
 
   public TrainingSet(TrainingInstance ti) 
   {
-    instance = new DynamicTable<TrainingInstance>();
+    instance = new ArrayList<TrainingInstance>();
     instance.add(ti);
   }
 
@@ -28,7 +28,7 @@ public class TrainingSet
      * allocated object, it can happen while we check the target for
      * sane values. 
      */
-    instance = new DynamicTable<TrainingInstance>();
+    instance = new ArrayList<TrainingInstance>();
 
     /* Add the data */
     for(int i=0;i<d.length;i++)
@@ -68,7 +68,7 @@ public class TrainingSet
    * Delete the matching array objects contained in t.  This does not
    * do a value-by-value comparison. 
    */
-  public void del(TrainingInstance t){ instance.del(t); }
+  public void del(TrainingInstance t){ instance.remove(t); }
   
   public int size(){ return instance.size(); }
 }

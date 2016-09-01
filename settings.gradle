@@ -1,2 +1,3 @@
 rootProject.name = 'sdsai'
 include 'sdsai-common'
+include 'sdsai-sandbox'
