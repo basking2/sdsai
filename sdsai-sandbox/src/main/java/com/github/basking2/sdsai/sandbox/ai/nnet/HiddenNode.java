@@ -1,10 +1,10 @@
 /* $Id: HiddenNode.java 313 2006-07-10 02:26:03Z sam $ */
 
-package com.github.basking2.sdsai.ai.nnet;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
 
 import com.github.basking2.sdsai.Key;
-import com.github.basking2.sdsai.graph.Edge;
-import com.github.basking2.sdsai.graph.GraphNode;
+import com.github.basking2.sdsai.sandbox.graph.Edge;
+import com.github.basking2.sdsai.sandbox.graph.GraphNode;
 
 public class HiddenNode extends GraphNode implements NeuralNetElement
 { 

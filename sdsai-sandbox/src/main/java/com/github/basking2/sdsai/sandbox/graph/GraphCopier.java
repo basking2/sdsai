@@ -6,7 +6,7 @@
  * for the purpose.<p>
  * This will duplicate a connected graph.
  */
-package com.github.basking2.sdsai.graph;
+package com.github.basking2.sdsai.sandbox.graph;
 
 import com.github.basking2.sdsai.Key;
 

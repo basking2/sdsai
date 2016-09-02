@@ -1,6 +1,6 @@
 /* $Id: GraphEdge.java 281 2005-12-29 22:59:47Z sam $ */
 
-package com.github.basking2.sdsai.graph;
+package com.github.basking2.sdsai.sandbox.graph;
 import com.github.basking2.sdsai.EObject;
 
 public class GraphEdge implements Edge, EObject {

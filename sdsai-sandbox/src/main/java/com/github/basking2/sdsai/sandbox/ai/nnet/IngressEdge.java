@@ -1,6 +1,6 @@
 /* $Id: IngressEdge.java 670 2008-05-02 20:42:07Z sbaskin $ */
 
-package com.github.basking2.sdsai.ai.nnet;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
 
 public class IngressEdge extends HiddenEdge 
 {

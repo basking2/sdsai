@@ -1,6 +1,6 @@
 /* $Id: Queue.java 770 2008-09-03 21:39:19Z sam $ */
 
-package com.github.basking2.sdsai;
+package com.github.basking2.sdsai.sandbox;
 
 public class Queue<E> 
 {

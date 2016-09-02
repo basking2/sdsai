@@ -1,6 +1,6 @@
 /* $Id: Graph.java 312 2006-07-03 22:20:47Z sam $ */
 
-package com.github.basking2.sdsai.graph;
+package com.github.basking2.sdsai.sandbox.graph;
 import com.github.basking2.sdsai.Key;
 import com.github.basking2.sdsai.Set;
 

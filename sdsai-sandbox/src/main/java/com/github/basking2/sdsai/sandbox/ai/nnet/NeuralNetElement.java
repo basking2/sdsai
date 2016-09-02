@@ -1,8 +1,8 @@
 /* $Id: NeuralNetElement.java 281 2005-12-29 22:59:47Z sam $ */
 
-package com.github.basking2.sdsai.ai.nnet;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
 
-import com.github.basking2.sdsai.graph.GraphElement;
+import com.github.basking2.sdsai.sandbox.graph.GraphElement;
 
 public interface NeuralNetElement extends GraphElement {
 

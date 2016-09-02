@@ -1,6 +1,6 @@
 /* $Id: List.java 702 2008-05-27 21:53:19Z sbaskin $ */
 
-package com.github.basking2.sdsai;
+package com.github.basking2.sdsai.sandbox;
 
 /**
  * 
@@ -38,10 +38,4 @@ public interface List<E> extends Iterable<E>{
   public int size();
 
   public Object[] toArray();
-
- /**
-  * Calls visit(Object o) of list visitor on every list object, starting at
-  * index 0 through index n-1 in order.
-  */
-  public void foreach(ListVisitor<E> lv);
 }

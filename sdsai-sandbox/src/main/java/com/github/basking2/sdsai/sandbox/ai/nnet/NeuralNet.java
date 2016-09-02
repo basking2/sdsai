@@ -1,9 +1,9 @@
 /* $Id: NeuralNet.java 670 2008-05-02 20:42:07Z sbaskin $ */
 
-package com.github.basking2.sdsai.ai.nnet;
-import com.github.basking2.sdsai.graph.Node;
-import com.github.basking2.sdsai.graph.GraphCopier;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
 
+import com.github.basking2.sdsai.sandbox.graph.GraphCopier;
+import com.github.basking2.sdsai.sandbox.graph.Node;
 
 public class NeuralNet
 {

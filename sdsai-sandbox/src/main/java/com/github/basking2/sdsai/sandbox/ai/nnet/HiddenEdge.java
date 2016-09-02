@@ -1,8 +1,9 @@
 /* $Id: HiddenEdge.java 281 2005-12-29 22:59:47Z sam $ */
 
-package com.github.basking2.sdsai.ai.nnet;
-import com.github.basking2.sdsai.graph.Edge;
-import com.github.basking2.sdsai.graph.GraphEdge;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
+
+import com.github.basking2.sdsai.sandbox.graph.Edge;
+import com.github.basking2.sdsai.sandbox.graph.GraphEdge;
 
 public class HiddenEdge extends GraphEdge implements NeuralNetElement {
 

@@ -1,6 +1,6 @@
 /* $Id: TrainingSet.java 313 2006-07-10 02:26:03Z sam $ */
 
-package com.github.basking2.sdsai.ai.nnet;
+package com.github.basking2.sdsai.sandbox.ai.nnet;
 
 import java.util.List;
 import java.util.ArrayList;
