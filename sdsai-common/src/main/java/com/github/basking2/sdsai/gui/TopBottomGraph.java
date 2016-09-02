@@ -22,6 +22,9 @@ public class TopBottomGraph extends BufferedImage
 
  /**
   * Creates an image of type TYPE_INT_ARGB of size width x height.
+  *
+  * @param width The width of the image.
+  * @param height The height of the image.
   */
   public TopBottomGraph(int width, int height)
   {
@@ -35,6 +38,9 @@ public class TopBottomGraph extends BufferedImage
   * Also note that the value is the distance from the top or bottom. Thus, if
   * bot are set to 0, the graph plots a point along the top and bottom of the
   * graph.  It's a good hack to make one line go away.
+  *
+  * @param bottom The bottom point.
+  * @param top The top point.
   */
   public void plot(int bottom, int top)
   {
@@ -102,6 +108,9 @@ public class TopBottomGraph extends BufferedImage
 
  /**
   * Plot the percentages on this graph.
+  *
+  * @param bottom The percentage from the bottom of the graph.
+  * @param top The percentage from the top of the graph.
   */
   public void plot(float bottom, float top)
   {
@@ -110,8 +119,10 @@ public class TopBottomGraph extends BufferedImage
   }
 
  /**
-  * Plot given the <i>differences</i> between the values instead of the
-  * absolute values.
+  * Plot given the <i>differences</i> between the values instead of the absolute values.
+  *
+  * @param dbottom Change from the previous bottom.
+  * @param dtop Change from the previous top.
   */
   public void plotDelta(int dbottom, int dtop)
   {
@@ -122,6 +133,9 @@ public class TopBottomGraph extends BufferedImage
   * Plot given the <i>differences</i> in percentages of the total height.
   * The plotted data is computed as 
   * <code>new_value = previous_value + graph_height * delta_percentage</code>.
+  *
+  * @param dbottom Change from the previous bottom.
+  * @param dtop Change from the previous top.
   */
   public void plotDelta(float dbottom, float dtop)
   {
@@ -131,6 +145,8 @@ public class TopBottomGraph extends BufferedImage
 
  /**
   * This is for testing but we can pull it out later when we are comfy with it.
+  *
+  * @param argv Arguments.
   */
   public static void main(String[] argv)
   { 
@@ -165,33 +181,37 @@ public class TopBottomGraph extends BufferedImage
   }
 
  /**
-  * Set the color of the top graph.
+  * @param c Set the color of the top graph to this.
   */
   public void setTopColor(Color c){ topColor = c; }
 
  /**
-  * Set the color of the bottom graph.
+  * @param c Set the color of the bottom graph to this.
   */
   public void setBottomColor(Color c){ bottomColor = c; }
 
  /**
-  * Set the color of the background of the graph.
+  * @param c Set the color of the background of the graph to this.
   */
   public void setBackgroundColor(Color c){ bgColor = c; }
 
  /**
-  * Set the color of the marker line which shows the front of the graph.
+  * @param c Set the color of the marker line which shows the front of the graph to this.
   */
   public void setMarkerColor(Color c){ markerColor = c; }
 
   /**
    * Get the offset in the graph from the y axis of the image.  This is useful
    * if a user wants to only repaint a section of the graph.
+   *
+   * @return The offset.
    */
   public int getOffset(){ return offset; }
 
  /**
-  * Set the offset of the graph. If o is < -1 or >= the width it is set to -1.
+  * Set the offset of the graph. If o is &lt; -1 or &gt;= the width it is set to -1.
+  *
+  * @param o The offset.
   */
   public void setOffset(int o)
   { 

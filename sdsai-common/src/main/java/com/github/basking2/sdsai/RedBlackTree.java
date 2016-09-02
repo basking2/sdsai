@@ -12,14 +12,16 @@ import java.util.List;
  * Cormen, Leiserson, Rivest and Stein was used for reference
  * (and as such the algorithms may look JUST like theirs do). See section 13
  * in the 2nd edition.<p>
- * <el>
+ *
  * Here are the rules that dictate a Red-Black Tree's shape/look:
+ * <ul>
  * <li>Every node is red or black.
  * <li>The root is black.
  * <li>Every leaf node is null (or NIL) and is a black node.
  * <li>If a node is red, then both its children are black.
  * <li>Every path from an internal node to a leaf node contains the same 
  *     number of black nodes.
+ * </ul>
  */
 public class RedBlackTree<E> implements Iterable<Key<E>>
 {
@@ -338,11 +340,13 @@ public class RedBlackTree<E> implements Iterable<Key<E>>
   /**
    * This is just like add, but you can specify a mode.
    * Use the flags provided.
-   * <el>
+   *
+   * <ul>
    * <li> ALL - all object are added.
    * <li> NODUPOBJ - Do not add duplicate objects, but different
    *      object with the same key value will be added.
    * <li> NODUPKEYS - Do not add object with the same keys.
+   * </ul>
    */
   public boolean add(Key<E> k, int mode) throws DuplicateDataException
   {

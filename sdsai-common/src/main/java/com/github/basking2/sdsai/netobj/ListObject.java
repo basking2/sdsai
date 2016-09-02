@@ -320,14 +320,6 @@ public class ListObject extends NetObject implements Iterable<NetObject>
   public int size(){ return list.size(); }
 
  /**
-  * Return the list object that implements the internal structure
-  * of a ListObject. This is meant for use with the constructor
-  * ListObject(name, RedBlackTree<NetObject>) so that sub-objects
-  * can easily recast existing ListObjects as their own type.
-  */
-  public RedBlackTree<NetObject> getInternalList() { return list; }
-
- /**
   * Returns a list of Key objects which contain the user data.
   * To access the user data call getData() on the key object.
   */

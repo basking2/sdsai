@@ -121,8 +121,7 @@ public class RateLimitedOutputStream extends OutputStream
   }
 
   /**
-   * Similar to {@link RateLimitedOutputStream#setDelayedPayloadSize(int)}
-   * this method limits the burst and delay of an output stream 
+   * This method limits the burst and delay of an output stream
    * using the current rate and the submitted delay value in milliseconds.
    * 
    * @param millis
