@@ -4,7 +4,7 @@ apply plugin: 'signing'
 
 // group = defined by parent.
 // archiveBaseName = defined by parent and project name.
-version = '2.0-SNAPSHOT'
+// version = defined by parent.
 
 
 task javadocJar(type: Jar) {
