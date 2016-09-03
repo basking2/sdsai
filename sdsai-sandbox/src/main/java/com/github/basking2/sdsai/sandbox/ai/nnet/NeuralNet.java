@@ -32,6 +32,9 @@ public class NeuralNet
    * nodes required are ingress and egress edge arrays.  All hidden
    * nodes are manipulated by recursivly operating on the egress edges.
    * The ingress edges are needed to set the input values.
+   * 
+   * @param i Ingress edges.
+   * @param o Egress edges.
    */
   public NeuralNet(IngressEdge[] i, EgressEdge[] o){
     input = i;
@@ -131,13 +134,15 @@ public class NeuralNet
   
   /**
    * Train the neural net with the data input instance and the target values.
+   * 
+   * @param in The training instance.
    */
   public void train(TrainingInstance in){ 
     /**
-     * If the error gradiant is steep, then we want to take small
+     * If the error gradient is steep, then we want to take small
      * steps so we don't RUSH past the minimum.
-     * If the error gradiant is gradual, then we want to take bigger
-     * setps to cause significant change in the error.
+     * If the error gradient is gradual, then we want to take bigger
+     * steps to cause significant change in the error.
      */
 
     eta=scaler/sigma();
@@ -149,6 +154,9 @@ public class NeuralNet
   
   /**
    * Find the training instance that performs the worst.
+   * 
+   * @param s The training set.
+   * @return The index of the worst training set.
    */
   public int worst(TrainingSet s){
     int curr=0, i=s.size()-1;
@@ -168,6 +176,10 @@ public class NeuralNet
   /**
    * Return the index of the training instance that is
    * the nth worst.
+   * 
+   * @param s The training set.
+   * @param n The nth worst.
+   * @return The index of the training set.
    */
   public int worst(TrainingSet s, int n){
     int      i     = s.size()-1; 
@@ -208,9 +220,13 @@ public class NeuralNet
   
  /**
   * Find the training instance that does nth worst.  That is,
-  * there are <i>nth</i> instance that perform more baddly
+  * there are <i>nth</i> instance that perform more badly
   * that the index of the instance returned.
   * <p> Note that getWorst(dataSet,1) is equivalent to getWorst(dataSet).
+  * 
+  * @param s Training set.
+  * @param nth Which of the worst training sets to get. 
+  * @return The training set.
   */
   public TrainingInstance getWorst(TrainingSet s, int nth)
   {
@@ -220,13 +236,16 @@ public class NeuralNet
   /**
    * Return the training instance which we think is least well
    * performed on.
+   * 
+   * @param s The training set.
+   * @return The training instance which we think is the least well performed on.
    */
   public TrainingInstance getWorst(TrainingSet s){
     return s.getInstance(worst(s));
   }
   
   /**
-   * In an asyncronous environement it may be benificial to
+   * In an asynchronous environment it may be beneficial to
    * be able to cause the train() method to stop and exit.
    * This will set the field learn equal false which will cause
    * train() to gracefully exit on its next iteration.
@@ -235,7 +254,10 @@ public class NeuralNet
 
 
   /**
-   * Traing i times.
+   * Training i times.
+   * 
+   * @param s The training set.
+   * @param i The number of iterations to train.
    */
   public void train(TrainingSet s, int i){
     for(;i>0;i--){
@@ -253,6 +275,9 @@ public class NeuralNet
    * a NeuralNet.  It trains the NeuralNet until any further training
    * will decrease the accuracy.<p>
    * Training is done by calling train(TrainingSet s) repeatedly.
+   * 
+   * @param s The training set.
+   * @return The accuracy after training.
    */
   public double trainUp(TrainingSet s)
   {
@@ -273,6 +298,10 @@ public class NeuralNet
   * or an instance is found which does not decrease the accuracy.
   * If no TrainingInstance will not decrease accuracy, then a
   * TrainingException is thrown.
+  * 
+  * @param s The training set.
+  * @return The accuracy in percentage correct.
+  * @throws TrainingException When accuracy cannot be reached.
   */
   public double train(TrainingSet s) throws TrainingException {
       int nth=0;
@@ -306,7 +335,13 @@ public class NeuralNet
    * Train n times or until the accuracy is met.
    * If the value of n is exceeded and the training level is not met, then
    * a TrainingException is thrown.
-   * Returns the number of iterations acctually taken to reach the accuracy.
+   * Returns the number of iterations actually taken to reach the accuracy.
+   * 
+   * @param s The training set.
+   * @param acc The accuracy we want.
+   * @param n A limit on the number of training rounds to do.
+   * @return The number of iterations taken to converge.
+   * @throws TrainingException if more rounds than n are used and we do not reach the required accuracy.
    */
   public int train(TrainingSet s, double acc, int n) 
     throws TrainingException 
@@ -407,6 +442,10 @@ public class NeuralNet
   
   /**
    * How "far" are we from being right?
+   * 
+   * @param in The training instance.
+   * 
+   * @return The distance from the correct answer.
    */
   public double errorDistance(TrainingInstance in)
   {
@@ -424,6 +463,8 @@ public class NeuralNet
   
   /**
    * Get the summed error gradient of the outputs.
+   * 
+   * @return The summed error gradient of the outputs.
    */
   public double sigma()
   {
@@ -436,6 +477,9 @@ public class NeuralNet
   /**
    * Test the neural net presupposing that only ONE output is "on" at any
    * given time.
+   * 
+   * @param tset The training set.
+   * @return True if this test passes. False on failure.
    */
   public boolean test(TrainingSet tset)
   {  
@@ -466,6 +510,7 @@ public class NeuralNet
 
   /**
    * Return the index of what the NeuralNet thinks is the current answer.
+   * @return the index of what the NeuralNet thinks is the current answer.
    */
   public int answer(){
     double[] o=getOutputs(); 
@@ -485,6 +530,8 @@ public class NeuralNet
    * Neural net as further training my worsen performance or
    * perhaps two nets would like to be trained on seperate sets of data.
    * This method is handy for JUST such a purpose!
+   * 
+   * @return A copy of this {@link NeuralNet}.
    */
   public NeuralNet copy(){
     IngressEdge[] inedge = new IngressEdge[input.length];

@@ -50,6 +50,9 @@ public class TrainingSet
   /**
    * Return the index of the "answer" or the index of the only
    * 1-valued element in a training instance <i>i</i>.
+   * 
+   * @param i The index to fetch.
+   * @return The value or -1 f none found.
    */
   public int getTargetIndex(int i)
   {
@@ -67,6 +70,8 @@ public class TrainingSet
   /**
    * Delete the matching array objects contained in t.  This does not
    * do a value-by-value comparison. 
+   * 
+   * @param t Remove this training set.
    */
   public void del(TrainingInstance t){ instance.remove(t); }
   
