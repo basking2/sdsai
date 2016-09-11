@@ -1,31 +1,32 @@
 package com.github.basking2.sdsai.math;
 
-
 import org.apache.commons.math3.analysis.interpolation.BicubicInterpolatingFunction;
 import org.apache.commons.math3.analysis.interpolation.BicubicInterpolator;
 
 /**
  */
 class BicubicZoom {
-	private BicubicInterpolator bicubicInterpolator = new BicubicInterpolator();
+	final private BicubicInterpolator bicubicInterpolator = new BicubicInterpolator();
 
-	public void zoom(
-			final double[] dataIn,
-			final int xIn,
-			final int yIn,
-			final int widthIn,
-			final int heightIn,
-			final int strideIn,
-
-			final double[] dataOut,
-			final int xOut,
-			final int yOut,
-			final int strideOut,
-			final int widthOut,
-			final int heightOut
-			)
-	{
-
+	/**
+	 * Zoom region
+	 */
+	public void zoom
+	(
+		final double[] dataIn,
+		final int xIn,
+		final int yIn,
+		final int widthIn,
+		final int heightIn,
+		final int strideIn,
+	
+		final double[] dataOut,
+		final int xOut,
+		final int yOut,
+		final int widthOut,
+		final int heightOut,
+		final int strideOut
+	) {
 		// out * scale = out
 		final double scale = (double)widthOut / (double)widthIn;
 
@@ -63,43 +64,44 @@ class BicubicZoom {
 
 	private BicubicInterpolatingFunction buildBicubicInterpolatingFunction
 	(
-			final double[] data,
-			final int xIn,
-			final int yIn,
-			final int widthIn,
-			final int heightIn,
-			final int strideIn,
+		final double[] data,
+		final int xIn,
+		final int yIn,
+		final int widthIn,
+		final int heightIn,
+		final int strideIn,
 
-			final int xOut,
-			final int yOut,
-			final int widthOut,
-			final int heightOut,
-			final int strideOut,
+		final int xOut,
+		final int yOut,
+		final int widthOut,
+		final int heightOut,
+		final int strideOut,
 
-			final double scale
-			) 
-	{
+		final double scale
+	) {
 		// I and j are indexes along the width and height.
 		// They are converted to x and y values.
 		final double[] xPoints = new double[widthIn+2];
 		final double[] yPoints = new double[heightIn+2];
 		final int offset = xIn + yIn * strideIn;
-		final double[][] values = new double[widthIn+2][heightIn+2];
+		final double[][] values = new double[widthIn + 2][heightIn + 2];
 
-		for (int i = 0; i < widthIn; i++) {
+		for (int i = 0; i < widthIn; ++i) {
 			// Because i and j cover the same range, we can initialize *both*
 			// xPoints and yPoints arrays here using the i value.
 			xPoints[i+1] = i * scale;
 
-			double[] array =  values[i+1];
+			final double[] array = values[i+1];
 			array[0] = data[offset + i + 0 * strideIn];
 			array[array.length-1] = data[offset + i + (heightIn-1) * strideIn];
 
-			for (int j = 0; j < heightIn; j++) {
+			for (int j = 0; j < heightIn; ++j) {
+
+				// FIXME - this only needs to be done once but is done `i` times.
 				yPoints[j+1] = j * scale;
 
 				array[j+1] = data[offset + i + j * strideIn];
-			}
+			}    	
 		}
 
 		final double[] leftCol = values[0];
@@ -110,7 +112,7 @@ class BicubicZoom {
 		rightCol[0] = data[offset + widthIn - 1];
 		rightCol[rightCol.length-1] = data[offset + widthIn - 1+ (heightIn-1) * strideIn];
 
-		for (int i = 1; i < heightIn; i++) {
+		for (int i = 1; i < heightIn; ++i) {
 			leftCol[i+1] = data[offset + (i * strideIn)];
 			rightCol[i+1] = data[offset + widthIn - 1 + (i * strideIn)];
 		}
@@ -123,24 +125,22 @@ class BicubicZoom {
 		return bicubicInterpolator.interpolate(xPoints, yPoints, values);
 	}
 
-	private void fillWithBicubicInterpolatingFunction
-	(
-			final BicubicInterpolatingFunction bicubicInterpolatingFunction,
+	private void fillWithBicubicInterpolatingFunction(
+		final BicubicInterpolatingFunction bicubicInterpolatingFunction,
 
-			final double[] dataOut,
-			final int xOut,
-			final int yOut,
-			final int widthOut,
-			final int heightOut,
-			final int strideOut,
+		final double[] dataOut,
+		final int xOut,
+		final int yOut,
+		final int widthOut,
+		final int heightOut,
+		final int strideOut,
 
-			final double scale
-			) 
-	{
+		final double scale
+	) {
 		final int offsetOut = xOut + yOut * strideOut;
 
-		for (int i = 0; i < widthOut; i++) {
-			for (int j = 0; j < heightOut; j++) {
+		for (int i = 0; i < widthOut; ++i) {
+			for (int j = 0; j < heightOut; ++j) {
 				dataOut[offsetOut + i + j * strideOut] = bicubicInterpolatingFunction.value(i, j);
 			}
 		}
