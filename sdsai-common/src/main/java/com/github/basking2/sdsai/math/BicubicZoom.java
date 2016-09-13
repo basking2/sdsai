@@ -5,7 +5,7 @@ import org.apache.commons.math3.analysis.interpolation.BicubicInterpolator;
 
 /**
  */
-class BicubicZoom {
+public class BicubicZoom {
 	final private BicubicInterpolator bicubicInterpolator = new BicubicInterpolator();
 
 	/**
