@@ -57,8 +57,7 @@ public class BicubicZoom {
 				yOut,
 				widthOut,
 				heightOut,
-				strideOut,
-				scale
+				strideOut
 				);
 	}
 
@@ -106,20 +105,21 @@ public class BicubicZoom {
 
 		final double[] leftCol = values[0];
 		leftCol[0] = data[offset];
-		leftCol[leftCol.length-1] = data[offset + (heightIn-1) * strideIn];
+		leftCol[heightIn+1] = data[offset + (heightIn-1) * strideIn];
 
 		final double[] rightCol = values[widthIn+1];
 		rightCol[0] = data[offset + widthIn - 1];
-		rightCol[rightCol.length-1] = data[offset + widthIn - 1+ (heightIn-1) * strideIn];
+		rightCol[heightIn+1] = data[offset + widthIn - 1 + (heightIn-1) * strideIn];
 
-		for (int i = 1; i < heightIn; ++i) {
-			leftCol[i+1] = data[offset + (i * strideIn)];
+		for (int i = 0; i < heightIn; ++i) {
+			leftCol[i+1]  = data[offset + (i * strideIn)];
 			rightCol[i+1] = data[offset + widthIn - 1 + (i * strideIn)];
 		}
 
 		xPoints[0] = -1 * scale;
-		yPoints[0] = -1 * scale;
 		xPoints[widthIn+1] = (widthIn+1)*scale;
+
+        yPoints[0] = -1 * scale;
 		yPoints[heightIn+1] = (heightIn+1)*scale;
 
 		return bicubicInterpolator.interpolate(xPoints, yPoints, values);
@@ -133,9 +133,7 @@ public class BicubicZoom {
 		final int yOut,
 		final int widthOut,
 		final int heightOut,
-		final int strideOut,
-
-		final double scale
+		final int strideOut
 	) {
 		final int offsetOut = xOut + yOut * strideOut;
 

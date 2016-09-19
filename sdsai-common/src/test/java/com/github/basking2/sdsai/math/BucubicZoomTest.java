@@ -21,9 +21,9 @@ public class BucubicZoomTest {
                 final int idx = x + y * 256;
 
                 if (x%2==0) {
-                    imageIn[idx] = 255;
-                } else {
                     imageIn[idx] = 0;
+                } else {
+                    imageIn[idx] = 255;
                 }
             }
         }
@@ -57,7 +57,8 @@ public class BucubicZoomTest {
             for (int x = 0; x < 256; ++x) {
                 int v = (int)data[x+y*256];
                 if (v > 0) {
-                    bi.setRGB(x, y, ((v<<16) | (v << 8) | v));
+                    //bi.setRGB(x, y, ((v<<16) | (v << 8) | v));
+                    bi.setRGB(x, y, ((v<<16)));
                 }
             }
         }
