@@ -1,3 +1,5 @@
 rootProject.name = 'sdsai'
 include 'sdsai-common'
 include 'sdsai-sandbox'
+include 'sdsai-net'
+include 'sdsai-sexpr'
