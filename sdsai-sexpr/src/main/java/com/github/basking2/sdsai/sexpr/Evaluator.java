@@ -26,6 +26,10 @@ public class Evaluator {
             return evaluate(wrap((Iterator) o));
         }
 
+        if (o instanceof Iterable) {
+            return evaluate(wrap(((Iterable) o).iterator()));
+        }
+
         if (o instanceof List) {
             return evaluate(wrap(((List<Object>) o).iterator()));
         }
