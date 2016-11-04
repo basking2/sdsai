@@ -1,5 +1,9 @@
 package com.github.basking2.sdsai.sexpr;
 
+import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
+import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
+import com.github.basking2.sdsai.sexpr.util.MappingIterator;
+
 import java.util.*;
 import java.util.function.Function;
 
@@ -7,14 +11,19 @@ import java.util.function.Function;
  */
 public class Evaluator {
 
-    private Map<Object, Function<EvaluatingIterator, Object>> functionRegistry;
+    private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
 
     public Evaluator() {
         functionRegistry = new HashMap<>();
     }
 
-    public void register(final Object name, final Function<EvaluatingIterator, Object> operator) {
+    public void register(final Object name, final FunctionInterface<Object> operator) {
         functionRegistry.put(name, operator);
+        functionRegistry.put("lambda", new CurryFunction(this));
+    }
+
+    public FunctionInterface<? extends Object> getFunction(final Object functionName) {
+        return functionRegistry.get(functionName);
     }
 
     public Object evaluate(final Object o) {
@@ -30,10 +39,6 @@ public class Evaluator {
             return evaluate(wrap(((Iterable) o).iterator()));
         }
 
-        if (o instanceof List) {
-            return evaluate(wrap(((List<Object>) o).iterator()));
-        }
-
         if (o instanceof Object[]) {
             return evaluate(wrap(Arrays.asList((Object[])o).iterator()));
         }
@@ -47,7 +52,7 @@ public class Evaluator {
         }
 
         final Object operatorObject = i.next();
-        final Function<EvaluatingIterator, Object> operator = functionRegistry.get(operatorObject);
+        final FunctionInterface<? extends Object> operator = functionRegistry.get(operatorObject);
         if (operator == null) {
             throw new MapAlgebraRuntimeException("No function "+operatorObject.toString());
         }
@@ -56,21 +61,15 @@ public class Evaluator {
     }
 
     private EvaluatingIterator wrap(final Iterator<Object> iterator) {
-        return new EvaluatingIterator() {
-            public boolean hasNext() {
-                return iterator.hasNext();
-            }
-
-            public Object next() throws MapAlgebraRuntimeException {
-                return evaluate(iterator.next());
-            }
-        };
+        return new EvaluatingIterator(iterator);
     }
 
-    public interface EvaluatingIterator extends Iterator<Object> {
-
-        boolean hasNext();
-
-        Object next();
+    /**
+     * An iterator that will evaluate every element before passing it back using the outer class' evaluator.
+     */
+    public class EvaluatingIterator extends MappingIterator<Object, Object> {
+        public EvaluatingIterator(final Iterator<Object> itr) {
+            super(itr, e -> evaluate(e));
+        }
     }
 }
