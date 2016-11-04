@@ -84,4 +84,21 @@ public class EvaluatorTest {
         assertFalse(i.hasNext());
 
     }
+
+    @Test
+    public void testList() {
+        Evaluator evaluator = new Evaluator();
+
+        final List<Object> l = asList("list", 1, 2, 3, 4, 5);
+
+        Iterator<Iterator> i = (Iterator<Iterator>) evaluator.evaluate(l);
+
+        assertEquals(Integer.valueOf(1), i.next());
+        assertEquals(Integer.valueOf(2), i.next());
+        assertEquals(Integer.valueOf(3), i.next());
+        assertEquals(Integer.valueOf(4), i.next());
+        assertEquals(Integer.valueOf(5), i.next());
+        assertFalse(i.hasNext());
+
+    }
 }

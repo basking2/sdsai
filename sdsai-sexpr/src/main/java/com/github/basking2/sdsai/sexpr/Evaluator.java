@@ -2,6 +2,7 @@ package com.github.basking2.sdsai.sexpr;
 
 import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
 import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
+import com.github.basking2.sdsai.sexpr.functions.ListFunction;
 import com.github.basking2.sdsai.sexpr.functions.MapFunction;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
@@ -16,12 +17,14 @@ public class Evaluator {
 
     public Evaluator() {
         functionRegistry = new HashMap<>();
+
+        register("curry", new CurryFunction(this));
+        register("map", new MapFunction());
+        register("list", new ListFunction());
     }
 
-    public void register(final Object name, final FunctionInterface<Object> operator) {
+    public void register(final Object name, final FunctionInterface<? extends Object> operator) {
         functionRegistry.put(name, operator);
-        functionRegistry.put("curry", new CurryFunction(this));
-        functionRegistry.put("map", new MapFunction());
     }
 
     public FunctionInterface<? extends Object> getFunction(final Object functionName) {
