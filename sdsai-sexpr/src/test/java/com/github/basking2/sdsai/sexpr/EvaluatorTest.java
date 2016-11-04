@@ -4,10 +4,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class EvaluatorTest {
@@ -56,6 +58,30 @@ public class EvaluatorTest {
         assertEquals(Integer.valueOf(1), argOrder.get(4));
         assertEquals(Integer.valueOf(1), argOrder.get(5));
         assertEquals(Double.valueOf(2), argOrder.get(6));
+    }
+
+    @Test
+    public void testMap() {
+        Evaluator evaluator = new Evaluator();
+        evaluator.register("add", iterator -> {
+            int sum = 0;
+
+            while (iterator.hasNext()) {
+                sum += (Integer) iterator.next();
+            }
+
+            return sum;
+        });
+
+
+        final List<Object> l = asList("map", asList("curry", "add", 3), 4, 5);
+
+
+        Iterator<Iterator> i = (Iterator<Iterator>) evaluator.evaluate(l);
+
+        assertEquals(Integer.valueOf(7), i.next());
+        assertEquals(Integer.valueOf(8), i.next());
+        assertFalse(i.hasNext());
 
     }
 }

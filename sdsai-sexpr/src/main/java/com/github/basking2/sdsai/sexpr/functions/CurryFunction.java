@@ -1,18 +1,17 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
 import com.github.basking2.sdsai.sexpr.Evaluator;
-import com.github.basking2.sdsai.sexpr.MapAlgebraRuntimeException;
+import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
 import com.github.basking2.sdsai.sexpr.util.IteratorIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * This function takes a list of function name and arguments and produces a function that can be applied to future objects.
  */
-public class CurryFunction implements FunctionInterface<FunctionInterface<Iterator<Object>>> {
+public class CurryFunction implements FunctionInterface<FunctionInterface<Object>> {
 
     private Evaluator evaluator;
 
@@ -21,10 +20,10 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Iterat
     }
 
     @Override
-    public FunctionInterface<Iterator<Object>> apply(final Iterator<Object> args) {
+    public FunctionInterface<Object> apply(final Iterator<Object> args) {
 
         if (!args.hasNext()) {
-            throw new MapAlgebraRuntimeException("CurryFunction requires at least 1 argument.");
+            throw new SExprRuntimeException("CurryFunction requires at least 1 argument.");
         }
 
         final FunctionInterface<? extends Object> function = evaluator.getFunction(args.next());
@@ -36,10 +35,10 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Iterat
         }
 
         // Now return a new function that...
-        return new FunctionInterface<Iterator<Object>>() {
+        return new FunctionInterface<Object>() {
             @Override
-            public Iterator<Object> apply(Iterator<Object> args3) {
-                return new IteratorIterator(args2.iterator(), args3);
+            public Object apply(Iterator<Object> args3) {
+                return function.apply(new IteratorIterator(args2.iterator(), args3));
             }
         };
     }
