@@ -38,7 +38,7 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Object
         return new FunctionInterface<Object>() {
             @Override
             public Object apply(Iterator<Object> args3) {
-                return function.apply(new IteratorIterator(args2.iterator(), args3));
+                return function.apply(new IteratorIterator<Object>(args2.iterator(), args3));
             }
         };
     }

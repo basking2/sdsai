@@ -11,6 +11,7 @@ import java.util.Iterator;
  * Map a function across all subsequent arguments.
  */
 public class MapFunction implements FunctionInterface<Iterator<Object>> {
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<Object> apply(final Iterator<Object> objectIterator) {
 

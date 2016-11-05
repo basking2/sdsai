@@ -13,13 +13,14 @@ public class Iterators {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T> Iterator<T> toIterator(final Object o) {
         if (o instanceof Iterator) {
-            return ((Iterator)o);
+            return ((Iterator<T>)o);
         }
 
         if (o instanceof Iterable) {
-            return ((Iterable)o).iterator();
+            return ((Iterable<T>)o).iterator();
         }
 
         if (o instanceof Object[]) {
@@ -29,6 +30,7 @@ public class Iterators {
         return null;
     }
 
+    @SafeVarargs
     public static <T> Iterator<T> wrap(final T ... ts) {
         return new Iterator<T>() {
 

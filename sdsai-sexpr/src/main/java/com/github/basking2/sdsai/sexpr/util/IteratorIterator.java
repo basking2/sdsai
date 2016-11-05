@@ -22,6 +22,7 @@ public class IteratorIterator<T> implements Iterator<T> {
         this(inputs.iterator());
     }
 
+    @SafeVarargs
     public IteratorIterator(final Iterator<T> ... inputs) {
         this(Arrays.asList(inputs));
     }
@@ -32,7 +33,7 @@ public class IteratorIterator<T> implements Iterator<T> {
     private void updateCurrentIterator() {
         while (! currentIterator.hasNext() && inputs.hasNext()) {
             final Object   o = inputs.next();
-            final Iterator i = Iterators.toIterator(o);
+            final Iterator<T> i = Iterators.toIterator(o);
 
             if (i != null) {
                 currentIterator = i;

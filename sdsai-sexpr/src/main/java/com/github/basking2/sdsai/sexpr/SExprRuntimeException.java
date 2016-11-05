@@ -3,6 +3,8 @@ package com.github.basking2.sdsai.sexpr;
 /**
  */
 public class SExprRuntimeException extends RuntimeException {
+    private static final long serialVersionUID = 3976798317524183454L;
+
     public SExprRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }

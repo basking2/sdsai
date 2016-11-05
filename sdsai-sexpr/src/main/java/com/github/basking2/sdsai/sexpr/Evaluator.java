@@ -38,17 +38,18 @@ public class Evaluator {
         return functionRegistry.get(functionName);
     }
 
+    @SuppressWarnings("unchecked")
     public Object evaluate(final Object o) {
         if (o instanceof EvaluatingIterator) {
             return evaluate((EvaluatingIterator) o);
         }
 
         if (o instanceof Iterator) {
-            return evaluate(wrap((Iterator) o));
+            return evaluate(wrap((Iterator<Object>) o));
         }
 
         if (o instanceof Iterable) {
-            return evaluate(wrap(((Iterable) o).iterator()));
+            return evaluate(wrap(((Iterable<Object>) o).iterator()));
         }
 
         if (o instanceof Object[]) {
@@ -60,7 +61,7 @@ public class Evaluator {
 
     public Object evaluate(final Iterator<Object> i) {
         if (!i.hasNext()) {
-            return new ArrayList().iterator();
+            return new ArrayList<Object>().iterator();
         }
 
         final Object operatorObject = i.next();
