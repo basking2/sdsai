@@ -26,6 +26,13 @@ public class MapFunction implements FunctionInterface<Iterator<Object>> {
 
         final FunctionInterface<Object> function = (FunctionInterface<Object>)(functionObject);
 
-        return new MappingIterator<Object, Object>(objectIterator, o -> function.apply(Iterators.wrap(o)));
+        return new MappingIterator<Object, Object>(objectIterator, o -> {
+            if (o instanceof Iterator) {
+                return function.apply((Iterator<Object>)o);
+            }
+            else {
+                return function.apply(Iterators.wrap(o));
+            }
+        });
     }
 }
