@@ -1,13 +1,18 @@
 package com.github.basking2.sdsai.sexpr;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
 import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
+import com.github.basking2.sdsai.sexpr.functions.IfFunction;
+import com.github.basking2.sdsai.sexpr.functions.LastFunction;
 import com.github.basking2.sdsai.sexpr.functions.ListFunction;
 import com.github.basking2.sdsai.sexpr.functions.MapFunction;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
-
-import java.util.*;
 
 /**
  */
@@ -21,6 +26,8 @@ public class Evaluator {
         register("curry", new CurryFunction(this));
         register("map", new MapFunction());
         register("list", new ListFunction());
+        register("last", new LastFunction());
+        register("if", new IfFunction());
     }
 
     public void register(final Object name, final FunctionInterface<? extends Object> operator) {
@@ -73,8 +80,19 @@ public class Evaluator {
      * An iterator that will evaluate every element before passing it back using the outer class' evaluator.
      */
     public static class EvaluatingIterator extends MappingIterator<Object, Object> {
+        private Iterator<Object> itr;
         public EvaluatingIterator(final Evaluator evaluator, final Iterator<Object> itr) {
             super(itr, e -> evaluator.evaluate(e));
+            this.itr = itr;
+        }
+        
+        /**
+         * Advance the iterator without evaluating it.
+         * 
+         * This is useful for conditional executions, such is ["if"].
+         */
+        public void skip() {
+            this.itr.next();
         }
     }
 }

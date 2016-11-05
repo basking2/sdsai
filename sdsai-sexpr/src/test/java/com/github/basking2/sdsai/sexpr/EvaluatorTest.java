@@ -1,16 +1,15 @@
 package com.github.basking2.sdsai.sexpr;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 
 public class EvaluatorTest {
     @Test
@@ -76,8 +75,8 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("map", asList("curry", "add", 3), 4, 5);
 
-
-        Iterator<Iterator> i = (Iterator<Iterator>) evaluator.evaluate(l);
+        @SuppressWarnings("unchecked")
+        Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l);
 
         assertEquals(Integer.valueOf(7), i.next());
         assertEquals(Integer.valueOf(8), i.next());
@@ -91,7 +90,8 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("list", 1, 2, 3, 4, 5);
 
-        Iterator<Iterator> i = (Iterator<Iterator>) evaluator.evaluate(l);
+        @SuppressWarnings("unchecked")
+        Iterator<Integer> i = (Iterator<Integer>) evaluator.evaluate(l);
 
         assertEquals(Integer.valueOf(1), i.next());
         assertEquals(Integer.valueOf(2), i.next());
@@ -100,5 +100,29 @@ public class EvaluatorTest {
         assertEquals(Integer.valueOf(5), i.next());
         assertFalse(i.hasNext());
 
+    }
+    
+    @Test
+    public void testLastFunction() {
+        final Evaluator evaluator = new Evaluator();
+
+        final List<Object> l = asList("last", 1, 2, 3, 4, 5);
+
+        Integer i = (Integer) evaluator.evaluate(l);
+
+        assertEquals(Integer.valueOf(5), i);
+    }
+    
+    @Test
+    public void testIfFunction() {
+        final Evaluator evaluator = new Evaluator();
+        
+        Integer i;
+
+        i = (Integer) evaluator.evaluate(asList("if", 0, 2, 3));
+        assertEquals(Integer.valueOf(3), i);
+
+        i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3));
+        assertEquals(Integer.valueOf(2), i);
     }
 }
