@@ -24,6 +24,7 @@ public class Evaluator {
         register("list", new ListFunction());
         register("last", new LastFunction());
         register("compose", new ComposeFunction());
+        register("flatten", new FlattenFunction());
         register("if", new IfFunction());
     }
 

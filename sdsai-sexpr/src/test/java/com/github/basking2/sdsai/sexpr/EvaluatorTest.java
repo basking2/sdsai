@@ -145,7 +145,20 @@ public class EvaluatorTest {
         assertEquals(Integer.valueOf(7), i.next());
         assertEquals(Integer.valueOf(8), i.next());
         assertFalse(i.hasNext());
+    }
 
+    @Test
+    public void testFlatten() {
+        final Evaluator evaluator = new Evaluator();
+        Iterator<Integer> i = (Iterator<Integer>)
+                evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)));
 
+        assertEquals(Integer.valueOf(1), i.next());
+        assertEquals(Integer.valueOf(2), i.next());
+        assertEquals(Integer.valueOf(3), i.next());
+        assertEquals(Integer.valueOf(4), i.next());
+        assertEquals(Integer.valueOf(5), i.next());
+        assertEquals(Integer.valueOf(6), i.next());
+        assertFalse(i.hasNext());
     }
 }
