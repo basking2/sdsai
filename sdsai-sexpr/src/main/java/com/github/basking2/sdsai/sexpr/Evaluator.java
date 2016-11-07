@@ -5,12 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
-import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
-import com.github.basking2.sdsai.sexpr.functions.IfFunction;
-import com.github.basking2.sdsai.sexpr.functions.LastFunction;
-import com.github.basking2.sdsai.sexpr.functions.ListFunction;
-import com.github.basking2.sdsai.sexpr.functions.MapFunction;
+import com.github.basking2.sdsai.sexpr.functions.*;
 import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
@@ -28,6 +23,7 @@ public class Evaluator {
         register("map", new MapFunction());
         register("list", new ListFunction());
         register("last", new LastFunction());
+        register("compose", new ComposeFunction());
         register("if", new IfFunction());
     }
 

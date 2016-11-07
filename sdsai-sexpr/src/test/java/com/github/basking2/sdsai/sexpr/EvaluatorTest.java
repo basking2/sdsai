@@ -125,4 +125,27 @@ public class EvaluatorTest {
         i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3));
         assertEquals(Integer.valueOf(2), i);
     }
+
+    @Test
+    public void testCompose() {
+        final Evaluator evaluator = new Evaluator();
+        evaluator.register("add", iterator -> {
+            int sum = 0;
+
+            while (iterator.hasNext()) {
+                sum += (Integer) iterator.next();
+            }
+
+            return sum;
+        });
+        Iterator<Integer> i = (Iterator<Integer>)
+                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), 3, 4, 5));
+
+        assertEquals(Integer.valueOf(6), i.next());
+        assertEquals(Integer.valueOf(7), i.next());
+        assertEquals(Integer.valueOf(8), i.next());
+        assertFalse(i.hasNext());
+
+
+    }
 }
