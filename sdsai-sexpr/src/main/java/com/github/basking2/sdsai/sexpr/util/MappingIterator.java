@@ -19,6 +19,10 @@ public class MappingIterator<T, R> implements Iterator<R> {
         this.f = f;
     }
 
+    public void setMapping(Mapper<T, R> f) {
+        this.f = f;
+    }
+
     @Override
     public boolean hasNext() {
         return iterator.hasNext();

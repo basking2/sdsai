@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.github.basking2.sdsai.sexpr.Evaluator;
 import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
+import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 
 public class IfFunction implements FunctionInterface<Object> {
 
@@ -26,8 +27,8 @@ public class IfFunction implements FunctionInterface<Object> {
         }
         
         // Skip the true branch.
-        if (args instanceof Evaluator.EvaluatingIterator) {
-            ((Evaluator.EvaluatingIterator)args).skip();
+        if (args instanceof EvaluatingIterator) {
+            ((EvaluatingIterator)args).skip();
         }
         else {
             args.next();

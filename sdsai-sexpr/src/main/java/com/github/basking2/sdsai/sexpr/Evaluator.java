@@ -11,6 +11,7 @@ import com.github.basking2.sdsai.sexpr.functions.IfFunction;
 import com.github.basking2.sdsai.sexpr.functions.LastFunction;
 import com.github.basking2.sdsai.sexpr.functions.ListFunction;
 import com.github.basking2.sdsai.sexpr.functions.MapFunction;
+import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
 
@@ -75,25 +76,5 @@ public class Evaluator {
 
     private EvaluatingIterator wrap(final Iterator<Object> iterator) {
         return new EvaluatingIterator(this, iterator);
-    }
-
-    /**
-     * An iterator that will evaluate every element before passing it back using the outer class' evaluator.
-     */
-    public static class EvaluatingIterator extends MappingIterator<Object, Object> {
-        private Iterator<Object> itr;
-        public EvaluatingIterator(final Evaluator evaluator, final Iterator<Object> itr) {
-            super(itr, e -> evaluator.evaluate(e));
-            this.itr = itr;
-        }
-        
-        /**
-         * Advance the iterator without evaluating it.
-         * 
-         * This is useful for conditional executions, such is ["if"].
-         */
-        public void skip() {
-            this.itr.next();
-        }
     }
 }
