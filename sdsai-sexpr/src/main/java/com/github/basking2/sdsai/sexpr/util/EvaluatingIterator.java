@@ -4,7 +4,7 @@ import com.github.basking2.sdsai.sexpr.Evaluator;
 
 import java.util.Iterator;
 
-public class EvaluatingIterator implements Iterator<Object> {
+public class EvaluatingIterator<T extends Object> implements Iterator<T> {
 
     private Iterator<Object> itr;
     private boolean evaluationEnabled;
@@ -22,8 +22,9 @@ public class EvaluatingIterator implements Iterator<Object> {
     }
 
     @Override
-    public Object next() {
-        return evaluationEnabled ? evaluator.evaluate(itr.next()) : itr.next();
+    @SuppressWarnings("unchecked")
+    public T next() {
+        return evaluationEnabled ? (T)evaluator.evaluate(itr.next()) : (T)itr.next();
     }
 
     /**

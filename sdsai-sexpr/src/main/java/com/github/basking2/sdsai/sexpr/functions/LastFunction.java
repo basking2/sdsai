@@ -8,7 +8,7 @@ import java.util.Iterator;
 public class LastFunction implements FunctionInterface<Object> {
     
     @Override
-    public Object apply(final Iterator<Object> objectIterator) {
+    public Object apply(final Iterator<? extends Object> objectIterator) {
         Object o = null;
 
         while (objectIterator.hasNext()) {

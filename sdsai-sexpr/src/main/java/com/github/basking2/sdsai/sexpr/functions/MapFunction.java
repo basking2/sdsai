@@ -13,7 +13,7 @@ import java.util.Iterator;
 public class MapFunction implements FunctionInterface<Iterator<Object>> {
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<Object> apply(final Iterator<Object> objectIterator) {
+    public Iterator<Object> apply(final Iterator<? extends Object> objectIterator) {
 
         // If no function, then no results. No worries.
         if (!objectIterator.hasNext()) {

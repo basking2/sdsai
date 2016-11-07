@@ -7,10 +7,10 @@ import java.util.NoSuchElementException;
 
 public class IteratorIterator<T> implements Iterator<T> {
 
-    final Iterator<Iterator<T>> inputs;
+    final Iterator<Iterator<? extends T>> inputs;
     Iterator<T> currentIterator;
 
-    public IteratorIterator(final Iterator<Iterator<T>> inputs) {
+    public IteratorIterator(final Iterator<Iterator<? extends T>> inputs) {
         this.inputs = inputs;
         this.currentIterator = new Iterator<T>() {
             @Override public boolean hasNext() { return false; }
@@ -18,12 +18,12 @@ public class IteratorIterator<T> implements Iterator<T> {
         };
     }
 
-    public IteratorIterator(final List<Iterator<T>> inputs) {
+    public IteratorIterator(final List<Iterator<? extends T>> inputs) {
         this(inputs.iterator());
     }
 
     @SafeVarargs
-    public IteratorIterator(final Iterator<T> ... inputs) {
+    public IteratorIterator(final Iterator<? extends T> ... inputs) {
         this(Arrays.asList(inputs));
     }
 

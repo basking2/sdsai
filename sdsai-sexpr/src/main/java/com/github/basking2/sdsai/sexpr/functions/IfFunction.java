@@ -9,7 +9,7 @@ import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 public class IfFunction implements FunctionInterface<Object> {
 
     @Override
-    public Object apply(Iterator<Object> args) {
+    public Object apply(Iterator<? extends Object> args) {
         if (!(args.hasNext())) {
             throw new SExprRuntimeException("If requires 3 arguments.");
         }

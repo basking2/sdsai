@@ -8,9 +8,9 @@ import java.util.Iterator;
  * Sometimes you want to defer evaluation of a list. In such sitations you can make the first
  * element be the "list" function which simply returns the following arguments.
  */
-public class ListFunction implements FunctionInterface<Iterator<Object>> {
+public class ListFunction implements FunctionInterface<Iterator<? extends Object>> {
     @Override
-    public Iterator<Object> apply(Iterator<Object> objectIterator) {
+    public Iterator<? extends Object> apply(Iterator<? extends Object> objectIterator) {
         return objectIterator;
     }
 }

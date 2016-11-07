@@ -74,7 +74,7 @@ public class Evaluator {
         return operator.apply(i);
     }
 
-    private EvaluatingIterator wrap(final Iterator<Object> iterator) {
-        return new EvaluatingIterator(this, iterator);
+    private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator) {
+        return new EvaluatingIterator<>(this, iterator);
     }
 }

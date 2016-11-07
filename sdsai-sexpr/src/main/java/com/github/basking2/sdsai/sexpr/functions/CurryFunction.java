@@ -20,7 +20,7 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Object
     }
 
     @Override
-    public FunctionInterface<Object> apply(final Iterator<Object> args) {
+    public FunctionInterface<Object> apply(final Iterator<? extends Object> args) {
 
         if (!args.hasNext()) {
             throw new SExprRuntimeException("CurryFunction requires at least 1 argument.");
@@ -37,7 +37,7 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Object
         // Now return a new function that...
         return new FunctionInterface<Object>() {
             @Override
-            public Object apply(Iterator<Object> args3) {
+            public Object apply(Iterator<? extends Object> args3) {
                 return function.apply(new IteratorIterator<Object>(args2.iterator(), args3));
             }
         };
