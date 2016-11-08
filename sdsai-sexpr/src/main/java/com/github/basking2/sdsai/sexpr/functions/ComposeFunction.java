@@ -3,7 +3,6 @@ package com.github.basking2.sdsai.sexpr.functions;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 
 import java.util.Iterator;
-import java.util.function.Function;
 
 /**
  * Given a list of functions, f, g, h, compose them such that they are called in

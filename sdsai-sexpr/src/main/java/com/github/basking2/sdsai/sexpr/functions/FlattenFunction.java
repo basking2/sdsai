@@ -13,6 +13,7 @@ import java.util.Iterator;
  * Another way to view this is that it takes away the top-level iterator.
  */
 public class FlattenFunction implements FunctionInterface<Iterator<Object>> {
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<Object> apply(Iterator<?> iterator) {
 
