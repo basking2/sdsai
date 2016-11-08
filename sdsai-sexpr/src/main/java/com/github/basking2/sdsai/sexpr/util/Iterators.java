@@ -30,6 +30,14 @@ public class Iterators {
         return null;
     }
 
+    /**
+     * Wrap one or more values into an iterator.
+     *
+     * @param ts The t values to wrap into an interator.
+     *
+     * @param <T> The type returned by the returned iterator.
+     * @return An interator that will walk through ts values.
+     */
     @SafeVarargs
     public static <T> Iterator<T> wrap(final T ... ts) {
         return new Iterator<T>() {
