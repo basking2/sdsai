@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 public class IteratorIterator<T> implements Iterator<T> {
 
     final Iterator<Iterator<? extends T>> inputs;
-    Iterator<T> currentIterator;
+    Iterator<? extends T> currentIterator;
 
     public IteratorIterator(final Iterator<Iterator<? extends T>> inputs) {
         this.inputs = inputs;
@@ -32,13 +32,7 @@ public class IteratorIterator<T> implements Iterator<T> {
      */
     private void updateCurrentIterator() {
         while (! currentIterator.hasNext() && inputs.hasNext()) {
-            final Object   o = inputs.next();
-            final Iterator<T> i = Iterators.toIterator(o);
-
-            if (i != null) {
-                currentIterator = i;
-                return;
-            }
+            currentIterator = inputs.next();
         }
     }
 
