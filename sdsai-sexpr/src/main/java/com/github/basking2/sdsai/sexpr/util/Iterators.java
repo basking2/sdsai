@@ -3,6 +3,7 @@ package com.github.basking2.sdsai.sexpr.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 public class Iterators {
 
@@ -58,5 +59,29 @@ public class Iterators {
                 }
             }
         };
+    }
+
+    /**
+     * Construct and return a {@link NullSkippingIterator}.
+     *
+     * @param iterator The iterator.
+     * @param <T> A type for iterator.
+     * @return A {@link NullSkippingIterator}.
+     */
+    public static <T> Iterator<T> skipNulls(final Iterator<T> iterator) {
+        return new NullSkippingIterator<T>(iterator);
+    }
+
+    /**
+     * Construct and return a {@link MappingIterator}.
+     *
+     * @param iterator The iterator that provides the input T values.
+     * @param f The mapping function.
+     * @param <T> The input type.
+     * @param <R> The output type.
+     * @return a {@link MappingIterator}.
+     */
+    public static <T, R> MappingIterator<T, R> mappingIterator(final Iterator<T> iterator, final MappingIterator.Mapper<T, R> f) {
+        return new MappingIterator<T, R>(iterator, f);
     }
 }
