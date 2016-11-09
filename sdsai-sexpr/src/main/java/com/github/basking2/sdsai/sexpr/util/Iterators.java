@@ -81,7 +81,7 @@ public class Iterators {
      * @param <R> The output type.
      * @return a {@link MappingIterator}.
      */
-    public static <T, R> MappingIterator<T, R> mappingIterator(final Iterator<T> iterator, final MappingIterator.Mapper<T, R> f) {
+    public static <T, R> MappingIterator<T, R> mapIterator(final Iterator<T> iterator, final MappingIterator.Mapper<T, R> f) {
         return new MappingIterator<T, R>(iterator, f);
     }
 }

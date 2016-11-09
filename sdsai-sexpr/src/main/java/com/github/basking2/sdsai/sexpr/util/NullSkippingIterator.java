@@ -26,7 +26,7 @@ public class NullSkippingIterator<T> implements Iterator<T> {
 
     @Override
     public boolean hasNext() {
-        return nextT == null;
+        return nextT != null;
     }
 
     @Override
