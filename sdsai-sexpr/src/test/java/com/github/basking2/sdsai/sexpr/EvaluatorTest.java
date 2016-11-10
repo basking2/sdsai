@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.github.basking2.sdsai.sexpr.functions.Functions;
+
 public class EvaluatorTest {
     @Test
     public void testAdding() {
@@ -138,6 +140,7 @@ public class EvaluatorTest {
 
             return sum;
         });
+        @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
                 evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), 3, 4, 5));
 
@@ -150,6 +153,7 @@ public class EvaluatorTest {
     @Test
     public void testFlatten() {
         final Evaluator evaluator = new Evaluator();
+        @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
                 evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)));
 
@@ -160,5 +164,19 @@ public class EvaluatorTest {
         assertEquals(Integer.valueOf(5), i.next());
         assertEquals(Integer.valueOf(6), i.next());
         assertFalse(i.hasNext());
+    }
+    
+    @Test
+    public void testAggregator() {
+        final Evaluator evaluator = new Evaluator();
+        evaluator.register(
+            "add",
+            Functions.aggregator(Integer.valueOf(0),  (r, t) -> { return r + (Integer)t; })
+        );
+        
+        final Integer i = (Integer)evaluator.evaluate(
+                asList("add", asList("list", 1,2,3), 4));
+        
+        assertEquals(Integer.valueOf(10), i);
     }
 }
