@@ -10,6 +10,8 @@ import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
 
+import static com.github.basking2.sdsai.sexpr.util.Iterators.toIterator;
+
 /**
  */
 public class Evaluator {
@@ -25,7 +27,14 @@ public class Evaluator {
         register("last", new LastFunction());
         register("compose", new ComposeFunction());
         register("flatten", new FlattenFunction());
+        register("print", new PrintArgsFunction(System.out));
         register("if", new IfFunction());
+        register("head", iterator -> toIterator(iterator.next()).next());
+        register("tail", iterator -> {
+            Iterator i = toIterator(iterator.next());
+            i.next();
+            return i;
+        });
     }
 
     public void register(final Object name, final FunctionInterface<? extends Object> operator) {

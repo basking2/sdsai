@@ -3,6 +3,8 @@ package com.github.basking2.sdsai.sexpr.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Iterators {
 
@@ -82,5 +84,20 @@ public class Iterators {
      */
     public static <T, R> MappingIterator<T, R> mapIterator(final Iterator<T> iterator, final MappingIterator.Mapper<T, R> f) {
         return new MappingIterator<T, R>(iterator, f);
+    }
+
+    /**
+     * Collect the elements of an iterator into a {@link List}.
+     *
+     * @param itr The iterator to materialize.
+     * @param <T> The type of list elements.
+     * @return a list for the iterator.
+     */
+    public static <T> List<T> toList(final Iterator<T> itr) {
+        final ArrayList<T> list = new ArrayList<T>();
+        while (itr.hasNext()) {
+            list.add(itr.next());
+        }
+        return list;
     }
 }
