@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This function takes a list of function name and arguments and produces a function that can be applied to future objects.
  */
-public class CurryFunction implements FunctionInterface<FunctionInterface<Object>> {
+public class CurryFunction implements HelpfulFunction, FunctionInterface<FunctionInterface<Object>> {
 
     private Evaluator evaluator;
 
@@ -41,5 +41,31 @@ public class CurryFunction implements FunctionInterface<FunctionInterface<Object
                 return function.apply(new IteratorIterator<Object>(args2.iterator(), args3));
             }
         };
+    }
+
+    @Override
+    public String functionHelp(boolean verbose) {
+        final StringBuilder sb = new StringBuilder();
+        
+        if (verbose) {
+            sb.append("## Curry\n\n");
+        }
+        
+        sb.append("Return a curried function names in the first argument to this function.\n\n");
+        sb.append("This function takes as its first argument a function or a string that names a function.\n");
+        sb.append("All subsequent argumets are evaluated and stored.\n");
+        sb.append("When the function returned by \"curry\" is called it is passed ")
+          .append("the evaluated arguments followed by the formal arguments. ");
+        
+        if (verbose) {
+            sb.append("\nAnd example:\n\n")
+              .append("    [\"map\", [\"curry\", \"add\", 3], 4, 5\n\n")
+              .append("The above code will return an iteration containing 7, 8. ")
+              .append("The function \"add\" is bound to the integer 3 and a function is returned. ")
+              .append("When that function is returned with the argument 4, 3 is added to 4 and so on.");
+            
+        }
+
+        return sb.toString();
     }
 }

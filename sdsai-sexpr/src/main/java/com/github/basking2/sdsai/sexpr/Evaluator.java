@@ -1,16 +1,24 @@
 package com.github.basking2.sdsai.sexpr;
 
+import static com.github.basking2.sdsai.sexpr.util.Iterators.toIterator;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.github.basking2.sdsai.sexpr.functions.*;
+import com.github.basking2.sdsai.sexpr.functions.ComposeFunction;
+import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
+import com.github.basking2.sdsai.sexpr.functions.FlattenFunction;
+import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
+import com.github.basking2.sdsai.sexpr.functions.HelpFunction;
+import com.github.basking2.sdsai.sexpr.functions.IfFunction;
+import com.github.basking2.sdsai.sexpr.functions.LastFunction;
+import com.github.basking2.sdsai.sexpr.functions.ListFunction;
+import com.github.basking2.sdsai.sexpr.functions.MapFunction;
+import com.github.basking2.sdsai.sexpr.functions.PrintArgsFunction;
 import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
-import com.github.basking2.sdsai.sexpr.util.MappingIterator;
-
-import static com.github.basking2.sdsai.sexpr.util.Iterators.toIterator;
 
 /**
  */
@@ -21,6 +29,7 @@ public class Evaluator {
     public Evaluator() {
         functionRegistry = new HashMap<>();
 
+        register("help", new HelpFunction(this));
         register("curry", new CurryFunction(this));
         register("map", new MapFunction());
         register("list", new ListFunction());
@@ -31,7 +40,7 @@ public class Evaluator {
         register("if", new IfFunction());
         register("head", iterator -> toIterator(iterator.next()).next());
         register("tail", iterator -> {
-            Iterator i = toIterator(iterator.next());
+            Iterator<?> i = toIterator(iterator.next());
             i.next();
             return i;
         });
@@ -48,7 +57,7 @@ public class Evaluator {
     @SuppressWarnings("unchecked")
     public Object evaluate(final Object o) {
         if (o instanceof EvaluatingIterator) {
-            return evaluate((EvaluatingIterator) o);
+            return evaluate((EvaluatingIterator<?>) o);
         }
 
         if (o instanceof Iterator) {
