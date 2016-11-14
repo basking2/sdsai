@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
+
 import java.util.Iterator;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Iterator;
 public class LastFunction implements FunctionInterface<Object> {
     
     @Override
-    public Object apply(final Iterator<? extends Object> objectIterator) {
+    public Object apply(final Iterator<? extends Object> objectIterator, final EvaluationContext evaluationContext) {
         Object o = null;
 
         while (objectIterator.hasNext()) {

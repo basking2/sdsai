@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.util.IteratorIterator;
 
 import java.util.Iterator;
@@ -15,7 +16,7 @@ import java.util.Iterator;
 public class FlattenFunction implements FunctionInterface<Iterator<Object>> {
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<Object> apply(Iterator<?> iterator) {
+    public Iterator<Object> apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
 
         // NOTE - the type-cast is critical to get the correct constructor.
         return new IteratorIterator<Object>((Iterator<Iterator<?>>)iterator);

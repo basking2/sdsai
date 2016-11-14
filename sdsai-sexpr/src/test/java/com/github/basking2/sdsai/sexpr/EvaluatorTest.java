@@ -18,7 +18,7 @@ public class EvaluatorTest {
     public void testAdding() {
         final List<Object> argOrder = new ArrayList<>();
         Evaluator evaluator = new Evaluator();
-        evaluator.register("add", iterator -> {
+        evaluator.register("add", (iterator, ctx) -> {
 
             double sum = 0;
 
@@ -48,7 +48,7 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("add", 1, asList("add", 0, 32D), asList("add", 1, 1));
 
-        final Object o = evaluator.evaluate(l);
+        final Object o = evaluator.evaluate(l, new EvaluationContext());
 
         assertTrue(o instanceof Double);
         assertEquals(Double.valueOf(35), o);
@@ -64,7 +64,7 @@ public class EvaluatorTest {
     @Test
     public void testMap() {
         Evaluator evaluator = new Evaluator();
-        evaluator.register("add", iterator -> {
+        evaluator.register("add", (iterator, ctx) -> {
             int sum = 0;
 
             while (iterator.hasNext()) {
@@ -78,7 +78,7 @@ public class EvaluatorTest {
         final List<Object> l = asList("map", asList("curry", "add", 3), 4, 5);
 
         @SuppressWarnings("unchecked")
-        Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l);
+        Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l, new EvaluationContext());
 
         assertEquals(Integer.valueOf(7), i.next());
         assertEquals(Integer.valueOf(8), i.next());
@@ -93,7 +93,7 @@ public class EvaluatorTest {
         final List<Object> l = asList("list", 1, 2, 3, 4, 5);
 
         @SuppressWarnings("unchecked")
-        Iterator<Integer> i = (Iterator<Integer>) evaluator.evaluate(l);
+        Iterator<Integer> i = (Iterator<Integer>) evaluator.evaluate(l, new EvaluationContext());
 
         assertEquals(Integer.valueOf(1), i.next());
         assertEquals(Integer.valueOf(2), i.next());
@@ -110,7 +110,7 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("last", 1, 2, 3, 4, 5);
 
-        Integer i = (Integer) evaluator.evaluate(l);
+        Integer i = (Integer) evaluator.evaluate(l, new EvaluationContext());
 
         assertEquals(Integer.valueOf(5), i);
     }
@@ -121,17 +121,17 @@ public class EvaluatorTest {
         
         Integer i;
 
-        i = (Integer) evaluator.evaluate(asList("if", 0, 2, 3));
+        i = (Integer) evaluator.evaluate(asList("if", 0, 2, 3), new EvaluationContext());
         assertEquals(Integer.valueOf(3), i);
 
-        i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3));
+        i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3), new EvaluationContext());
         assertEquals(Integer.valueOf(2), i);
     }
 
     @Test
     public void testCompose() {
         final Evaluator evaluator = new Evaluator();
-        evaluator.register("add", iterator -> {
+        evaluator.register("add", (iterator, ctx) -> {
             int sum = 0;
 
             while (iterator.hasNext()) {
@@ -142,7 +142,7 @@ public class EvaluatorTest {
         });
         @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
-                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), 3, 4, 5));
+                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), 3, 4, 5), new EvaluationContext());
 
         assertEquals(Integer.valueOf(6), i.next());
         assertEquals(Integer.valueOf(7), i.next());
@@ -155,7 +155,7 @@ public class EvaluatorTest {
         final Evaluator evaluator = new Evaluator();
         @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
-                evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)));
+                evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)), new EvaluationContext());
 
         assertEquals(Integer.valueOf(1), i.next());
         assertEquals(Integer.valueOf(2), i.next());
@@ -175,7 +175,7 @@ public class EvaluatorTest {
         );
         
         final Integer i = (Integer)evaluator.evaluate(
-                asList("add", asList("list", 1,2,3), 4));
+                asList("add", asList("list", 1,2,3), 4), new EvaluationContext());
         
         assertEquals(Integer.valueOf(10), i);
     }

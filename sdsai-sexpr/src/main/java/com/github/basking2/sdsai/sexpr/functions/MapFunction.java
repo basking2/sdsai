@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 import com.github.basking2.sdsai.sexpr.util.MappingIterator;
@@ -13,7 +14,7 @@ import java.util.Iterator;
 public class MapFunction implements FunctionInterface<Iterator<Object>> {
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<Object> apply(final Iterator<? extends Object> objectIterator) {
+    public Iterator<Object> apply(final Iterator<? extends Object> objectIterator, final EvaluationContext evaluationContext) {
 
         // If no function, then no results. No worries.
         if (!objectIterator.hasNext()) {
@@ -29,10 +30,10 @@ public class MapFunction implements FunctionInterface<Iterator<Object>> {
 
         return new MappingIterator<Object, Object>(objectIterator, o -> {
             if (o instanceof Iterator) {
-                return function.apply((Iterator<Object>)o);
+                return function.apply((Iterator<Object>)o, evaluationContext);
             }
             else {
-                return function.apply(Iterators.wrap(o));
+                return function.apply(Iterators.wrap(o), evaluationContext);
             }
         });
     }

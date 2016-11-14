@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
+
 import java.io.PrintStream;
 import java.util.Iterator;
 
@@ -13,7 +15,7 @@ public class PrintArgsFunction implements FunctionInterface<Iterator<?>> {
     };
 
     @Override
-    public Iterator<?> apply(final Iterator<?> iterator) {
+    public Iterator<?> apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
         return mapIterator(iterator, arg -> {
             out.println(arg +":"+arg.getClass());
             return arg;

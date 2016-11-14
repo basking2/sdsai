@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
+
 import java.util.Iterator;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Iterator;
  */
 public class ListFunction implements FunctionInterface<Iterator<? extends Object>> {
     @Override
-    public Iterator<? extends Object> apply(Iterator<? extends Object> objectIterator) {
+    public Iterator<? extends Object> apply(Iterator<? extends Object> objectIterator, final EvaluationContext evaluationContext) {
         return objectIterator;
     }
 }

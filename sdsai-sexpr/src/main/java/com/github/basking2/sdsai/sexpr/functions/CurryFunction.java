@@ -1,7 +1,9 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.Evaluator;
 import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
+import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.IteratorIterator;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
     }
 
     @Override
-    public FunctionInterface<Object> apply(final Iterator<? extends Object> args) {
+    public FunctionInterface<Object> apply(final Iterator<? extends Object> args, final EvaluationContext evaluationContext) {
 
         if (!args.hasNext()) {
             throw new SExprRuntimeException("CurryFunction requires at least 1 argument.");
@@ -37,8 +39,8 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
         // Now return a new function that...
         return new FunctionInterface<Object>() {
             @Override
-            public Object apply(Iterator<? extends Object> args3) {
-                return function.apply(new IteratorIterator<Object>(args2.iterator(), args3));
+            public Object apply(final Iterator<? extends Object> args3, final EvaluationContext evaluationContext) {
+                return function.apply(new IteratorIterator<Object>(args2.iterator(), args3), evaluationContext);
             }
         };
     }

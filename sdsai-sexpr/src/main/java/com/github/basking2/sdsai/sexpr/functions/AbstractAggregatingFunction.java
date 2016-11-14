@@ -4,6 +4,7 @@ import static com.github.basking2.sdsai.sexpr.util.Iterators.toIterator;
 
 import java.util.Iterator;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
 
 /**
@@ -21,7 +22,7 @@ public abstract class AbstractAggregatingFunction<T, R> implements FunctionInter
     }
 
     @Override
-    public R apply(final Iterator<?> iterator) {
+    public R apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
         
         R r = initialValue;
 

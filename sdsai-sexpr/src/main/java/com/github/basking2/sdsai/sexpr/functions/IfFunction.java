@@ -2,13 +2,14 @@ package com.github.basking2.sdsai.sexpr.functions;
 
 import java.util.Iterator;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
 import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 
 public class IfFunction implements FunctionInterface<Object> {
 
     @Override
-    public Object apply(Iterator<? extends Object> args) {
+    public Object apply(final Iterator<? extends Object> args, final EvaluationContext evaluationContext) {
         if (!(args.hasNext())) {
             throw new SExprRuntimeException("If requires 3 arguments.");
         }

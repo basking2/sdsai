@@ -10,7 +10,7 @@ public class GsonEvaluatorTest {
     public void testGsonEvaluation() {
 
         GsonEvaluator evaluator = new GsonEvaluator();
-        evaluator.register("add", iterator -> {
+        evaluator.register("add", (iterator, ctx) -> {
 
             double sum = 0;
 
@@ -37,7 +37,7 @@ public class GsonEvaluatorTest {
         });
 
 
-        final Object o = evaluator.evaluateJson("[\"add\", 1, [\"add\", 0, 32], [\"add\", 1, 1]]");
+        final Object o = evaluator.evaluateJson("[\"add\", 1, [\"add\", 0, 32], [\"add\", 1, 1]]", new EvaluationContext());
 
         assertTrue(o instanceof Double);
         assertEquals(Double.valueOf(35), o);

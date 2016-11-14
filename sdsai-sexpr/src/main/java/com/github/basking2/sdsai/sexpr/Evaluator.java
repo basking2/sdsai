@@ -38,8 +38,8 @@ public class Evaluator {
         register("flatten", new FlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("if", new IfFunction());
-        register("head", iterator -> toIterator(iterator.next()).next());
-        register("tail", iterator -> {
+        register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
+        register("tail", (iterator, ctx) -> {
             Iterator<?> i = toIterator(iterator.next());
             i.next();
             return i;
@@ -55,27 +55,27 @@ public class Evaluator {
     }
 
     @SuppressWarnings("unchecked")
-    public Object evaluate(final Object o) {
+    public Object evaluate(final Object o, final EvaluationContext context) {
         if (o instanceof EvaluatingIterator) {
             return evaluate((EvaluatingIterator<Object>) o);
         }
 
         if (o instanceof Iterator) {
-            return evaluate(wrap((Iterator<Object>) o));
+            return evaluate(wrap((Iterator<Object>) o, context));
         }
 
         if (o instanceof Iterable) {
-            return evaluate(wrap(((Iterable<Object>) o).iterator()));
+            return evaluate(wrap(((Iterable<Object>) o).iterator(), context));
         }
 
         if (o instanceof Object[]) {
-            return evaluate(wrap(Iterators.wrap((Object[])o)));
+            return evaluate(wrap(Iterators.wrap((Object[])o), context));
         }
 
         return o;
     }
 
-    public Object evaluate(final Iterator<Object> i) {
+    public Object evaluate(final EvaluatingIterator<Object> i) {
         if (!i.hasNext()) {
             return new ArrayList<Object>().iterator();
         }
@@ -93,10 +93,10 @@ public class Evaluator {
             throw new SExprRuntimeException("No function "+operatorObject.toString());
         }
 
-        return operator.apply(i);
+        return operator.apply(i, i.getEvaluationContext());
     }
 
-    private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator) {
-        return new EvaluatingIterator<>(this, iterator);
+    private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator, final EvaluationContext context) {
+        return new EvaluatingIterator<>(this, context, iterator);
     }
 }

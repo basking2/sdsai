@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 
 import java.util.Iterator;
@@ -12,7 +13,7 @@ public class ComposeFunction implements FunctionInterface<FunctionInterface<Obje
 
     @Override
     @SuppressWarnings("unchecked")
-    public FunctionInterface<Object> apply(Iterator<?> iterator) {
+    public FunctionInterface<Object> apply(Iterator<?> iterator, final EvaluationContext evaluationContext) {
 
         FunctionInterface<Object> f = null;
 
@@ -27,13 +28,12 @@ public class ComposeFunction implements FunctionInterface<FunctionInterface<Obje
                     final FunctionInterface<? extends Object> finalF = f;
                     final FunctionInterface<? extends Object> finalO = (FunctionInterface<? extends Object>) o;
 
-                    f = in ->  {
-                        final Object fOutput = Iterators.wrap(finalO.apply(in));
-                        return finalF.apply((Iterator<? super Object>)fOutput);
+                    f = (in, ctx) ->  {
+                        final Object fOutput = Iterators.wrap(finalO.apply(in, ctx));
+                        return finalF.apply((Iterator<? super Object>)fOutput, ctx);
                     };
                 }
             }
-
         }
 
         return f;

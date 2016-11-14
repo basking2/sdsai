@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.sexpr.util;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.Evaluator;
 
 import java.util.Iterator;
@@ -9,9 +10,11 @@ public class EvaluatingIterator<T extends Object> implements Iterator<T> {
     private Iterator<Object> itr;
     private boolean evaluationEnabled;
     private Evaluator evaluator;
+    private EvaluationContext evaluationContext;
 
-    public EvaluatingIterator(final Evaluator evaluator, final Iterator<Object> itr) {
+    public EvaluatingIterator(final Evaluator evaluator, final EvaluationContext evaluationContext, final Iterator<Object> itr) {
         this.evaluator = evaluator;
+        this.evaluationContext = evaluationContext;
         this.itr = itr;
         this.evaluationEnabled = true;
     }
@@ -24,7 +27,7 @@ public class EvaluatingIterator<T extends Object> implements Iterator<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T next() {
-        return evaluationEnabled ? (T)evaluator.evaluate(itr.next()) : (T)itr.next();
+        return evaluationEnabled ? (T)evaluator.evaluate(itr.next(), evaluationContext) : (T)itr.next();
     }
 
     /**
@@ -44,4 +47,9 @@ public class EvaluatingIterator<T extends Object> implements Iterator<T> {
     public void skip() {
         this.itr.next();
     }
+
+    public EvaluationContext getEvaluationContext() {
+        return evaluationContext;
+    }
 }
+

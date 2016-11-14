@@ -2,6 +2,7 @@ package com.github.basking2.sdsai.sexpr.functions;
 
 import java.util.Iterator;
 
+import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.Evaluator;
 
 /**
@@ -24,7 +25,7 @@ public class HelpFunction implements FunctionInterface<String>, HelpfulFunction 
      * {@inheritDoc}
      */
     @Override
-    public String apply(final Iterator<? extends Object> args) {
+    public String apply(final Iterator<? extends Object> args, final EvaluationContext evaluationContext) {
         
         final StringBuilder stringBuilder = new StringBuilder();
         boolean verbose = false;
