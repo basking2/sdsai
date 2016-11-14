@@ -57,7 +57,7 @@ public class Evaluator {
     @SuppressWarnings("unchecked")
     public Object evaluate(final Object o) {
         if (o instanceof EvaluatingIterator) {
-            return evaluate((EvaluatingIterator<?>) o);
+            return evaluate((EvaluatingIterator<Object>) o);
         }
 
         if (o instanceof Iterator) {
