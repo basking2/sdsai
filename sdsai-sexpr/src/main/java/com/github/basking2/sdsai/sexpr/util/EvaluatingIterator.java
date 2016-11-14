@@ -25,15 +25,19 @@ public class EvaluatingIterator<T extends Object> implements Iterator<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T next() {
+        return next(evaluationContext);
+    }
+
+    @SuppressWarnings("unchecked")
+    public T next(final EvaluationContext evaluationContext) {
         return evaluationEnabled ? (T)evaluator.evaluate(itr.next(), evaluationContext) : (T)itr.next();
     }
 
     /**
      * Set whether this iterator should map objects through its evaluator or not.
      *
-     * @param evaluationEnabled
+     * @param evaluationEnabled Enable or disable evlaution using this iterator's {@link Evaluator}.
      */
     public void setEvaluationEnabled(final boolean evaluationEnabled) {
         this.evaluationEnabled = evaluationEnabled;

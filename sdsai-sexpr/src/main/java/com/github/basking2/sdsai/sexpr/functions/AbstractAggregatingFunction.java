@@ -11,12 +11,21 @@ import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
  * This defines most of a function that takes a list of Ts, iterators of Ts or iterables over Ts
  * and transforms them into an R.
  *
- * @param <T>
+ * @param <T> The input parameter type.
+ * @param <R> The return type.
  */
 public abstract class AbstractAggregatingFunction<T, R> implements FunctionInterface <R> {
     
     public final R initialValue;
-    
+
+    /**
+     * Construct an function that will start aggregating values with initialValue as the first R value.
+     *
+     * If an implementation is summing numbers, initialValue may be 0.
+     * If an implementation is building a list, initialValue may be an empty list.
+     *
+     * @param initialValue An intial value.
+     */
     public AbstractAggregatingFunction(final R initialValue) {
         this.initialValue = initialValue;
     }

@@ -9,11 +9,15 @@ import java.util.ArrayList;
 public class Iterators {
 
     /**
-     * Map lists to iterators.
+     * Map iterables and arrays to iterators or returns null.
      *
-     * @param o
-     * @param <T>
-     * @return
+     * If an iterator is passed it, it is returned.
+     *
+     * This will not wrap a non-iterable object (or array) into a single element iterator. See {@link #wrap(Object[])} for that.
+     *
+     * @param o An object we would like to try and convert to an {@link Iterator}.
+     * @param <T> The type returned by the {@link Iterator}.
+     * @return An iterator that walks over the elements in o, or null if we cannot convert o to an {@link Iterator}.
      */
     @SuppressWarnings("unchecked")
     public static <T> Iterator<T> toIterator(final Object o) {

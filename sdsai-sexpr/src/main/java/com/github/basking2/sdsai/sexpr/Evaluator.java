@@ -13,6 +13,9 @@ import com.github.basking2.sdsai.sexpr.functions.FlattenFunction;
 import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
 import com.github.basking2.sdsai.sexpr.functions.HelpFunction;
 import com.github.basking2.sdsai.sexpr.functions.IfFunction;
+import com.github.basking2.sdsai.sexpr.functions.LetFunction;
+import com.github.basking2.sdsai.sexpr.functions.GetFunction;
+import com.github.basking2.sdsai.sexpr.functions.SetFunction;
 import com.github.basking2.sdsai.sexpr.functions.LastFunction;
 import com.github.basking2.sdsai.sexpr.functions.ListFunction;
 import com.github.basking2.sdsai.sexpr.functions.MapFunction;
@@ -38,6 +41,9 @@ public class Evaluator {
         register("flatten", new FlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("if", new IfFunction());
+        register("let", new LetFunction());
+        register("get", new GetFunction());
+        register("set", new SetFunction());
         register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
         register("tail", (iterator, ctx) -> {
             Iterator<?> i = toIterator(iterator.next());
@@ -52,6 +58,16 @@ public class Evaluator {
 
     public FunctionInterface<? extends Object> getFunction(final Object functionName) {
         return functionRegistry.get(functionName);
+    }
+
+    /**
+     * Create a default, empty, evaluation context and call {@link #evaluate(Object, EvaluationContext)}.
+     *
+     * @param o The object to evaluate.
+     * @return The result of the evaluation.
+     */
+    public Object evaluate(final Object o) {
+        return evaluate(o, new EvaluationContext());
     }
 
     @SuppressWarnings("unchecked")
