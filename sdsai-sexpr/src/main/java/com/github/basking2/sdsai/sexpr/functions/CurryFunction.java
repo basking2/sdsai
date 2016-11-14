@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 /**
  * This function takes a list of function name and arguments and produces a function that can be applied to future objects.
  */
@@ -40,7 +42,7 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
         return new FunctionInterface<Object>() {
             @Override
             public Object apply(final Iterator<? extends Object> args3, final EvaluationContext evaluationContext) {
-                return function.apply(new IteratorIterator<Object>(args2.iterator(), args3), evaluationContext);
+                return function.apply(new IteratorIterator<Object>(asList(args2.iterator(), args3)), evaluationContext);
             }
         };
     }

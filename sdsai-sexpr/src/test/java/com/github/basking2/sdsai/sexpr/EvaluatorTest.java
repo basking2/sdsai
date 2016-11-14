@@ -93,14 +93,14 @@ public class EvaluatorTest {
         final List<Object> l = asList("list", 1, 2, 3, 4, 5);
 
         @SuppressWarnings("unchecked")
-        Iterator<Integer> i = (Iterator<Integer>) evaluator.evaluate(l, new EvaluationContext());
+        List<Integer> i = (List<Integer>) evaluator.evaluate(l, new EvaluationContext());
 
-        assertEquals(Integer.valueOf(1), i.next());
-        assertEquals(Integer.valueOf(2), i.next());
-        assertEquals(Integer.valueOf(3), i.next());
-        assertEquals(Integer.valueOf(4), i.next());
-        assertEquals(Integer.valueOf(5), i.next());
-        assertFalse(i.hasNext());
+        assertEquals(5, i.size());
+        assertEquals(Integer.valueOf(1), i.get(0));
+        assertEquals(Integer.valueOf(2), i.get(1));
+        assertEquals(Integer.valueOf(3), i.get(2));
+        assertEquals(Integer.valueOf(4), i.get(3));
+        assertEquals(Integer.valueOf(5), i.get(4));
 
     }
     

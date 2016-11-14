@@ -22,11 +22,6 @@ public class IteratorIterator<T> implements Iterator<T> {
         this(inputs.iterator());
     }
 
-    @SafeVarargs
-    public IteratorIterator(final Iterator<? extends T> ... inputs) {
-        this(Arrays.asList(inputs));
-    }
-
     /**
      * Ensure that currentIterator points to the next element if one exists.
      */

@@ -3,7 +3,10 @@ package com.github.basking2.sdsai.sexpr.functions;
 import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import com.github.basking2.sdsai.sexpr.util.IteratorIterator;
 
+import java.util.Arrays;
 import java.util.Iterator;
+
+import static com.github.basking2.sdsai.sexpr.util.Iterators.mapIterator;
 
 /**
  * Flatten an iterator of iterators a single layer.
@@ -18,7 +21,23 @@ public class FlattenFunction implements FunctionInterface<Iterator<Object>> {
     @Override
     public Iterator<Object> apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
 
-        // NOTE - the type-cast is critical to get the correct constructor.
-        return new IteratorIterator<Object>((Iterator<Iterator<?>>)iterator);
+        Iterator<Iterator<? extends Object>> itrItrObj = mapIterator(iterator, e -> {
+            if (e instanceof Iterator) {
+                return (Iterator<Object>) e;
+            }
+
+            if (e instanceof Iterable) {
+                return ((Iterable<Object>)e).iterator();
+            }
+
+            if (e instanceof Object[]) {
+                return Arrays.asList((Object[])e).iterator();
+            }
+
+            return Arrays.asList((Object)e).iterator();
+
+        });
+
+        return new IteratorIterator<Object>(itrItrObj);
     }
 }
