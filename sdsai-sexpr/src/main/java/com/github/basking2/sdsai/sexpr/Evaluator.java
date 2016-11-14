@@ -81,8 +81,15 @@ public class Evaluator {
         }
 
         final Object operatorObject = i.next();
-        final FunctionInterface<? extends Object> operator = functionRegistry.get(operatorObject);
-        if (operator == null) {
+        final FunctionInterface<? extends Object> operator;
+
+        if (operatorObject instanceof FunctionInterface) {
+            operator = (FunctionInterface<? extends Object>)operatorObject;
+        }
+        else if (functionRegistry.containsKey(operatorObject)) {
+            operator = functionRegistry.get(operatorObject);
+        }
+        else {
             throw new SExprRuntimeException("No function "+operatorObject.toString());
         }
 
