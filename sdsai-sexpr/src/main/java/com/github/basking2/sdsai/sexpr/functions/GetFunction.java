@@ -5,10 +5,11 @@ import com.github.basking2.sdsai.sexpr.EvaluationContext;
 import java.util.Iterator;
 
 /**
+ * Get function. ["get", "variable"].
  */
-public class GetFunction implements FunctionInterface<Object> {
+public class GetFunction extends AbstractFunction1<Object, Object> {
     @Override
-    public Object apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
-        return evaluationContext.get(iterator.next());
+    protected Object applyImpl(Object o, EvaluationContext context) {
+        return context.get(o);
     }
 }

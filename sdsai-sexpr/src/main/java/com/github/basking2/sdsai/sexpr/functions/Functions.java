@@ -1,5 +1,8 @@
 package com.github.basking2.sdsai.sexpr.functions;
 
+import com.github.basking2.sdsai.sexpr.SExprRuntimeException;
+
+import java.util.Iterator;
 import java.util.function.BiFunction;
 
 /**
@@ -21,4 +24,16 @@ public class Functions {
         };
     }
 
+    public static <T> T getArgument(final Iterator<?> iterator, final String argumentName) {
+        if (!iterator.hasNext()) {
+            throw new SExprRuntimeException("Function missing required argument "+argumentName+".");
+        }
+
+        final Object o = iterator.next();
+
+        @SuppressWarnings("unchecked")
+        final T arg = (T) o;
+
+        return arg;
+    }
 }

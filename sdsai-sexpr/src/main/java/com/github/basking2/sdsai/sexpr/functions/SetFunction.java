@@ -8,22 +8,10 @@ import java.util.Iterator;
 /**
  * Set a value in the {@link EvaluationContext}.
  */
-public class SetFunction implements FunctionInterface<Object> {
+public class SetFunction extends AbstractFunction2<Object, Object, Object> {
     @Override
-    public Object apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
-
-        while (iterator.hasNext()) {
-            final Object key = iterator.next();
-
-            if (iterator.hasNext()) {
-                final Object value = iterator.next();
-                evaluationContext.set(key, value);
-            }
-            else {
-                evaluationContext.set(key, null);
-            }
-        }
-
-        return "Set function.";
+    protected Object applyImpl(Object o, Object o2, EvaluationContext context) {
+        context.set(o, o2);
+        return o2;
     }
 }

@@ -1,5 +1,7 @@
 ## Functions
 
+* Info
+  * version
 * Functions
   * fun
   * curry
