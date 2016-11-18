@@ -17,10 +17,11 @@
 * String
   * stringJoin
   * stringSplit
+  * stringConcat
 * Printing
   * help
   * print 
-  * err
+  * printErr
 * Logging
   * logDebug
   * logInfo

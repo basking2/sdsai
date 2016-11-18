@@ -21,6 +21,16 @@ public class Evaluator {
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
+
+        register("logDebug", new LogFunction(LogFunction.LEVEL.DEBUG));
+        register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));
+        register("logWarn", new LogFunction(LogFunction.LEVEL.WARN));
+        register("logError", new LogFunction(LogFunction.LEVEL.ERROR));
+
+        register("stringJoin", new StringJoinFunction());
+        register("stringConcat", new StringConcatFunction());
+        register("stringSplit", new StringSplitFunction());
+
         register("version", new VersionFunction());
         register("curry", new CurryFunction(this));
         register("compose", new ComposeFunction());
@@ -30,6 +40,7 @@ public class Evaluator {
         register("list", new ListFunction());
         register("listFlatten", new ListFlattenFunction());
         register("print", new PrintArgsFunction(System.out));
+        register("printErr", new PrintArgsFunction(System.err));
         register("if", new IfFunction());
         register("let", new LetFunction());
         register("get", new GetFunction());

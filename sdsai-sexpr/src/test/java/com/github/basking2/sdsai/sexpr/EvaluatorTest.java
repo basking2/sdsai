@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.basking2.sdsai.sexpr.functions.LogFunction;
 import org.junit.Test;
 
 import com.github.basking2.sdsai.sexpr.functions.Functions;
@@ -178,5 +179,14 @@ public class EvaluatorTest {
                 asList("add", asList("list", 1,2,3), 4), new EvaluationContext());
         
         assertEquals(Integer.valueOf(10), i);
+    }
+
+    @Test
+    public void testLogging() {
+        final Evaluator evaluator = new Evaluator();
+        for (LogFunction.LEVEL l : LogFunction.LEVEL.values()) {
+            final String function = "log"+l.toString().substring(0, 1) + l.toString().substring(1).toLowerCase();
+            evaluator.evaluate(asList(function, l));
+        }
     }
 }
