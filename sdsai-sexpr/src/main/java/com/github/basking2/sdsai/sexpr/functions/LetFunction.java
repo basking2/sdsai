@@ -36,8 +36,11 @@ public class LetFunction implements FunctionInterface<Object>, HelpfulFunction {
     }
 
     @Override
-    public String functionHelp(boolean verbose) {
+    public String functionHelp(final String name, final boolean verbose) {
         final StringBuilder sb = new StringBuilder();
+        if (verbose) {
+            sb.append("## ").append(name).append("\n\n");
+        }
         sb.append("Set variables in a scoped context. This is thread safe.\n\n")
                 .append("This operates by creating a new context and evaluating every argument. ")
                 .append("The value of the last argument is returned.\n\n")

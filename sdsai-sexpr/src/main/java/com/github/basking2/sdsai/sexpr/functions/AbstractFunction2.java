@@ -30,6 +30,7 @@ public abstract class AbstractFunction2<T1, T2, R> implements FunctionInterface<
      *
      * @param t1 The desired parameter.
      * @param t2 The desired parameter.
+     * @param context The evaluation context.
      * @return The produced object.
      */
     protected abstract R applyImpl(T1 t1, T2 t2, EvaluationContext context);

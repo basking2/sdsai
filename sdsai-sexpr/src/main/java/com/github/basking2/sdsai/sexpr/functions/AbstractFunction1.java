@@ -28,6 +28,7 @@ public abstract class AbstractFunction1<T, R> implements FunctionInterface<R> {
      * Overriders of this class should implement this.
      *
      * @param t The desired parameter.
+     * @param context The evaluation context.
      * @return The produced object.
      */
     protected abstract R applyImpl(T t, EvaluationContext context);

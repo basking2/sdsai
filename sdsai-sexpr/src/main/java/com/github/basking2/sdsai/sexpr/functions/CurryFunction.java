@@ -48,11 +48,11 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
     }
 
     @Override
-    public String functionHelp(boolean verbose) {
+    public String functionHelp(final String name, final boolean verbose) {
         final StringBuilder sb = new StringBuilder();
         
         if (verbose) {
-            sb.append("## Curry\n\n");
+            sb.append("## ").append(name).append("\n\n");
         }
         
         sb.append("Return a curried function names in the first argument to this function.\n\n");

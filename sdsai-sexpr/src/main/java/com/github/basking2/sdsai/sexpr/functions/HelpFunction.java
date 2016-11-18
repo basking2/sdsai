@@ -31,29 +31,35 @@ public class HelpFunction implements FunctionInterface<String>, HelpfulFunction 
         boolean verbose = false;
 
         while (args.hasNext()) {
+            final String functionName;
             final Object o = args.next();
             HelpfulFunction hf = null;
 
             if (o instanceof HelpfulFunction) {
                 hf = (HelpfulFunction)o;
+                functionName = o.toString();
             }
             else if (o instanceof String) {
-                final String s = (String)o;
-                if ("verbose".equals(s) || "-v".equals(s)) {
+                functionName = (String)o;
+                if ("verbose".equals(functionName) || "-v".equals(functionName)) {
                     verbose = true;
                     continue;
                 }
                 else {
-                    final FunctionInterface<?> f = evaluator.getFunction(s);
+                    final FunctionInterface<?> f = evaluator.getFunction(functionName);
                     if (f instanceof HelpfulFunction) {
                         hf = (HelpfulFunction)o;
                     }
                 }
             }
+            else {
+                hf = null;
+                functionName = "";
+            }
 
             if (hf != null) {
                 stringBuilder.
-                    append(hf.functionHelp(verbose)).
+                    append(hf.functionHelp(functionName, verbose)).
                     append("\n");
             }
             else {
@@ -68,8 +74,8 @@ public class HelpFunction implements FunctionInterface<String>, HelpfulFunction 
      * {@inheritDoc}
      */
     @Override
-    public String functionHelp(boolean verbose) {
-        return "    [\"help\", [-v], [verbose], \"function name\", [\"curry\" \"another function name\"]]\n" +
+    public String functionHelp(final String name, final boolean verbose) {
+        return "    [\""+name+"\", [-v], [verbose], \"function name\", [\"curry\" \"another function name\"]]\n" +
                "      -v       - Turn on verbose output, if available.\n" +
                "      version  - Turn on verbose output, if available.\n" +
                "      string   - Strings are used as names of functions to fetch help for.\n"+

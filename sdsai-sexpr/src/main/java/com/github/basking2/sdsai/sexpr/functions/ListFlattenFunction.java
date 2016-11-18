@@ -38,11 +38,11 @@ public class ListFlattenFunction implements HelpfulFunction, FunctionInterface<L
     }
 
     @Override
-    public String functionHelp(boolean verbose) {
+    public String functionHelp(final String name, final boolean verbose) {
         final StringBuilder sb = new StringBuilder();
 
         if (verbose) {
-            sb.append("## listFlatten\n\n");
+            sb.append("## ").append(name).append("\n\n");
         }
 
         sb
