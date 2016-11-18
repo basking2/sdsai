@@ -75,7 +75,7 @@ public class EvaluatorTest {
         });
 
 
-        final List<Object> l = asList("map", asList("curry", "add", 3), 4, 5);
+        final List<Object> l = asList("map", asList("curry", "add", 3), asList("list", 4, 5));
 
         @SuppressWarnings("unchecked")
         Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l, new EvaluationContext());
@@ -142,7 +142,7 @@ public class EvaluatorTest {
         });
         @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
-                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), 3, 4, 5), new EvaluationContext());
+                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), asList("list", 3, 4, 5)), new EvaluationContext());
 
         assertEquals(Integer.valueOf(6), i.next());
         assertEquals(Integer.valueOf(7), i.next());
