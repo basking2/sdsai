@@ -40,13 +40,6 @@ public class MapFunction implements FunctionInterface<Iterator<Object>> {
             throw new SExprRuntimeException("Second argument must be an iterator.");
         }
 
-        return new MappingIterator<Object, Object>(returnIterator, o -> {
-            if (o instanceof Iterator) {
-                return function.apply((Iterator<Object>)o, evaluationContext);
-            }
-            else {
-                return function.apply(wrap(o), evaluationContext);
-            }
-        });
+        return new MappingIterator<Object, Object>(returnIterator, o -> function.apply(wrap(o), evaluationContext));
     }
 }
