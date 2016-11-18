@@ -189,4 +189,22 @@ public class EvaluatorTest {
             evaluator.evaluate(asList(function, l));
         }
     }
+
+    @Test
+    public void testStrings() {
+        final Evaluator evaluator = new Evaluator();
+
+        @SuppressWarnings("unchecked")
+        List<String> l = (List<String>) evaluator.evaluate(
+            asList(
+                    "stringSplit",
+                    ",",
+                    asList("stringJoin", ",",
+                        asList("stringConcat", "a", ":", "b"),
+                        asList("stringConcat", "c", ":", "d"))));
+
+        assertEquals(2, l.size());
+        assertEquals("a:b", l.get(0));
+        assertEquals("c:d", l.get(1));
+    }
 }
