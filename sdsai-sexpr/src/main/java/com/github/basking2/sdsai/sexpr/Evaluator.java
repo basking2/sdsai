@@ -7,19 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.github.basking2.sdsai.sexpr.functions.ComposeFunction;
-import com.github.basking2.sdsai.sexpr.functions.CurryFunction;
-import com.github.basking2.sdsai.sexpr.functions.FlattenFunction;
-import com.github.basking2.sdsai.sexpr.functions.FunctionInterface;
-import com.github.basking2.sdsai.sexpr.functions.HelpFunction;
-import com.github.basking2.sdsai.sexpr.functions.IfFunction;
-import com.github.basking2.sdsai.sexpr.functions.LetFunction;
-import com.github.basking2.sdsai.sexpr.functions.GetFunction;
-import com.github.basking2.sdsai.sexpr.functions.SetFunction;
-import com.github.basking2.sdsai.sexpr.functions.LastFunction;
-import com.github.basking2.sdsai.sexpr.functions.ListFunction;
-import com.github.basking2.sdsai.sexpr.functions.MapFunction;
-import com.github.basking2.sdsai.sexpr.functions.PrintArgsFunction;
+import com.github.basking2.sdsai.sexpr.functions.*;
 import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
 import com.github.basking2.sdsai.sexpr.util.Iterators;
 
@@ -39,6 +27,7 @@ public class Evaluator {
         register("last", new LastFunction());
         register("compose", new ComposeFunction());
         register("flatten", new FlattenFunction());
+        register("listFlatten", new ListFlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("if", new IfFunction());
         register("let", new LetFunction());
