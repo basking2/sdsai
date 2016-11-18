@@ -21,12 +21,13 @@ public class Evaluator {
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
+        register("version", new VersionFunction());
         register("curry", new CurryFunction(this));
-        register("map", new MapFunction());
-        register("list", new ListFunction());
-        register("last", new LastFunction());
         register("compose", new ComposeFunction());
+        register("map", new MapFunction());
+        register("last", new LastFunction());
         register("flatten", new FlattenFunction());
+        register("list", new ListFunction());
         register("listFlatten", new ListFlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("if", new IfFunction());

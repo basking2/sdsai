@@ -23,6 +23,11 @@ compileJava {
 repositories {
 }
 
+processResources {
+    expand projectVersion: project.version,
+           projectName: project.name
+}
+
 dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.21'
     compile 'com.google.code.gson:gson:2.8.0'
