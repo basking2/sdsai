@@ -1,0 +1,32 @@
+## Functions
+
+* Functions
+  * fun
+  * curry
+  * compose
+* List
+  * map
+  * head
+  * last
+  * tail
+  * list
+  * listFlatten
+  * flatten
+* String
+  * stringJoin
+  * stringSplit
+* Printing
+  * help
+  * print 
+  * err
+* Logging
+  * logDebug
+  * logInfo
+  * logWarn
+  * logError
+* Conditional
+  * if
+* Variables
+  * let
+  * get
+  * set

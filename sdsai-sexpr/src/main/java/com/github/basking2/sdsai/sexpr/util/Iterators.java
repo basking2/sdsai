@@ -8,6 +8,19 @@ import java.util.ArrayList;
 
 public class Iterators {
 
+    public static Iterator<?> EMPTY_ITERATOR = new Iterator() {
+
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
+
+        @Override
+        public Object next() {
+            throw new NoSuchElementException("Next called on the empty iterator.");
+        }
+    };
+
     /**
      * Map iterables and arrays to iterators or returns null.
      *
