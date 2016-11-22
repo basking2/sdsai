@@ -1,11 +1,15 @@
 package com.github.basking2.sdsai.sexpr;
 
+import static com.github.basking2.sdsai.sexpr.util.Iterators.mapIterator;
 import static com.github.basking2.sdsai.sexpr.util.Iterators.toIterator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.github.basking2.sdsai.sexpr.functions.*;
 import com.github.basking2.sdsai.sexpr.util.EvaluatingIterator;
@@ -15,9 +19,11 @@ import com.github.basking2.sdsai.sexpr.util.Iterators;
  */
 public class Evaluator {
 
+    private ExecutorService executorService;
     private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
 
     public Evaluator() {
+        executorService = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
@@ -51,6 +57,9 @@ public class Evaluator {
             i.next();
             return i;
         });
+
+        register("thread", new ThreadFunction(executorService));
+        register("join", new JoinFunction());
     }
 
     public void register(final Object name, final FunctionInterface<? extends Object> operator) {
