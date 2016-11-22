@@ -5,16 +5,11 @@ import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.SimpleExpressionParser;
 import org.junit.Test;
 
-import java.beans.Expression;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.sort;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
