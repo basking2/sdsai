@@ -62,3 +62,15 @@
   * set - Takes two arguments. The second is stored
           using the first as a key by which it can be
           retrieved.
+* Concurrency
+  * thread - Takes a single iterator as an argument
+             and returns a future that processes
+             the call to `next()`.
+             Iterators passed to this
+             must have thread-safe `next()` calls.
+             It is recommended that `thread` be materialized
+             into a list before passing to `join` 
+             to force maximum concurrency.
+  * join - This takes a single iterator as an argument
+           and waits on the futures produced by it.
+            
