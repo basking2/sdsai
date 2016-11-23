@@ -1,11 +1,13 @@
 SDSAI ItrEx
 ===========
-:author: Sam Baskinger <basking2@yahoo.com>
+Sam Baskinger <basking2@yahoo.com>
 :toc:
+
+:imagesdir: imgs
 
 ## The SDSAI Iterator Expressioin Language
 
-This software is available under the MIT license. See +LICENSE+ for more
+This software is available under the MIT license. See link:https://raw.githubusercontent.com/basking2/sdsai/master/sdsai-itrex/LICENSE[+LICENSE+] for more
 information.
 
 ## ItrEx - A simple evaluator
@@ -14,10 +16,94 @@ ItrEx specifies and implements an _evaluator_. That is, it doesn't particularly
 care what the language is that captures the data from the human into text,
 it only cares about taking a Java List object and evaluating it to a value.
 
-ItrEx doesn't try to be a language. This is important. The developer
-that choose to use ItrEx will develop it into a language, adding functions
-that have meaning. ItrEx does provide a few basic functions, but mostly
-to support evaluation.
+ItrEx doesn't try to be a general purpose language. This is important.
+The developer that chooses to use ItrEx will develop it into a language to
+suit their use case, adding functions that have meaning to them.
+ItrEx does provide a few basic functions, but mostly to support evaluation.
+
+### Functions
+
+.Info Functions
+* version - Takes no arguments and returns the version of this pakcage.
+
+.Functional Functions
+* +curry+ - This takes a list of 1 or more arguments.
+            The first argument should be a string
+            or a `FunctionInterface` object.
+            The rest of the arguments are stored in
+            a list for use at dispatch time.
+* +compose+ - Compose 1 or more functions
+              such that `["compose, "f", "g", "x"]`
+              runs `f(g(x))`.
+
+.List Functions
+* +map+ - This take a function and applies it
+          to each of the following arguments.
+* +head+ - Return the first element of the first argument.
+           The first argument should be a list.
+* +last+ - Evaluate every argument and return the
+           result of the last evaulation.
+* +tail+ - Consume the first element of the first
+           argument and return the rest.
+* +list+ - Materialize all arguments into a list
+           and return that list.
+* +listFlatten+ - Take a list of iterators and flatten
+                  all elements into a list.
+                  If a non-list item is encountered
+                  it is directly added to the list.
+                  This is more tolerant than
+                  the flatten function.
+* +flatten+ - Takes a list of iterators. Returns
+              an iterator that will walk through the
+              elements of each of those argument iterators.
+
+.String Functions
+* +stringJoin+ - Takes 1 or more strings. Returns
+               a string joined by the first string.
+* +stringSplit+ - Split the second string using the first
+                string as a regular expression.
+* +stringConcat+ - Concatinate all arguments as strings.
+
+.Printing Functions
+* +help+ - Print help text for a function, if any.
+* +print+ - Print each argument to standard out as
+            it is requested by a caller.
+            If `["print", ...]` is the top level
+            of an expression, nothing will be printed
+            because nothing will be requested.
+* +printErr+ - Like `print` but uses standard error.
+
+.Logging Functions
+* +logDebug+ - Like print, but logs at `DEBUG` level.
+* +logInfo+ - Like print, but logs at `INFO` level.
+* +logWarn+ - Like print, but logs at `WARN` level.
+* +logError+ - Like print, but logs at `ERROR` level.
+
+.Conditional Functions
+* +if+ - Takes 3 arguments. Evaluates the second
+         argument only if the first is true.
+         Otherwise only the 3rd argument is evaluated.
+
+.Variables Functions
+* +let+ - Create a child scope that is discarded
+        when the let expression finishes evaluation.
+* +get+ - Takes a single value and returns a previously
+        set value.
+* +set+ - Takes two arguments. The second is stored
+        using the first as a key by which it can be
+        retrieved.
+
+.Concurrency Functions
+* +thread+ - Takes a single iterator as an argument
+             and returns a future that processes
+             the call to `next()`.
+             Iterators passed to this
+             must have thread-safe `next()` calls.
+             It is recommended that `thread` be materialized
+             into a list before passing to `join`
+             to force maximum concurrency.
+* +join+ - This takes a single iterator as an argument
+           and waits on the futures produced by it.
 
 ## Itrml - A simple expression language
 
@@ -62,7 +148,7 @@ call is not followed by a comma. This is a stylistic choice.
 ----
 +
 The above are all double values.
-** Quoted Strings - Any seqeunce of characters surrounded by +"+.
+** Quoted Strings - Any sequence of characters surrounded by +"+.
    Characters may be escaped such that the string value
    +abc\"123\"+ would result in the string value +abc"123"+.
 ** Words - Unquoted Strings. These are any token that is not quoted.
