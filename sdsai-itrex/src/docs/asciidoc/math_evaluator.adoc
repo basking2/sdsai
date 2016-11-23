@@ -1,0 +1,77 @@
+////////////////////////////////////////////
+/// Documentation for ItrEx Math Evaluator
+///
+////////////////////////////////////////////
+
+ifndef::included[]
+ItrEx Math Evaluator {project-version}
+======================================
+Sam Baskinger <sam.baskinger@yahoo.com>
+:toc:
+:toclevels: 6
+
+endif::[]
+
+:imagesdir: imgs
+
+
+## ItrEx Math Evaluator
+
+ItrEx comes with an Evaluator (+JavaMathEvaluator+) that will try to
+dynamically look up methods in +java.lang.Math+ as well as providing
+the functions +toInt+, +toLong+, +toFloat+, and +toDouble+.
+
+Here are some examples.
+
+.Example 1: Get the absolute value.
+----
+[abs -1]
+----
+
+.Example 2: Get the absolute value of a float.
+----
+[abs [toFloat -1]]
+----
+
+.Example 3: Get the absolute value of which ever is bigger.
+----
+[abs [max [toDouble 1] 3d]]
+----
+
+.Example 4: Round each value.
+----
+[map [curry round] [list 1.1 1.2]]
+----
+
+The preceeding example is a little complex. The +curry+ function is
+only fetching the +round+ function out to hand it to +map+. The +map+
+call is going to apply +round+ to each value in the list, 1.1 and 1.2.
+
+The result of this expression is an +Iterator+ that returns the +Long+ values
+1 and 1.
+
+In the next example we introduce using +compose+.
+
+.Example 5: Complicated
+----
+[map
+    [compose
+        [curry round]
+        [curry max 2.3]]
+    [list 1.1 1.2 5]]
+----
+
+The +compose+ function will take two functions and pass the output of the
+last to the input of the other. So, +[compose f g 1]+ is equivalent to
+calling f(g(1)).
+
+The first use of +curry+ does the simplistic case of just returning the +round+
+function. The second use of +curry+ actually does something interesting, it
+binds the argument +2.3+ to +max+ such that a new function, one
+that only accepts 1 argument, is returned.
+
+The two functions are returned. Each element in the list is
+then compared with 2.3 and the maximum is returned. That value is then
+rounded.
+
+The result is an +Iterator+ that returns the values 2, 2 and 5.

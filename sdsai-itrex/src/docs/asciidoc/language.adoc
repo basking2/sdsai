@@ -1,0 +1,66 @@
+////////////////////////////////////////////
+/// Documentation for ItrEx Meta Lanugage
+///
+////////////////////////////////////////////
+
+ifndef::included[]
+ItrEx Language {project-version}
+================================
+Sam Baskinger <sam.baskinger@yahoo.com>
+:toc:
+:toclevels: 6
+
+endif::[]
+
+:imagesdir: imgs
+
+
+Itrml, pronounced (It-er-am-l), is a particular implementation of a
+very simple S-Expression language. There is, intentionally, nothing very
+interesting in it. It is meant to capture and encode data
+for use by ItrEx when JSON is too verbose.
+
+## Data Types
+
+* Lists - Lists are any sequence of literals or lists surrounded by square
+  (+[]+) braces. Elements of a list are optionally separated by commas.
+  Commas may be used, or not used, interchangeably in a list. This is to
+  support a very natural function calling syntax of +
++
+----
+[myFunction arg1, arg2, arg3]
+----
++
+Notice how the arguments are separated by commas, but the function
+call is not followed by a comma. This is a stylistic choice.
+* Literals - anything that is not a list.
+** Integer valuers. These are any sequence of digits not suffixed with
+   +l+ or +L+ which denote a Long value.
+** Long values. These are denoted by any sequence of only integers followed by
+   nothing, an +l+ or an +L+. The following are all valid Long integers. +
++
+----
+2341l
+34L
+----
++
+** Double values.
+   They are denoted by a series of digits with an optional decimal point and
+   more digits. A Double may be terminated with a +d+ or +D+ to distinguish
+   it from a Long when there are no decimal digits. For example. +
++
+----
+1.0
+32d
+3D
+4.4
+----
++
+The above are all double values.
+** Quoted Strings - Any sequence of characters surrounded by +"+.
+   Characters may be escaped such that the string value
+   +abc\"123\"+ would result in the string value +abc"123"+.
+** Words - Unquoted Strings. These are any token that is not quoted.
+  It is taken to be a string. There are no identifiers or variables
+  in this expression language, just values. Semantic meaning
+  is added by ItrEx if the resultant structure is passed to it for evaluation.

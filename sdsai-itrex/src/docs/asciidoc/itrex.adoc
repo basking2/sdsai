@@ -1,11 +1,11 @@
 SDSAI ItrEx
 ===========
-Sam Baskinger <basking2@yahoo.com>
+Sam Baskinger <sam.baskinger@yahoo.com>
 :toc:
 
 :imagesdir: imgs
 
-## The SDSAI Iterator Expressioin Language
+## The SDSAI Iterator Expression Language
 
 This software is available under the MIT license. See link:https://raw.githubusercontent.com/basking2/sdsai/master/sdsai-itrex/LICENSE[+LICENSE+] for more
 information.
@@ -25,6 +25,7 @@ ItrEx does provide a few basic functions, but mostly to support evaluation.
 
 :included: true
 :leveloffset: 1
+
 include::api.adoc[]
 
 :leveloffset: 0
@@ -32,113 +33,20 @@ include::api.adoc[]
 
 ## Itrml - A simple expression language
 
-Itrml, pronounced (It-er-am-l), is a particular implementation of a
-very simple S-Expression language. There is, intentionally, nothing very
-interesting in it. It is meant to capture and encode data
-for use by ItrEx when JSON is too verbose.
+:included: true
+:leveloffset: 1
 
-### Data Types
+include::language.adoc[]
 
-* Lists - Lists are any sequence of literals or lists surrounded by square
-  (+[]+) braces. Elements of a list are optionally separated by commas.
-  Commas may be used, or not used, interchangeably in a list. This is to
-  support a very natural function calling syntax of +
-+
-----
-[myFunction arg1, arg2, arg3]
-----
-+
-Notice how the arguments are separated by commas, but the function
-call is not followed by a comma. This is a stylistic choice.
-* Literals - anything that is not a list.
-** Integer valuers. These are any sequence of digits not suffixed with
-   +l+ or +L+ which denote a Long value.
-** Long values. These are denoted by any sequence of only integers followed by
-   nothing, an +l+ or an +L+. The following are all valid Long integers. +
-+
-----
-2341l
-34L
-----
-+
-** Double values.
-   They are denoted by a series of digits with an optional decimal point and
-   more digits. A Double may be terminated with a +d+ or +D+ to distinguish
-   it from a Long when there are no decimal digits. For example. +
-+
-----
-1.0
-32d
-3D
-4.4
-----
-+
-The above are all double values.
-** Quoted Strings - Any sequence of characters surrounded by +"+.
-   Characters may be escaped such that the string value
-   +abc\"123\"+ would result in the string value +abc"123"+.
-** Words - Unquoted Strings. These are any token that is not quoted.
-  It is taken to be a string. There are no identifiers or variables
-  in this expression language, just values. Semantic meaning
-  is added by ItrEx if the resultant structure is passed to it for evaluation.
+:leveloffset: 0
+:included!:
 
 ## ItrEx Math Evaluator
 
-ItrEx comes with an Evaluator (+JavaMathEvaluator+) that will try to
-dynamically look up methods in +java.lang.Math+ as well as providing
-the functions +toInt+, +toLong+, +toFloat+, and +toDouble+.
+:included: true
+:leveloffset: 1
 
-Here are some examples.
+include::math_evaluator.adoc[]
 
-.Example 1: Get the absolute value.
-----
-[abs -1]
-----
-
-.Example 2: Get the absolute value of a float.
-----
-[abs [toFloat -1]]
-----
-
-.Example 3: Get the absolute value of which ever is bigger.
-----
-[abs [max [toDouble 1] 3d]]
-----
-
-.Example 4: Round each value.
-----
-[map [curry round] [list 1.1 1.2]]
-----
-
-The preceeding example is a little complex. The +curry+ function is
-only fetching the +round+ function out to hand it to +map+. The +map+
-call is going to apply +round+ to each value in the list, 1.1 and 1.2.
-
-The result of this expression is an +Iterator+ that returns the +Long+ values
-1 and 1.
-
-In the next example we introduce using +compose+.
-
-.Example 5: Complicated
-----
-[map
-    [compose
-        [curry round]
-        [curry max 2.3]]
-    [list 1.1 1.2 5]]
-----
-
-The +compose+ function will take two functions and pass the output of the
-last to the input of the other. So, +[compose f g 1]+ is equivalent to
-calling f(g(1)).
-
-The first use of +curry+ does the simplistic case of just returning the +round+
-function. The second use of +curry+ actually does something interesting, it
-binds the argument +2.3+ to +max+ such that a new function, one
-that only accepts 1 argument, is returned.
-
-The two functions are returned. Each element in the list is
-then compared with 2.3 and the maximum is returned. That value is then
-rounded.
-
-The result is an +Iterator+ that returns the values 2, 2 and 5.
+:leveloffset: 0
+:included!:

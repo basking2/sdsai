@@ -6,7 +6,7 @@
 ifndef::included[]
 ItrEx Api {project-version}
 ===========================
-Sam Baskinger <basking2@yahoo.com>
+Sam Baskinger <sam.baskinger@yahoo.com>
 :toc:
 :toclevels: 6
 
