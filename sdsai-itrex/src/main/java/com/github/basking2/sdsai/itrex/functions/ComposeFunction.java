@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
+import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.util.Iterators;
 
 import java.util.Iterator;
@@ -33,6 +34,9 @@ public class ComposeFunction implements FunctionInterface<FunctionInterface<Obje
                         return finalF.apply((Iterator<? super Object>)fOutput, ctx);
                     };
                 }
+            }
+            else {
+                throw new SExprRuntimeException("Argument to compose must be a function: "+o.toString());
             }
         }
 
