@@ -34,8 +34,7 @@ public class ThreadFunction implements FunctionInterface<Iterator<Future<Object>
             throw new SExprRuntimeException("Required first argument to thread function could not be converted to an Iterator.");
         }
 
-        @SuppressWarnings("unchecked")
-        final FutureIterator<Object> fi = new FutureIterator(objectIterator, executorService);
+        final FutureIterator<Object> fi = new FutureIterator<Object>(objectIterator, executorService);
 
         return fi;
     }

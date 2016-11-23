@@ -13,9 +13,9 @@ import static com.github.basking2.sdsai.itrex.functions.Functions.getArgument;
 public abstract class AbstractFunction3<T1, T2, T3, R> implements FunctionInterface<R> {
     @Override
     public R apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
-        @SuppressWarnings("unchecked") final T1 arg1 = getArgument(iterator, "1");
-        @SuppressWarnings("unchecked") final T2 arg2 = getArgument(iterator, "2");
-        @SuppressWarnings("unchecked") final T3 arg3 = getArgument(iterator, "3");
+        final T1 arg1 = getArgument(iterator, "1");
+        final T2 arg2 = getArgument(iterator, "2");
+        final T3 arg3 = getArgument(iterator, "3");
 
         try {
             return applyImpl(arg1, arg2, arg3, evaluationContext);

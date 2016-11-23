@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Iterators {
 
-    public static Iterator<?> EMPTY_ITERATOR = new Iterator() {
+    public static Iterator<?> EMPTY_ITERATOR = new Iterator<Object>() {
 
         @Override
         public boolean hasNext() {

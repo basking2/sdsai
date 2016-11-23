@@ -14,8 +14,8 @@ public abstract class AbstractFunction2<T1, T2, R> implements FunctionInterface<
     @Override
     public R apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
 
-        @SuppressWarnings("unchecked") final T1 arg1 = getArgument(iterator, "1");
-        @SuppressWarnings("unchecked") final T2 arg2 = getArgument(iterator, "2");
+        final T1 arg1 = getArgument(iterator, "1");
+        final T2 arg2 = getArgument(iterator, "2");
 
         try {
             return applyImpl(arg1, arg2, evaluationContext);
