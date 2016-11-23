@@ -9,27 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.github.basking2.sdsai.itrex.functions.ComposeFunction;
-import com.github.basking2.sdsai.itrex.functions.CurryFunction;
-import com.github.basking2.sdsai.itrex.functions.FlattenFunction;
-import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
-import com.github.basking2.sdsai.itrex.functions.GetFunction;
-import com.github.basking2.sdsai.itrex.functions.HelpFunction;
-import com.github.basking2.sdsai.itrex.functions.IfFunction;
-import com.github.basking2.sdsai.itrex.functions.JoinFunction;
-import com.github.basking2.sdsai.itrex.functions.LastFunction;
-import com.github.basking2.sdsai.itrex.functions.LetFunction;
-import com.github.basking2.sdsai.itrex.functions.ListFlattenFunction;
-import com.github.basking2.sdsai.itrex.functions.ListFunction;
-import com.github.basking2.sdsai.itrex.functions.LogFunction;
-import com.github.basking2.sdsai.itrex.functions.MapFunction;
-import com.github.basking2.sdsai.itrex.functions.PrintArgsFunction;
-import com.github.basking2.sdsai.itrex.functions.SetFunction;
-import com.github.basking2.sdsai.itrex.functions.StringConcatFunction;
-import com.github.basking2.sdsai.itrex.functions.StringJoinFunction;
-import com.github.basking2.sdsai.itrex.functions.StringSplitFunction;
-import com.github.basking2.sdsai.itrex.functions.ThreadFunction;
-import com.github.basking2.sdsai.itrex.functions.VersionFunction;
+import com.github.basking2.sdsai.itrex.functions.*;
 import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.util.Iterators;
 
@@ -70,6 +50,7 @@ public class Evaluator {
         register("get", new GetFunction());
         register("set", new SetFunction());
         register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
+        register("for", new ForFunction(this));
         register("tail", (iterator, ctx) -> {
             Iterator<?> i = toIterator(iterator.next());
             i.next();

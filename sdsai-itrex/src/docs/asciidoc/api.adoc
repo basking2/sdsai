@@ -102,6 +102,21 @@ endif::[]
     with another function, the +true branch+ is skipped and the +false branch+
     is evaluated and returned. If your +true branch+ has no side effects
     and is not computationally expensive, this should not make any difference.
++[for <name> <iterable> <body>]+::
+    For sets +name+ to each value in +iterable+. It will then evaluate the +body+
+    over and over, for each value in +iterable+. The last evaluated value of
+    +body+ is returned.
+    Because +for+ needs to store the +body+ unevaluated it must not be directly
+    curried or composed as that proxies the argument list inside the evaluation
+    engine. +
++
+[caption="Example: "]
+.Returns the sum of 1, 2, 3 and 4.
+----
+[last
+   [set i 0]
+   [for j [list 1 2 3 4] [set i [add [get i] [get j]]]]]
+----
 
 ## Variables
 
