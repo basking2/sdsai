@@ -1,0 +1,171 @@
+////////////////////////////////////////////
+/// Documentation for ItrEx Core API
+///
+////////////////////////////////////////////
+
+ifndef::included[]
+ItrEx Api {project-version}
+===========================
+Sam Baskinger <basking2@yahoo.com>
+:toc:
+:toclevels: 6
+
+endif::[]
+
+:imagesdir: imgs
+
+## General Calls
+
+`[version]`::
+    Returns the version of the API.
+
+## Functional
+`[curry <function name> [args...]]`::
+    Return a new function that will call the
+    +function name+ with the given arguments and any
+    additional arguments passed to the returned function.
+`[compose <function 1> <function 2>...]`::
+    Compose 1 or more functions (_not_ function names) into
+    a into a single function. Each function should take only
+    1 argument, that returned from the following function.
+    The last function may take any number of arguments.
+    The +compose+ function does not take function names, but
+    functions. Use +curry+ with no arguments to fetch functions by name. +
++
+.Curry Example: This runs f(g("hello")).
+----
+[[compose [curry f] [curry g]] "hello"]
+----
+
+## List
+
++[map <function> <iterator>]+::
+    Return an iterator that maps the elements from +iterator+ to the result
+    of applying +function+ to those elements. The elements from the argument
+    iterator are not mapped using +function+ until they are requested
+    from the returned iterator.
++[head <iterator>]+::
+    Return the first element.
++[tail <iterator>]+::
+    Consume the first element and return the remaining iterator.
++[last <iterator>]+::
+    Evaluate every argument and return the result of the last one.
++[list a b c...]+::
+    Evaluate all arguments and put the results into a list.
++[listFlatten <iterator 1> <iterator 2>...]+::
+    Take a list of iterators and flatten all elements into a list.
+    If a non-list item is encountered it is directly added to the list.
+    This is more tolerant than the flatten function.
++[flatten <iterator 1> <iterator 2>...]+::
+    Takes a list of iterators. Returns an iterator that will walk through
+    elements of each of those argument iterators.
+    Unlike +listFlatten+, this does not materialize the inputs into
+    a list, allowing for memory savings.
+
+## String
+
++[stringJoin joinString string1 string2]+::
+    Takes 1 or more strings. Returns a string joined by the first string.
++[stringSplit splitPattern string]+::
+    Split the second string using the first string as a regular expression.
++[stringConcat string1 string2]+::
+    Concatenate all arguments as strings.
+
+## Printing
+
++[help <function>]+::
+    Print help text for a function, if any.
++[print ...]+::
+    Collect all its arguments into a single iterator and return
+    that iterator. When that iterator is called, only the is the
+    value printed.
++[printErr ...]+::
+    Like `print` but uses standard error.
+
+## Logging
+
++[logDebug ...]+::
+    Log all arguments at +DEBUG+. This is very similar to +print+.
++[logInfo ...]+::
+    Log all arguments at +INFO+. This is very similar to +print+.
++[logWarn ...]+::
+    Log all arguments at +WARN+. This is very similar to +print+.
++[logError ...]+::
+    Log all arguments at +ERROR+. This is very similar to +print+.
+
+## Conditional
+
++[if <predicate> <true branch> <false branch>]+::
+    If +predicate+ is true, then the +true branch+ is evaluted
+    and returned.
+    If +predicate+ is false _and_ +if+ has not been curried or composed
+    with another function, the +true branch+ is skipped and the +false branch+
+    is evaluated and returned. If your +true branch+ has no side effects
+    and is not computationally expensive, this should not make any difference.
+
+## Variables
+
++[let ...]+::
+    Create a child scope. This scope is discarded when
+    the let expression finishes evaluating. Values set with +set+
+    will then be discarded. The last value passed to let
+    is what is returned.
++[get <name>]::
+    Return a value previously set by a call to +set+ or that the
+    user has injected in the +EvaluationContext+.
++[set <name> <value>]::
+    Set the name to the given value. If there is already a value
+    set, it is discarded.
+
+## Concurrency
+
+[NOTE]
+These function will easily crash your program. The core API is not
+thread-safe. These are provided as a way to safely call _your_ thread safe
+function implementations, should you choose to write your own functions.
+
++[thread <iterator>]+::
+    This takes a single iterator as an argument and wraps it in another
+    iterator which is returned. When an element is fetched from the returned
+    iterator a call to +next()+ on the argument iterator is scheduled and
+    a +Future+ is returned to the caller. Order from the source iterator is
+    no guaranteed. Results from this function may be passed to +join+
+    to block and unwrap the results.
++[join <iterator>]+::
+    This takes a single iterator that returns +Future+s. The +thread+ function
+    can map an iterator to an iterator of futures. +
++
+----
+[join [thread [my_thread_safe_iterator]]]
+----
+
+### Performance
+
+Passing the result of +thread+ directly to +join+ will result in single threaded
+performance. This is because most functions attempt to only evaluate
+something if asked for it. As such, nothing is scheduled to be done by +thread+
+until +join+ asks for it. Since +join+ blocks for every +Future+ it receives
+we will never enjoy the parallelism available.
+
+[caption="Example 1: "]
+.Single Threaded Performance
+----
+[list
+    [join
+        [thread [get "my_threadsafe_iterator"]]]]
+----
+
+One way to improve this to materialize all the +Future+ objects returned
+by the iterator from +thread+ into a list before passing that list to
++join+.
+
+[caption="Example 2: "]
+.Threaded Performance with a List
+----
+[list
+    [join
+        [list [thread [get "my_threadsafe_iterator"]]]]]
+----
+
+The downside of this approach is that we must pay the memory cost of a
+list.
