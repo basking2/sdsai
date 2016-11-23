@@ -136,7 +136,7 @@ call is not followed by a comma. This is a stylistic choice.
 34L
 ----
 +
-** Double values. These the floating point numbers currently in the system.
+** Double values. 
    They are denoted by a series of digits with an optional decimal point and
    more digits. A Double may be terminated with a +d+ or +D+ to distinguish
    it from a Long when there are no decimal digits. For example. +

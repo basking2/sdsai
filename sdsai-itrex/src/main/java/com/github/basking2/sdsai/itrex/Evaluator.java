@@ -64,6 +64,17 @@ public class Evaluator {
         functionRegistry.put(name, operator);
     }
 
+    /**
+     * How functions are looked up.
+     *
+     * This method should be overwritten by users who want to dynamically create functions instead of
+     * preregistering any function that might be called, using {@link #register(Object, FunctionInterface)}.
+     *
+     * This default implementation returns functions registered in the internal database.
+     *
+     * @param functionName The operator name.
+     * @return The operator or null if none is found. This implementation returns null.
+     */
     public FunctionInterface<? extends Object> getFunction(final Object functionName) {
         return functionRegistry.get(functionName);
     }
@@ -114,28 +125,13 @@ public class Evaluator {
             operator = functionRegistry.get(operatorObject);
         }
         else {
-            operator = getOperator(operatorObject);
+            operator = getFunction(operatorObject);
             if (operator == null) {
                 throw new SExprRuntimeException("No function " + operatorObject.toString());
             }
         }
 
         return operator.apply(i, i.getEvaluationContext());
-    }
-
-    /**
-     * To allow extenders of this class to dynamically create or look up function objects, we provide this method.
-     *
-     * This method should be overwritten by users who want to dynamically create functions instead of
-     * preregistering any function that might be called, using {@link #register(Object, FunctionInterface)}.
-     *
-     * This default implementation returns null.
-     *
-     * @param operatorName The operator name.
-     * @return The operator or null if none is found. This implementation returns null.
-     */
-    protected FunctionInterface<? extends Object> getOperator(final Object operatorName) {
-        return null;
     }
 
     private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator, final EvaluationContext context) {

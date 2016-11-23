@@ -30,9 +30,11 @@ public class SimpleExpressionParser {
     static final Pattern CLOSE_BRACKET = Pattern.compile("^\\s*\\]");
     static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
     static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
-    static final Pattern INTEGER = Pattern.compile("^(?:\\d+)");
-    static final Pattern LONG = Pattern.compile("^(?:\\d+)[lL]");
-    static final Pattern DOUBLE = Pattern.compile("^(?:\\d+\\.\\d+|\\d+D|\\d+d)");
+
+    static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
+    static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
+    static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+|\\d+D|\\d+d)");
+
     static final Pattern WORD = Pattern.compile("^(?:\\w+)");
 
     private final String expression;
