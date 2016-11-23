@@ -30,7 +30,8 @@ public class SimpleExpressionParser {
     static final Pattern CLOSE_BRACKET = Pattern.compile("^\\s*\\]");
     static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
     static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
-    static final Pattern LONG = Pattern.compile("^(?:\\d+)[lL]?");
+    static final Pattern INTEGER = Pattern.compile("^(?:\\d+)");
+    static final Pattern LONG = Pattern.compile("^(?:\\d+)[lL]");
     static final Pattern DOUBLE = Pattern.compile("^(?:\\d+\\.\\d+|\\d+D|\\d+d)");
     static final Pattern WORD = Pattern.compile("^(?:\\w+)");
 
@@ -170,6 +171,13 @@ public class SimpleExpressionParser {
             }
 
             return Long.valueOf(token);
+        }
+
+        final Matcher intMatcher = INTEGER.matcher(expression).region(position, expression.length());
+        if (intMatcher.find()) {
+            String token = intMatcher.group();
+            position += token.length();
+            return Integer.valueOf(token);
         }
 
         final Matcher wordMatcher = WORD.matcher(expression).region(position, expression.length());

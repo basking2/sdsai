@@ -20,7 +20,7 @@ public class SimpleExpressionParserTest {
     public void testLongList() {
         final List<Object> l = (List<Object>)parseExpression("[1  2l  3L]");
         assertEquals(3, l.size());
-        assertEquals(Long.valueOf(1), l.get(0));
+        assertEquals(Integer.valueOf(1), l.get(0));
         assertEquals(Long.valueOf(2), l.get(1));
         assertEquals(Long.valueOf(3), l.get(2));
     }
@@ -29,7 +29,7 @@ public class SimpleExpressionParserTest {
     public void testLongListList() {
         final List<List<Object>> l = (List<List<Object>>)parseExpression("[[1]  [2l  3L]]");
         assertEquals(2, l.size());
-        assertEquals(Long.valueOf(1), l.get(0).get(0));
+        assertEquals(Integer.valueOf(1), l.get(0).get(0));
         assertEquals(Long.valueOf(2), l.get(1).get(0));
         assertEquals(Long.valueOf(3), l.get(1).get(1));
     }
@@ -67,9 +67,9 @@ public class SimpleExpressionParserTest {
     @Test
     public void testCommaList() {
         final List<String> l = (List<String>)parseExpression("[1, 2, 3 4]");
-        assertEquals(1l, l.get(0));
-        assertEquals(2l, l.get(1));
-        assertEquals(3l, l.get(2));
-        assertEquals(4l, l.get(3));
+        assertEquals(1, l.get(0));
+        assertEquals(2, l.get(1));
+        assertEquals(3, l.get(2));
+        assertEquals(4, l.get(3));
     }
 }

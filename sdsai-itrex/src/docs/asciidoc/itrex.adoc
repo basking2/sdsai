@@ -126,11 +126,12 @@ for use by ItrEx when JSON is too verbose.
 Notice how the arguments are separated by commas, but the function
 call is not followed by a comma. This is a stylistic choice.
 * Literals - anything that is not a list.
+** Integer valuers. These are any sequence of digits not suffixed with
+   +l+ or +L+ which denote a Long value.
 ** Long values. These are denoted by any sequence of only integers followed by
    nothing, an +l+ or an +L+. The following are all valid Long integers. +
 +
 ----
-1
 2341l
 34L
 ----
