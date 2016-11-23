@@ -59,12 +59,22 @@ public class JavaMathEvaluatorTest {
         assertEquals(Long.valueOf(1), i.next());
     }
     @Test
-    @Ignore
-    public void testMapRoundFailing() {
+    public void testMapCurry() {
         final Evaluator e = new JavaMathEvaluator();
-        final Iterator<Long> i = (Iterator<Long>)e.evaluate(parseExpression("[map [curry [compose round max] 2.3] [list 1.1 1.2]]"));
+        final Iterator<Long> i = (Iterator<Long>)e.evaluate(parseExpression("[map [curry max 2.3] [list 1.1 1.2 5]]"));
 
-        assertEquals(Long.valueOf(1), i.next());
-        assertEquals(Long.valueOf(1), i.next());
+        assertEquals(Double.valueOf(2.3), i.next());
+        assertEquals(Double.valueOf(2.3), i.next());
+        assertEquals(Double.valueOf(5), i.next());
+    }
+
+    @Test
+    public void testMapCompose() {
+        final Evaluator e = new JavaMathEvaluator();
+        final Iterator<Long> i = (Iterator<Long>)e.evaluate(parseExpression("[map [compose [curry round] [curry max 2.3]] [list 1.1 1.2 5]]"));
+
+        assertEquals(Long.valueOf(2), i.next());
+        assertEquals(Long.valueOf(2), i.next());
+        assertEquals(Long.valueOf(5), i.next());
     }
 }
