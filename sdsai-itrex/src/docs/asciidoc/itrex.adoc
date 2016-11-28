@@ -1,5 +1,5 @@
-SDSAI ItrEx ${project.version}
-==============================
+SDSAI ItrEx {project-version}
+=============================
 Sam Baskinger <sam.baskinger@yahoo.com>
 :toc:
 
