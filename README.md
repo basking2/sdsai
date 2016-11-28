@@ -2,7 +2,7 @@
 
 ![Travis Build Status](https://travis-ci.org/basking2/sdsai.svg?branch=master "travis-ci")
 
-Sam's Datastructures and AI - a collection of Java and Scala utility code.
+Sam's Data-structures and AI - a collection of Java and Scala utility code.
 
 ## Links
 
