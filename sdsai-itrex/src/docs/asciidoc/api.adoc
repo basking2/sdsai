@@ -125,10 +125,10 @@ endif::[]
     the let expression finishes evaluating. Values set with +set+
     will then be discarded. The last value passed to let
     is what is returned.
-+[get <name>]::
++[get <name>]+::
     Return a value previously set by a call to +set+ or that the
     user has injected in the +EvaluationContext+.
-+[set <name> <value>]::
++[set <name> <value>]+::
     Set the name to the given value. If there is already a value
     set, it is discarded.
 
