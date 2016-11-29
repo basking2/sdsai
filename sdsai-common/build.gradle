@@ -1,6 +1,6 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'maven'
 
 // group = defined by parent.
 // archiveBaseName = defined by parent and project name.
@@ -40,48 +40,52 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
-}
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+    signing {
+        sign configurations.archives
+    }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name 'SDSAI'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'Simple datastructures and algorithms.'
-                url 'https://github.com/basking2/sdsai'
-
-                scm {
-                    connection 'scm:git:git@github.com:basking2/sdsai.git'
-                    developerConnection 'git@github.com:basking2/sdsai.git'
-                    url 'https://github.com/basking2/sdsai.git'
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
 
-                licenses {
-                    license {
-                        name 'MIT'
-                        url 'https://opensource.org/licenses/MIT'
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name 'SDSAI'
+                    packaging 'jar'
+                    // optionally artifactId can be defined here
+                    description 'Simple datastructures and algorithms.'
+                    url 'https://github.com/basking2/sdsai'
+
+                    scm {
+                        connection 'scm:git:git@github.com:basking2/sdsai.git'
+                        developerConnection 'git@github.com:basking2/sdsai.git'
+                        url 'https://github.com/basking2/sdsai.git'
                     }
-                }
 
-                developers {
-                    developer {
-                        id 'basking2'
-                        name 'Sam'
-                        email 'basking2@yahoo.com'
+                    licenses {
+                        license {
+                            name 'MIT'
+                            url 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'basking2'
+                            name 'Sam'
+                            email 'basking2@yahoo.com'
+                        }
                     }
                 }
             }
