@@ -1,11 +1,6 @@
 package com.github.basking2.sdsai.itrex.functions.bool;
 
-import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.functions.AbstractAggregatingFunction;
-import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
-import java.util.Iterator;
 
 /**
  * Perform a boolean function on all arguments.
