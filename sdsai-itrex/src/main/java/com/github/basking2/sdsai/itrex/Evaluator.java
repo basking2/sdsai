@@ -10,6 +10,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
+import com.github.basking2.sdsai.itrex.functions.bool.AndFunction;
+import com.github.basking2.sdsai.itrex.functions.bool.NotFunction;
+import com.github.basking2.sdsai.itrex.functions.bool.OrFunction;
 import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.util.Iterators;
 
@@ -56,6 +59,10 @@ public class Evaluator {
             i.next();
             return i;
         });
+
+        register("and", new AndFunction());
+        register("or", new OrFunction());
+        register("not", new NotFunction());
 
         register("thread", new ThreadFunction(executorService));
         register("join", new JoinFunction());

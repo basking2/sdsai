@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.itrex;
 
+import static com.github.basking2.sdsai.itrex.SimpleExpressionParser.parseExpression;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -208,5 +209,22 @@ public class EvaluatorTest {
         assertEquals(2, l.size());
         assertEquals("a:b", l.get(0));
         assertEquals("c:d", l.get(1));
+    }
+
+    @Test
+    public void testBoolean() {
+        final Evaluator e = new Evaluator();
+
+        assertTrue((Boolean)e.evaluate(parseExpression("[and]")));
+        assertFalse((Boolean)e.evaluate(parseExpression("[or]")));
+
+        assertFalse((Boolean)e.evaluate(parseExpression("[not [and]]")));
+        assertTrue((Boolean)e.evaluate(parseExpression("[not [or]]")));
+        assertTrue((Boolean)e.evaluate(parseExpression("[not [and] [or]]")));
+
+        assertTrue((Boolean)e.evaluate(parseExpression("[or 1 2]")));
+        assertFalse((Boolean)e.evaluate(parseExpression("[and [not [and]] 2]")));
+
+        assertFalse((Boolean)e.evaluate(parseExpression("[not astring]")));
     }
 }

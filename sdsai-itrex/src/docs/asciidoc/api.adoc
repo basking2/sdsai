@@ -118,6 +118,23 @@ endif::[]
    [for j [list 1 2 3 4] [set i [add [get i] [get j]]]]]
 ----
 
++[and <arg1> <arg2>...]+::
+  This returns the logical +and+ of the arguments. An argument is considered
+  false if it is literally a +False+ object or +null+. It is true otherwise.
+  If no arguments are given, this defaults to true.
+
++[or <arg1> <arg2>...]+::
+  This returns the logical +and+ of the arguments. An argument is considered
+  false if it is literally a +False+ object or +null+. It is true otherwise.
+  If no arguments are given, this defaults to false.
+
++[not <arg>]+::
+  Invert and return the logical inversion of the last argument.
+  +[not a_string]+ evaluates to +false+.
+  If more than 1 argument is given the inversion of the last one is returned.
+
+
+
 ## Variables
 
 +[let ...]+::
