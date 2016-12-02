@@ -92,4 +92,19 @@ public class SimpleExpressionParserTest {
         assertEquals("bye", l.get(1).get(0));
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testMultipleExpressions() {
+        SimpleExpressionParser sep = new SimpleExpressionParser("[a] [b] [c]");
+        Object o = sep.parse();
+        
+        assertEquals("a", ((List<String>)o).get(0));
+        o = sep.parse();
+        assertEquals("b", ((List<String>)o).get(0));
+        o = sep.parse();
+        assertEquals("c", ((List<String>)o).get(0));
+        o = sep.parse();
+        assertTrue(o == null);
+        
+    }
 }

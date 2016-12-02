@@ -97,11 +97,15 @@ public class SimpleExpressionParser {
 
         // This is a bracket expression.
         if (i > 0) {
-            // Move the postion up to the opening [ and parse that list.
+            // Move the position up to the opening [ and parse that list.
             position += i;
             return parseList();
         }
 
+        // At end of expression, return null.
+        if (position >= expression.length()) {
+            return null;
+        }
 
         return parseLiteral();
     }
