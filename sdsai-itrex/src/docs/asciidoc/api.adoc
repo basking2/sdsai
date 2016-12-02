@@ -71,6 +71,19 @@ endif::[]
 +[stringConcat string1 string2]+::
     Concatenate all arguments as strings.
 
+## Casting
+
++[toString arg]+::
+    Return the result of calling +toString()+ on the argument.
++[toInt arg]+::
+    Convert the argument to an integer.
++[toFloat arg]+::
+    Convert the argument to a float.
++[toLong arg]+::
+    Convert the argument to a long.
++[toDouble arg]+::
+    Convert the argument to a double.
+
 ## Printing
 
 +[help <function>]+::
