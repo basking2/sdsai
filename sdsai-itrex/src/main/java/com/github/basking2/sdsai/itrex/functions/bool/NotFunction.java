@@ -1,7 +1,5 @@
 package com.github.basking2.sdsai.itrex.functions.bool;
 
-import com.github.basking2.sdsai.itrex.functions.AbstractFunction1;
-
 /**
  * Return the boolean value of the last argument to this function.
  */
