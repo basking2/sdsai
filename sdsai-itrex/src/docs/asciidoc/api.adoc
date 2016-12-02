@@ -130,21 +130,30 @@ endif::[]
    [set i 0]
    [for j [list 1 2 3 4] [set i [add [get i] [get j]]]]]
 ----
-
 +[and <arg1> <arg2>...]+::
-  This returns the logical +and+ of the arguments. An argument is considered
-  false if it is literally a +False+ object or +null+. It is true otherwise.
-  If no arguments are given, this defaults to true.
-
+    This returns the logical +and+ of the arguments. An argument is considered
+    false if it is literally a +False+ object or +null+. It is true otherwise.
+    If no arguments are given, this defaults to true.
 +[or <arg1> <arg2>...]+::
-  This returns the logical +and+ of the arguments. An argument is considered
-  false if it is literally a +False+ object or +null+. It is true otherwise.
-  If no arguments are given, this defaults to false.
-
+    This returns the logical +and+ of the arguments. An argument is considered
+    false if it is literally a +False+ object or +null+. It is true otherwise.
+    If no arguments are given, this defaults to false.
 +[not <arg>]+::
-  Invert and return the logical inversion of the last argument.
-  +[not a_string]+ evaluates to +false+.
-  If more than 1 argument is given the inversion of the last one is returned.
+    Invert and return the logical inversion of the last argument.
+    +[not a_string]+ evaluates to +false+.
+    If more than 1 argument is given the inversion of the last one is returned.
++[eq <args>...]+::
+    Return true if all arguments are Comparables and equal to each other.
++[lt <args>...]+::
+    Return true if all arguments are Comparables and are in ascending order.
++[lte <args>...]+::
+    Return true if all arguments are Comparables and are in ascending order
+    or adjacent elements are equal.
++[gt <args>...]+::
+    Return true if all arguments are Comparables and are in descending order.
++[gte <args>...]+::
+    Return true if all arguments are Comparables and are in descending order
+    or adjacent elements are equal.
 
 
 
