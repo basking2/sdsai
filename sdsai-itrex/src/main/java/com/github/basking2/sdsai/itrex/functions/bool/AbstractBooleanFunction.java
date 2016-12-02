@@ -13,7 +13,7 @@ public abstract class AbstractBooleanFunction extends AbstractAggregatingFunctio
      * If an implementation is summing numbers, initialValue may be 0.
      * If an implementation is building a list, initialValue may be an empty list.
      *
-     * @param initialValue An intial value.
+     * @param initialValue An initial value.
      */
     public AbstractBooleanFunction(Boolean initialValue) {
         super(initialValue);

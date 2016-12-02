@@ -59,6 +59,9 @@ public class Evaluator {
             i.next();
             return i;
         });
+        
+        // Register toInt, toLong, toFloat, toString, toDouble.
+        CastingFunctionFactory.register(this);
 
         register("and", new AndFunction());
         register("or", new OrFunction());
