@@ -22,7 +22,7 @@ public class PrefetchingIteratorTest {
             arr.add(i);
         }
 
-        final Iterator<Integer> i = new PrefetchingIterator<Integer>(es, arr.iterator(), 10);
+        final Iterator<Integer> i = new PrefetchingIterator<Integer>(es, 10, arr.iterator());
 
         int prev = -1;
         while (i.hasNext()) {
