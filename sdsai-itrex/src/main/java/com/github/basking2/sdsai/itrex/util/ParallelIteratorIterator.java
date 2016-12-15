@@ -29,10 +29,17 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
     final private BlockingQueue<T> resultsQueue;
 
     /**
+     * Constructor.
      *
-     * @param executorService
-     * @param queueSize
-     * @param inputs
+     * @param executorService The executor that provide the parallelism.
+     * @param queueSize The depth of the queue to use for iterated results.
+     *                  For performance reasons the actual depth of cached results
+     *                  is the length of the inputs + queueSize. The reason for this is that
+     *                  in some very contrived timing situations all iterators can begin 
+     *                  producing values and exhaust the last queue space. Typically only 1
+     *                  producing iterator will do this.
+     * @param inputs The list of input iterators. Each iterator may be accessed in parallel with another.
+     *               If iterators share resources, this behavior must be accounted for.
      */
     public ParallelIteratorIterator(
             final ExecutorService executorService,
@@ -63,6 +70,19 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         }
     }
 
+    /**
+     * Check if a new result should be expected and fetch with a call to {@link #next()}.
+     * 
+     * This first checks if the internal queue has a cached result, and returns true if it does.
+     * 
+     * Otherwise, each actor is checked if it still has results to fetch. If any returns true, this returns
+     * true.
+     * 
+     * Finally, the results queue is re-checked in case an actor published a result between the time we
+     * first checked the results queue and then checked each actor individually.
+     * 
+     * @return True if there are more elements to fetch or retrieve out of the cache queue. False otherwise.
+     */
     @Override
     public boolean hasNext() {
         // This is fast, so we opt to try this first.

@@ -52,6 +52,7 @@ public class CompareFunction implements FunctionInterface<Boolean> {
         this.operator = operator;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Boolean apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
 
@@ -62,7 +63,7 @@ public class CompareFunction implements FunctionInterface<Boolean> {
                 throw new SExprRuntimeException("Arguments to compare functions must be Comparable objects.");
             }
 
-            Comparable prev = (Comparable)o;
+            Comparable<Object> prev = (Comparable<Object>)o;
 
             while (iterator.hasNext()) {
                 final Object current = iterator.next();
@@ -71,7 +72,8 @@ public class CompareFunction implements FunctionInterface<Boolean> {
                     if (!operator.test(i)) {
                         return false;
                     }
-                    prev = (Comparable)current;
+
+                    prev = (Comparable<Object>)current;
                 }
                 else {
                     return false;
