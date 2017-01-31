@@ -152,7 +152,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             boolean hasNext = true;
 
             // While we can fetch and place a result, do so.
-            while (resultsQueue.remainingCapacity() >= actors.size()) {
+            while (hasNext && resultsQueue.remainingCapacity() >= actors.size()) {
 
                 // On each iteration collect if this iterator has more elements, and if yes, the element.
                 synchronized (iterator) {
