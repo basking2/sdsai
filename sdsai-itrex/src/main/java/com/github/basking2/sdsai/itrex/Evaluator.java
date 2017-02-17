@@ -14,6 +14,8 @@ import com.github.basking2.sdsai.itrex.functions.bool.AndFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.CompareFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.NotFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.OrFunction;
+import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
+import com.github.basking2.sdsai.itrex.packages.CastingPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
 import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.util.Iterators;
@@ -25,12 +27,16 @@ public class Evaluator {
     private Executor executor;
     private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
 
+    /**
+     * Build an evaluator, importing most of the basic packages of functions.
+     */
     public Evaluator() {
         executor= Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
         register("import", new ImportFunction(this));
+        register("version", new VersionFunction());
 
         register("logDebug", new LogFunction(LogFunction.LEVEL.DEBUG));
         register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));
@@ -40,7 +46,12 @@ public class Evaluator {
         // Import the string package.
         evaluate(new String[]{"import", StringPackage.class.getCanonicalName()});
 
-        register("version", new VersionFunction());
+        // Register toInt, toLong, toFloat, toString, toDouble.
+        evaluate(new String[]{"import", CastingPackage.class.getCanonicalName()});
+
+        // And or not eq...
+        evaluate(new String[]{"import", BooleanPackage.class.getCanonicalName()});
+
         register("curry", new CurryFunction(this));
         register("compose", new ComposeFunction());
         register("map", new MapFunction());
@@ -62,17 +73,6 @@ public class Evaluator {
             return i;
         });
         
-        // Register toInt, toLong, toFloat, toString, toDouble.
-        CastingFunctionFactory.register(this);
-
-        register("and", new AndFunction());
-        register("or", new OrFunction());
-        register("not", new NotFunction());
-        register("eq", new CompareFunction(CompareFunction.OP.EQ));
-        register("gt", new CompareFunction(CompareFunction.OP.GT));
-        register("gte", new CompareFunction(CompareFunction.OP.GTE));
-        register("lt", new CompareFunction(CompareFunction.OP.LT));
-        register("lte", new CompareFunction(CompareFunction.OP.LTE));
 
         register("thread", new ThreadFunction(executor));
         register("join", new JoinFunction());

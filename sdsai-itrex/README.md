@@ -1,7 +1,21 @@
 # ItrEx
 
+A very simple S-Expression inspired language specializing in iterators.
+We call it Iter[ator]Ex[pressions] -- ItrEx.
+
+The language is intentionally limited in its functionality as it
+is intended to give no more usefulness than the functions an
+implementor defines. This allows us to expose a evaluation 
+endpoint on the internet and know the scope of what can be done
+with it.
+
 ## ItrEx API 
 
+* Import
+  * `[import com.mypackage.MyClass]` - Imports all public static fields
+    that are of type FunctionInterface and registers them in the 
+    evaluator. This is not thread safe as it mutates the global
+    registry of functions.
 * Info
   * `[version]`
 * Functional
@@ -38,3 +52,9 @@
 * Concurrency
   * `[thread iterator]`
   * `[join iterator]`
+
+# Future Features
+
+* Better scripting support.
+* A scoped `import` so two expressions can import functions 
+  using the same `Evaluator` and not interfere with one another.
