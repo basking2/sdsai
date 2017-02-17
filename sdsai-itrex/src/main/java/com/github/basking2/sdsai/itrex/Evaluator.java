@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
@@ -21,11 +21,11 @@ import com.github.basking2.sdsai.itrex.util.Iterators;
  */
 public class Evaluator {
 
-    private ExecutorService executorService;
+    private Executor executor;
     private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
 
     public Evaluator() {
-        executorService = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
+        executor= Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
@@ -73,7 +73,7 @@ public class Evaluator {
         register("lt", new CompareFunction(CompareFunction.OP.LT));
         register("lte", new CompareFunction(CompareFunction.OP.LTE));
 
-        register("thread", new ThreadFunction(executorService));
+        register("thread", new ThreadFunction(executor));
         register("join", new JoinFunction());
     }
 

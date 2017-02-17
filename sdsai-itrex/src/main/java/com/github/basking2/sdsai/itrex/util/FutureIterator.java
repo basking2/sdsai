@@ -1,7 +1,8 @@
 package com.github.basking2.sdsai.itrex.util;
 
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 /**
@@ -9,11 +10,11 @@ import java.util.concurrent.Future;
  */
 public class FutureIterator<T> implements Iterator<Future<T>> {
     private final Iterator<T> iterator;
-    private final ExecutorService executorService;
+    private final Executor executor;
 
-    public FutureIterator(final Iterator<T> iterator, final ExecutorService executorService) {
+    public FutureIterator(final Iterator<T> iterator, final Executor executor) {
         this.iterator = iterator;
-        this.executorService = executorService;
+        this.executor = executor;
     }
 
     @Override
@@ -23,6 +24,15 @@ public class FutureIterator<T> implements Iterator<Future<T>> {
 
     @Override
     public Future<T> next() {
-        return executorService.submit(() -> iterator.next());
+        final CompletableFuture<T> f = new CompletableFuture<T>();
+        executor.execute(() -> {
+            try {
+                f.complete(iterator.next());
+            }
+            catch (final Throwable t) {
+                f.completeExceptionally(t);
+            }
+        });
+        return f;
     }
 }

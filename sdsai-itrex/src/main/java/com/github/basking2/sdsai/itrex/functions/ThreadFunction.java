@@ -5,7 +5,7 @@ import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.util.FutureIterator;
 
 import java.util.Iterator;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
@@ -16,10 +16,10 @@ import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
  * Use join to unwrap the value in that future.
  */
 public class ThreadFunction implements FunctionInterface<Iterator<Future<Object>>> {
-    private final ExecutorService executorService;
+    private final Executor executor;
 
-    public ThreadFunction(final ExecutorService executorService) {
-        this.executorService = executorService;
+    public ThreadFunction(final Executor executor) {
+        this.executor= executor;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ThreadFunction implements FunctionInterface<Iterator<Future<Object>
             throw new SExprRuntimeException("Required first argument to thread function could not be converted to an Iterator.");
         }
 
-        final FutureIterator<Object> fi = new FutureIterator<Object>(objectIterator, executorService);
+        final FutureIterator<Object> fi = new FutureIterator<Object>(objectIterator, executor);
 
         return fi;
     }

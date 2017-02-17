@@ -1,9 +1,7 @@
 package com.github.basking2.sdsai.itrex.util;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.Executor;
 
 import static java.util.Arrays.asList;
 
@@ -20,7 +18,7 @@ import static java.util.Arrays.asList;
  */
 public class PrefetchingIterator<T> extends ParallelIteratorIterator<T> {
 
-    public PrefetchingIterator(final ExecutorService executorService, final int prefetch, final Iterator<T> iterator) {
-        super(executorService, prefetch, asList(iterator));
+    public PrefetchingIterator(final Executor executor, final int prefetch, final Iterator<T> iterator) {
+        super(executor, prefetch, asList(iterator));
     }
 }

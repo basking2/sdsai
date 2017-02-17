@@ -3,8 +3,7 @@ package com.github.basking2.sdsai.itrex.util;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 
 /**
  * Fetch from a set of iterators concurrently and return the first ready element.
@@ -14,7 +13,7 @@ import java.util.concurrent.ExecutorService;
 public class ParallelIteratorIterator<T> implements Iterator<T> {
 
     final List<Actor> actors;
-    final private ExecutorService executorService;
+    final private Executor executor;
     final private BlockingQueue<Actor> deferQueue;
 
     /**
@@ -31,7 +30,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
     /**
      * Constructor.
      *
-     * @param executorService The executor that provide the parallelism.
+     * @param executor The executor that provide the parallelism.
      * @param queueSize The depth of the queue to use for iterated results.
      *                  For performance reasons the actual depth of cached results
      *                  is the length of the inputs + queueSize. The reason for this is that
@@ -42,7 +41,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
      *               If iterators share resources, this behavior must be accounted for.
      */
     public ParallelIteratorIterator(
-            final ExecutorService executorService,
+            final Executor executor,
             final int queueSize,
             final List<Iterator<T>> inputs
     )
@@ -60,13 +59,13 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
 
         // Build a results queue that can hold 1 result from ever iterator, or more.
         this.actors = Collections.unmodifiableList(actorsTmp);
-        this.executorService = executorService;
+        this.executor = executor;
         this.resultsQueue = new ArrayBlockingQueue<>(queueSize + actors.size());
         this.deferQueue = new ArrayBlockingQueue<>(actors.size());
 
         // Start all actors.
         for (final Actor a : actors) {
-            executorService.submit(a);
+            executor.execute(a);
         }
     }
 
@@ -117,7 +116,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
 
         // Always restart when we call next.
         while (!deferQueue.isEmpty()) {
-            executorService.submit(deferQueue.poll());
+            executor.execute(deferQueue.poll());
         }
 
         // If we don't have a result...
@@ -139,7 +138,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         return t;
     }
 
-    private class Actor implements Callable<Void> {
+    private class Actor implements Runnable {
         private Iterator<T> iterator;
 
         public Actor(final Iterator<T> iterator) {
@@ -147,7 +146,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         }
 
         @Override
-        public Void call() throws Exception {
+        public void run() {
 
             boolean hasNext = true;
 
@@ -168,8 +167,6 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             if (hasNext) {
                 deferQueue.add(this);
             }
-
-            return null;
         }
 
         public boolean hasNext() {
