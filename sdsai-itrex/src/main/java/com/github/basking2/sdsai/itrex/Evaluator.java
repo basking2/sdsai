@@ -14,6 +14,7 @@ import com.github.basking2.sdsai.itrex.functions.bool.AndFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.CompareFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.NotFunction;
 import com.github.basking2.sdsai.itrex.functions.bool.OrFunction;
+import com.github.basking2.sdsai.itrex.packages.StringPackage;
 import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.util.Iterators;
 
@@ -29,15 +30,15 @@ public class Evaluator {
         functionRegistry = new HashMap<>();
 
         register("help", new HelpFunction(this));
+        register("import", new ImportFunction(this));
 
         register("logDebug", new LogFunction(LogFunction.LEVEL.DEBUG));
         register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));
         register("logWarn", new LogFunction(LogFunction.LEVEL.WARN));
         register("logError", new LogFunction(LogFunction.LEVEL.ERROR));
 
-        register("stringJoin", new StringJoinFunction());
-        register("stringConcat", new StringConcatFunction());
-        register("stringSplit", new StringSplitFunction());
+        // Import the string package.
+        evaluate(new String[]{"import", StringPackage.class.getCanonicalName()});
 
         register("version", new VersionFunction());
         register("curry", new CurryFunction(this));
