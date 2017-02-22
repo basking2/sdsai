@@ -125,6 +125,10 @@ public class SimpleExpressionParser {
         ) {
             arrayList.add(parse());
             skipComma();
+
+            if (position >= expression.length()) {
+                throw new SimpleExpressionUnclosedListException();
+            }
         }
 
         position += i;
@@ -197,5 +201,14 @@ public class SimpleExpressionParser {
 
     public static Object parseExpression(final String expression) {
         return new SimpleExpressionParser(expression).parse();
+    }
+
+    /**
+     * Return the position in the expression string where parsing left off.
+     *
+     * @return
+     */
+    public int getPosition() {
+        return position;
     }
 }

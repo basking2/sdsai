@@ -105,3 +105,13 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
         }
     }
 }
+
+task runShell(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'com.github.basking2.sdsai.itrex.Shell'
+
+    standardInput = System.in
+    // arguments to pass to the application
+    //args ''
+}
