@@ -10,10 +10,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
-import com.github.basking2.sdsai.itrex.functions.bool.AndFunction;
-import com.github.basking2.sdsai.itrex.functions.bool.CompareFunction;
-import com.github.basking2.sdsai.itrex.functions.bool.NotFunction;
-import com.github.basking2.sdsai.itrex.functions.bool.OrFunction;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
 import com.github.basking2.sdsai.itrex.packages.CastingPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
@@ -27,13 +23,40 @@ public class Evaluator {
     private Executor executor;
     private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
 
+    public Evaluator(final Executor executor) {
+        this.executor = executor;
+        functionRegistry = new HashMap<>();
+
+        importDefaults();
+    }
+
     /**
      * Build an evaluator, importing most of the basic packages of functions.
      */
     public Evaluator() {
-        executor= Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
+        this.executor = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
         functionRegistry = new HashMap<>();
 
+        importDefaults();
+    }
+
+    /**
+     * This constructor only assigns the arguments to the internal state of this instance.
+     *
+     * This does no initialization. If you want an empty {@link Evaluator}, use this constructor.
+     *
+     * @param executor How concurrency is managed.
+     * @param functionRegistry What functions are available. Typically they are registered by {@link String} objects.
+     */
+    public Evaluator(final Executor executor, final Map<Object, FunctionInterface<? extends Object>> functionRegistry) {
+        this.executor = executor;
+        this.functionRegistry = functionRegistry;
+    }
+
+    /**
+     * Used by constructors, this imports the default libraries.
+     */
+    private void importDefaults() {
         register("help", new HelpFunction(this));
         register("import", new ImportFunction(this));
         register("version", new VersionFunction());
@@ -72,10 +95,11 @@ public class Evaluator {
             i.next();
             return i;
         });
-        
+
 
         register("thread", new ThreadFunction(executor));
         register("join", new JoinFunction());
+
     }
 
     public void register(final Object name, final FunctionInterface<? extends Object> operator) {

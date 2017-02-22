@@ -18,5 +18,4 @@ public class BooleanPackage {
     public static final FunctionInterface<Boolean> gte = new CompareFunction(CompareFunction.OP.GTE);
     public static final FunctionInterface<Boolean> lt = new CompareFunction(CompareFunction.OP.LT);
     public static final FunctionInterface<Boolean> lte = new CompareFunction(CompareFunction.OP.LTE);
-
 }
