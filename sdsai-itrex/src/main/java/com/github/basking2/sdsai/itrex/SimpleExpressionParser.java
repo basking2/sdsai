@@ -24,18 +24,18 @@ import java.util.regex.Pattern;
  */
 public class SimpleExpressionParser {
 
-    static final Pattern SKIP_WS = Pattern.compile("^\\s*");
-    static final Pattern COMMA = Pattern.compile("^\\s*,");
-    static final Pattern OPEN_BRACKET = Pattern.compile("^\\s*\\[");
-    static final Pattern CLOSE_BRACKET = Pattern.compile("^\\s*\\]");
-    static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
-    static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
+    public static final Pattern SKIP_WS = Pattern.compile("^\\s*");
+    public static final Pattern COMMA = Pattern.compile("^\\s*,");
+    public static final Pattern OPEN_BRACKET = Pattern.compile("^\\s*\\[");
+    public static final Pattern CLOSE_BRACKET = Pattern.compile("^\\s*\\]");
+    public static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
+    public static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
 
-    static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
-    static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
-    static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+|\\d+D|\\d+d)");
+    public static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
+    public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
+    public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+|\\d+D|\\d+d)");
 
-    static final Pattern WORD = Pattern.compile("^(?:\\w+)");
+    public static final Pattern WORD = Pattern.compile("^(?:\\w+)");
 
     private final String expression;
     private int position;

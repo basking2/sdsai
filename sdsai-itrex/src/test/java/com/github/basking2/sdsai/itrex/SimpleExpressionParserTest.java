@@ -76,11 +76,11 @@ public class SimpleExpressionParserTest {
     @Test
     public void testCommaList() {
         @SuppressWarnings("unchecked")
-        final List<String> l = (List<String>)parseExpression("[1, 2, 3 4]");
+        final List<String> l = (List<String>)parseExpression("[1, 2, 3 -4]");
         assertEquals(1, l.get(0));
         assertEquals(2, l.get(1));
         assertEquals(3, l.get(2));
-        assertEquals(4, l.get(3));
+        assertEquals(-4, l.get(3));
     }
     
     @Test
