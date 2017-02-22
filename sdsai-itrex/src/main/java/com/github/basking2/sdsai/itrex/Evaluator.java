@@ -81,6 +81,7 @@ public class Evaluator {
         register("last", new LastFunction());
         register("flatten", new FlattenFunction());
         register("list", new ListFunction());
+        register("dict", new DictFunction());
         register("listFlatten", new ListFlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("printErr", new PrintArgsFunction(System.err));
