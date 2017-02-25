@@ -34,7 +34,7 @@ public class LogFunction implements FunctionInterface<Object> {
     @Override
     public Object apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
         return mapIterator(iterator, e -> {
-            method.invoke(LOG, "%s", e);
+            method.invoke(LOG, "{}", e);
             return e;
         });
     }
