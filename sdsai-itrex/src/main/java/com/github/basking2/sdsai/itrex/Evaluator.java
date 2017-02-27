@@ -21,6 +21,11 @@ public class Evaluator {
     private Executor executor;
     private EvaluationContext rootContext;
 
+    /**
+     * Construct a new evaluator and import the default functions.
+     * 
+     * @param executor An executor to use for parallelism.
+     */
     public Evaluator(final Executor executor) {
         this.executor = executor;
         this.rootContext = new EvaluationContext();
@@ -50,14 +55,21 @@ public class Evaluator {
         this.executor = executor;
         this.rootContext = rootContext;
     }
+    
+    /**
+     * Import the base functions, help, version and import.
+     */
+    public void importBase() {
+        register("help", new HelpFunction());
+        register("import", new ImportFunction(rootContext));
+        register("version", new VersionFunction());
+    }
 
     /**
      * Used by constructors, this imports the default libraries.
      */
-    private void importDefaults() {
-        register("help", new HelpFunction());
-        register("import", new ImportFunction(this));
-        register("version", new VersionFunction());
+    public void importDefaults() {
+        importBase();
 
         register("logDebug", new LogFunction(LogFunction.LEVEL.DEBUG));
         register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));

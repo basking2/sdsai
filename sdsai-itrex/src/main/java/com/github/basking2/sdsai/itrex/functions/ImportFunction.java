@@ -13,10 +13,10 @@ import java.util.Iterator;
  */
 public class ImportFunction implements FunctionInterface<String> {
 
-    final Evaluator evaluator;
+    final EvaluationContext evaluationContext;
 
-    public ImportFunction(final Evaluator evaluator) {
-        this.evaluator = evaluator;
+    public ImportFunction(final EvaluationContext evaluationContext) {
+        this.evaluationContext = evaluationContext;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ImportFunction implements FunctionInterface<String> {
                 return e.getMessage();
             }
             if (func != null && func instanceof FunctionInterface) {
-                evaluator.register(field.getName(), (FunctionInterface<?>) func);
+                evaluationContext.register(field.getName(), (FunctionInterface<?>) func);
             }
         }
 
