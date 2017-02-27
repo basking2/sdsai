@@ -33,7 +33,7 @@ public class ThreadJoinTest {
         q.add(9l);
         q.add(10l);
 
-        final EvaluationContext ctx = new EvaluationContext();
+        final EvaluationContext ctx = evaluator.getChildEvaluationContext();
         ctx.set("q", q);
 
         final Object expression = SimpleExpressionParser.parseExpression(

@@ -3,9 +3,7 @@ package com.github.basking2.sdsai.itrex;
 import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -21,11 +19,11 @@ import com.github.basking2.sdsai.itrex.util.Iterators;
 public class Evaluator {
 
     private Executor executor;
-    private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
+    private EvaluationContext rootContext;
 
     public Evaluator(final Executor executor) {
         this.executor = executor;
-        functionRegistry = new HashMap<>();
+        this.rootContext = new EvaluationContext();
 
         importDefaults();
     }
@@ -35,7 +33,7 @@ public class Evaluator {
      */
     public Evaluator() {
         this.executor = Executors.newWorkStealingPool(Runtime.getRuntime().availableProcessors());
-        functionRegistry = new HashMap<>();
+        this.rootContext = new EvaluationContext();
 
         importDefaults();
     }
@@ -46,18 +44,18 @@ public class Evaluator {
      * This does no initialization. If you want an empty {@link Evaluator}, use this constructor.
      *
      * @param executor How concurrency is managed.
-     * @param functionRegistry What functions are available. Typically they are registered by {@link String} objects.
+     * @param rootContext The root context.
      */
-    public Evaluator(final Executor executor, final Map<Object, FunctionInterface<? extends Object>> functionRegistry) {
+    public Evaluator(final Executor executor, final EvaluationContext rootContext) {
         this.executor = executor;
-        this.functionRegistry = functionRegistry;
+        this.rootContext = rootContext;
     }
 
     /**
      * Used by constructors, this imports the default libraries.
      */
     private void importDefaults() {
-        register("help", new HelpFunction(this));
+        register("help", new HelpFunction());
         register("import", new ImportFunction(this));
         register("version", new VersionFunction());
 
@@ -75,7 +73,7 @@ public class Evaluator {
         // And or not eq...
         evaluate(new String[]{"import", BooleanPackage.class.getCanonicalName()});
 
-        register("curry", new CurryFunction(this));
+        register("curry", new CurryFunction());
         register("compose", new ComposeFunction());
         register("map", new MapFunction());
         register("last", new LastFunction());
@@ -104,22 +102,7 @@ public class Evaluator {
     }
 
     public void register(final Object name, final FunctionInterface<? extends Object> operator) {
-        functionRegistry.put(name, operator);
-    }
-
-    /**
-     * How functions are looked up.
-     *
-     * This method should be overwritten by users who want to dynamically create functions instead of
-     * preregistering any function that might be called, using {@link #register(Object, FunctionInterface)}.
-     *
-     * This default implementation returns functions registered in the internal database.
-     *
-     * @param functionName The operator name.
-     * @return The operator or null if none is found. This implementation returns null.
-     */
-    public FunctionInterface<? extends Object> getFunction(final Object functionName) {
-        return functionRegistry.get(functionName);
+        rootContext.register(name, operator);
     }
 
     /**
@@ -129,7 +112,7 @@ public class Evaluator {
      * @return The result of the evaluation.
      */
     public Object evaluate(final Object o) {
-        return evaluate(o, new EvaluationContext());
+        return evaluate(o, new EvaluationContext(rootContext));
     }
 
     @SuppressWarnings("unchecked")
@@ -158,6 +141,7 @@ public class Evaluator {
             return new ArrayList<Object>().iterator();
         }
 
+        final EvaluationContext context = i.getEvaluationContext();
         final Object operatorObject = i.next();
         final FunctionInterface<? extends Object> operator;
 
@@ -168,11 +152,8 @@ public class Evaluator {
 
             operator = tmpo;
         }
-        else if (functionRegistry.containsKey(operatorObject)) {
-            operator = functionRegistry.get(operatorObject);
-        }
         else {
-            operator = getFunction(operatorObject);
+            operator = context.getFunction(operatorObject);
             if (operator == null) {
                 throw new SExprRuntimeException("No function " + operatorObject.toString());
             }
@@ -183,5 +164,13 @@ public class Evaluator {
 
     private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator, final EvaluationContext context) {
         return new EvaluatingIterator<>(this, context, iterator);
+    }
+
+    public EvaluationContext getRootEvaluationContext() {
+        return rootContext;
+    }
+
+    public EvaluationContext getChildEvaluationContext() {
+        return new EvaluationContext(rootContext);
     }
 }

@@ -14,25 +14,24 @@ import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
 public class JavaMathEvaluator extends Evaluator {
 
     public JavaMathEvaluator() {
-        super();
+        importMath();
     }
 
-    @Override
-    public FunctionInterface<? extends Object> getFunction(final Object object) {
-        final String functionName = object.toString();
+    public void importMath() {
 
         for (final Method m : Math.class.getMethods()) {
-            if (functionName.equalsIgnoreCase(m.getName())) {
-                if (m.getParameterCount() == 2) {
-                    return new MathFunction2(functionName);
-                }
-                if (m.getParameterCount() == 1) {
-                    return new MathFunction1(functionName);
-                }
+
+            final String functionName = m.getName();
+
+            if (m.getParameterCount() == 2) {
+                FunctionInterface<? extends Object> f = new MathFunction2(functionName);
+                register(functionName, f);
+            }
+            else if (m.getParameterCount() == 1) {
+                FunctionInterface<? extends Object> f = new MathFunction1(functionName);
+                register(functionName, f);
             }
         }
-
-        return super.getFunction(object);
     }
 
     private static class MathFunction1 extends AbstractFunction1<Object, Object> {

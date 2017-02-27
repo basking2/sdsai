@@ -1,7 +1,6 @@
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
-import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.util.IteratorIterator;
 
@@ -16,12 +15,6 @@ import static java.util.Arrays.asList;
  */
 public class CurryFunction implements HelpfulFunction, FunctionInterface<FunctionInterface<Object>> {
 
-    private Evaluator evaluator;
-
-    public CurryFunction(final Evaluator evaluator) {
-        this.evaluator = evaluator;
-    }
-
     @Override
     public FunctionInterface<Object> apply(final Iterator<? extends Object> args, final EvaluationContext evaluationContext) {
 
@@ -29,7 +22,7 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
             throw new SExprRuntimeException("CurryFunction requires at least 1 argument.");
         }
 
-        final FunctionInterface<? extends Object> function = evaluator.getFunction(args.next());
+        final FunctionInterface<? extends Object> function = evaluationContext.getFunction(args.next());
 
         // Capture all evaluated args to a list.
         final List<Object> args2 = new ArrayList<>();

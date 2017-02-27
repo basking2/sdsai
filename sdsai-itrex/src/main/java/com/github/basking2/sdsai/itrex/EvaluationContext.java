@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.itrex;
 
+import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,9 +9,10 @@ import java.util.Map;
  */
 public class EvaluationContext {
     private EvaluationContext parent;
+    private Map<Object, FunctionInterface<? extends Object>> functionRegistry = new HashMap<>();
     private Map<Object, Object> env = new HashMap<>();
 
-    public EvaluationContext()
+    protected EvaluationContext()
     {
         this(null);
     }
@@ -41,5 +44,19 @@ public class EvaluationContext {
         }
 
         return false;
+    }
+
+    public void register(final Object name, final FunctionInterface<? extends Object> operator) {
+        functionRegistry.put(name, operator);
+    }
+
+    public FunctionInterface<? extends Object> getFunction(final Object functionName) {
+        for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
+            if (ec.functionRegistry.containsKey(functionName)) {
+                return ec.functionRegistry.get(functionName);
+            }
+        }
+
+        return null;
     }
 }

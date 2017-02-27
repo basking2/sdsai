@@ -39,7 +39,7 @@ public class GsonEvaluatorTest {
         });
 
 
-        final Object o = evaluator.evaluateJson("[\"add\", 1, [\"add\", 0, 32], [\"add\", 1, 1]]", new EvaluationContext());
+        final Object o = evaluator.evaluateJson("[\"add\", 1, [\"add\", 0, 32], [\"add\", 1, 1]]", evaluator.getChildEvaluationContext());
 
         assertTrue(o instanceof Double);
         assertEquals(Double.valueOf(35), o);

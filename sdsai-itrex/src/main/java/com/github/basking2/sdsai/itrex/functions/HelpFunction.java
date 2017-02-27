@@ -3,24 +3,12 @@ package com.github.basking2.sdsai.itrex.functions;
 import java.util.Iterator;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
-import com.github.basking2.sdsai.itrex.Evaluator;
 
 /**
  * A function that fetches function help text.
  */
 public class HelpFunction implements FunctionInterface<String>, HelpfulFunction {
     
-    private final Evaluator evaluator;
-    
-    /**
-     * Constructor.
-     * 
-     * @param evaluator The evaluator that provides function definitions to get help text for.
-     */
-    public HelpFunction(final Evaluator evaluator) {
-        this.evaluator = evaluator;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -46,7 +34,7 @@ public class HelpFunction implements FunctionInterface<String>, HelpfulFunction 
                     continue;
                 }
                 else {
-                    final FunctionInterface<?> f = evaluator.getFunction(functionName);
+                    final FunctionInterface<?> f = evaluationContext.getFunction(functionName);
                     if (f instanceof HelpfulFunction) {
                         hf = (HelpfulFunction)o;
                     }

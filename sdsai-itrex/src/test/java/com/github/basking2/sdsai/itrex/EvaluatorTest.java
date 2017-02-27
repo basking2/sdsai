@@ -52,7 +52,7 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("add", 1, asList("add", 0, 32D), asList("add", 1, 1));
 
-        final Object o = evaluator.evaluate(l, new EvaluationContext());
+        final Object o = evaluator.evaluate(l, evaluator.getChildEvaluationContext());
 
         assertTrue(o instanceof Double);
         assertEquals(Double.valueOf(35), o);
@@ -82,7 +82,7 @@ public class EvaluatorTest {
         final List<Object> l = asList("map", asList("curry", "add", 3), asList("list", 4, 5));
 
         @SuppressWarnings("unchecked")
-        Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l, new EvaluationContext());
+        Iterator<Iterator<Integer>> i = (Iterator<Iterator<Integer>>) evaluator.evaluate(l, evaluator.getChildEvaluationContext());
 
         assertEquals(Integer.valueOf(7), i.next());
         assertEquals(Integer.valueOf(8), i.next());
@@ -97,7 +97,7 @@ public class EvaluatorTest {
         final List<Object> l = asList("list", 1, 2, 3, 4, 5);
 
         @SuppressWarnings("unchecked")
-        List<Integer> i = (List<Integer>) evaluator.evaluate(l, new EvaluationContext());
+        List<Integer> i = (List<Integer>) evaluator.evaluate(l, evaluator.getChildEvaluationContext());
 
         assertEquals(5, i.size());
         assertEquals(Integer.valueOf(1), i.get(0));
@@ -114,7 +114,7 @@ public class EvaluatorTest {
 
         final List<Object> l = asList("last", 1, 2, 3, 4, 5);
 
-        Integer i = (Integer) evaluator.evaluate(l, new EvaluationContext());
+        Integer i = (Integer) evaluator.evaluate(l, evaluator.getChildEvaluationContext());
 
         assertEquals(Integer.valueOf(5), i);
     }
@@ -125,10 +125,10 @@ public class EvaluatorTest {
         
         Integer i;
 
-        i = (Integer) evaluator.evaluate(asList("if", 0, 2, 3), new EvaluationContext());
+        i = (Integer) evaluator.evaluate(asList("if", 0, 2, 3), evaluator.getChildEvaluationContext());
         assertEquals(Integer.valueOf(3), i);
 
-        i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3), new EvaluationContext());
+        i = (Integer) evaluator.evaluate(asList("if", 1, 2, 3), evaluator.getChildEvaluationContext());
         assertEquals(Integer.valueOf(2), i);
     }
 
@@ -146,7 +146,7 @@ public class EvaluatorTest {
         });
         @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
-                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), asList("list", 3, 4, 5)), new EvaluationContext());
+                evaluator.evaluate(asList("map", asList("compose", asList("curry", "add", 1), asList("curry", "add", 2)), asList("list", 3, 4, 5)), evaluator.getChildEvaluationContext());
 
         assertEquals(Integer.valueOf(6), i.next());
         assertEquals(Integer.valueOf(7), i.next());
@@ -159,7 +159,7 @@ public class EvaluatorTest {
         final Evaluator evaluator = new Evaluator();
         @SuppressWarnings("unchecked")
         Iterator<Integer> i = (Iterator<Integer>)
-                evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)), new EvaluationContext());
+                evaluator.evaluate(asList("flatten", asList("list", 1, 2, 3), asList("list", 4, 5, 6)), evaluator.getChildEvaluationContext());
 
         assertEquals(Integer.valueOf(1), i.next());
         assertEquals(Integer.valueOf(2), i.next());
@@ -179,7 +179,7 @@ public class EvaluatorTest {
         );
         
         final Integer i = (Integer)evaluator.evaluate(
-                asList("add", asList("list", 1,2,3), 4), new EvaluationContext());
+                asList("add", asList("list", 1,2,3), 4), evaluator.getChildEvaluationContext());
         
         assertEquals(Integer.valueOf(10), i);
     }
