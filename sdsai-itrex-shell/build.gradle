@@ -1,23 +1,28 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'org.asciidoctor.convert'
+apply plugin: 'application'
 
 // group = defined by parent.
 // archiveBaseName = defined by parent and project name.
 version = '1.0.2-SNAPSHOT'
 
+mainClassName = 'com.github.basking2.sdsai.itrex.Shell'
+applicationDefaultJvmArgs = []
+applicationName = 'itrex'
+
+run {
+    standardInput = System.in
+}
+
 buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-  }
+    repositories {
+        jcenter()
+    }
 }
 
 compileJava {
-	options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:unchecked'
 }
 
 repositories {
@@ -25,12 +30,11 @@ repositories {
 
 processResources {
     expand projectVersion: project.version,
-           projectName: project.name
+            projectName: project.name
 }
 
 dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.21'
-    compile 'com.google.code.gson:gson:2.8.0'
+    compile project(':sdsai-itrex')
     testCompile group: 'junit', name: 'junit', version:'4.12'
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version:'1.7.21'
 }
@@ -106,3 +110,12 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
     }
 }
 
+task runShell(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    main = 'com.github.basking2.sdsai.itrex.Shell'
+
+    standardInput = System.in
+    // arguments to pass to the application
+    //args ''
+}
