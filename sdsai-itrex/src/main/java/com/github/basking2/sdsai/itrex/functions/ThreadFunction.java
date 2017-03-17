@@ -2,13 +2,13 @@ package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
-import com.github.basking2.sdsai.itrex.util.FutureIterator;
+import com.github.basking2.sdsai.itrex.iterators.FutureIterator;
 
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 /**
  * This takes a single iterator and, for each element in that iterator, returns a single element wrapped in a Future.

@@ -1,12 +1,12 @@
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
-import com.github.basking2.sdsai.itrex.util.IteratorIterator;
+import com.github.basking2.sdsai.itrex.iterators.IteratorIterator;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.mapIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
 
 /**
  * Flatten an iterator of iterators a single layer.

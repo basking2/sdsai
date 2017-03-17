@@ -5,7 +5,7 @@ import com.github.basking2.sdsai.itrex.EvaluationContext;
 import java.io.PrintStream;
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.mapIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
 
 public class PrintArgsFunction implements FunctionInterface<Iterator<?>> {
     final private PrintStream out;

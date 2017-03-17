@@ -1,6 +1,6 @@
 package com.github.basking2.sdsai.itrex;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,8 +11,8 @@ import com.github.basking2.sdsai.itrex.functions.*;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
 import com.github.basking2.sdsai.itrex.packages.CastingPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
-import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
-import com.github.basking2.sdsai.itrex.util.Iterators;
+import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
+import com.github.basking2.sdsai.itrex.iterators.Iterators;
 
 /**
  */

@@ -1,4 +1,4 @@
-package com.github.basking2.sdsai.itrex.util;
+package com.github.basking2.sdsai.itrex.iterators;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -138,6 +138,9 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         return t;
     }
 
+    /**
+     * A {@link Runnable} that owns a particular {@link Iterator}.
+     */
     private class Actor implements Runnable {
         private Iterator<T> iterator;
 
@@ -145,6 +148,9 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             this.iterator = iterator;
         }
 
+        /**
+         * Try to fill the {@link #resultsQueue} with as many elements as will fit leaving some headroom.
+         */
         @Override
         public void run() {
 

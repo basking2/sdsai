@@ -3,11 +3,11 @@ package com.github.basking2.sdsai.itrex.functions;
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
-import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
+import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 /**
  * Takes a variable name, iterator, and an expression that is unevaluated.

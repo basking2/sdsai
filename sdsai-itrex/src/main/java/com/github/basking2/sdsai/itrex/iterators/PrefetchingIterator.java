@@ -1,4 +1,4 @@
-package com.github.basking2.sdsai.itrex.util;
+package com.github.basking2.sdsai.itrex.iterators;
 
 import java.util.Iterator;
 import java.util.concurrent.Executor;

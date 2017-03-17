@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
-import com.github.basking2.sdsai.itrex.util.EvaluatingIterator;
+import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 
 public class IfFunction implements FunctionInterface<Object> {
 

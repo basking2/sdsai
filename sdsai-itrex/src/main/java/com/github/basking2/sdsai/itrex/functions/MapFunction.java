@@ -2,13 +2,13 @@ package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
-import com.github.basking2.sdsai.itrex.util.MappingIterator;
+import com.github.basking2.sdsai.itrex.iterators.MappingIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
-import static com.github.basking2.sdsai.itrex.util.Iterators.wrap;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.wrap;
 
 /**
  * Map a function across all subsequent arguments.

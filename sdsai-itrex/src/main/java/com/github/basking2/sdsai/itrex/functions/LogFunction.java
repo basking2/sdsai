@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.mapIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
 
 public class LogFunction implements FunctionInterface<Object> {
 

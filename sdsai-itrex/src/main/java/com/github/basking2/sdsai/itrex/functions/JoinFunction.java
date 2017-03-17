@@ -6,8 +6,8 @@ import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.mapIterator;
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 /**
  * Join any Future object from a given array.

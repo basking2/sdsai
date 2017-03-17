@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 /**
  * Flatten arguments and iterators into a list.

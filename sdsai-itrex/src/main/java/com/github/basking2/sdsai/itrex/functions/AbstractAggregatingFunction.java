@@ -1,6 +1,6 @@
 package com.github.basking2.sdsai.itrex.functions;
 
-import static com.github.basking2.sdsai.itrex.util.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 import java.util.Iterator;
 
