@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.itrex;
 
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.EMPTY_ITERATOR;
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ public class Evaluator {
      * This constructor only assigns the arguments to the internal state of this instance.
      *
      * This does no initialization. If you want an empty {@link Evaluator}, use this constructor.
+     *
+     * @see #importDefaults()
      *
      * @param executor How concurrency is managed.
      * @param rootContext The root context.
@@ -150,7 +153,7 @@ public class Evaluator {
 
     public Object evaluate(final EvaluatingIterator<Object> i) {
         if (!i.hasNext()) {
-            return new ArrayList<Object>().iterator();
+            return EMPTY_ITERATOR;
         }
 
         final EvaluationContext context = i.getEvaluationContext();
@@ -171,7 +174,7 @@ public class Evaluator {
             }
         }
 
-        return operator.apply(i, i.getEvaluationContext());
+        return operator.apply(i, context);
     }
 
     private EvaluatingIterator<Object> wrap(final Iterator<Object> iterator, final EvaluationContext context) {

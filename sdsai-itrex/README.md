@@ -58,3 +58,6 @@ with it.
 * Better scripting support.
 * A scoped `import` so two expressions can import functions 
   using the same `Evaluator` and not interfere with one another.
+* Anonymous functions.
+* Directly get function references.
+
