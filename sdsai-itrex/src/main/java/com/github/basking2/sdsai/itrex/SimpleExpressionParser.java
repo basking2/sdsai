@@ -206,7 +206,7 @@ public class SimpleExpressionParser {
     /**
      * Return the position in the expression string where parsing left off.
      *
-     * @return
+     * @return the position in the expression string where parsing left off.
      */
     public int getPosition() {
         return position;
