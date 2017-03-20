@@ -2,15 +2,15 @@ package com.github.basking2.sdsai.itrex.iterators;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  */
@@ -50,5 +50,66 @@ public class ParallelIteratorIteratorTest {
         assertFalse(i.hasNext());
 
         i.next();
+    }
+
+    /**
+     * Test that under situations where an executor has only 1 thread, deadlock does not occur.
+     */
+    @Test
+    public void testStealWork1() {
+        // Use an executor that does work on this thread.
+        final Executor e = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                command.run();
+            }
+        };
+
+        // 2 iterators that sleep.
+        final Iterator i1 = asList(1,2,3).iterator();
+        final Iterator i2 = asList(4,5,6).iterator();
+
+        final Iterator<Integer> i = new ParallelIteratorIterator(e, 1, asList(i1, i2));
+
+        final Set<Integer> resultSet = new HashSet<>();
+
+        for (int element = 0; i.hasNext();) {
+            resultSet.add(i.next());
+        }
+
+        assertTrue(resultSet.contains(1));
+        assertTrue(resultSet.contains(2));
+        assertTrue(resultSet.contains(3));
+        assertTrue(resultSet.contains(4));
+        assertTrue(resultSet.contains(5));
+        assertTrue(resultSet.contains(6));
+    }
+
+    /**
+     * Test that under situations where an executor has only 1 thread, deadlock does not occur.
+     */
+    @Test
+    public void testStealWork2() {
+        // Use an executor that does work on this thread.
+        final Executor e = Executors.newSingleThreadExecutor();
+
+        // 2 iterators that sleep.
+        final Iterator i1 = Iterators.mapIterator(asList(1,2,3).iterator(), i -> {Thread.sleep(200); return i;} );
+        final Iterator i2 = Iterators.mapIterator(asList(4,5,6).iterator(), i -> {Thread.sleep(200); return i;} );
+
+        final Iterator<Integer> i = new ParallelIteratorIterator(e, 1, asList(i1, i2));
+
+        final Set<Integer> resultSet = new HashSet<>();
+
+        for (int element = 0; i.hasNext();) {
+            resultSet.add(i.next());
+        }
+
+        assertTrue(resultSet.contains(1));
+        assertTrue(resultSet.contains(2));
+        assertTrue(resultSet.contains(3));
+        assertTrue(resultSet.contains(4));
+        assertTrue(resultSet.contains(5));
+        assertTrue(resultSet.contains(6));
     }
 }

@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Fetch from a set of iterators concurrently and return the first ready element.
@@ -114,30 +116,34 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             hasResult = false;
         }
 
-        // Always restart when we call next.
-        while (!deferQueue.isEmpty()) {
-            executor.execute(deferQueue.poll());
-        }
-
         // At this point we know there are pending results, we just need to get them.
         while (!hasResult) {
 
-            // recheck that there is an element to be had and then wait.
+            // 1. Recheck that there is an element to be had.
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             
-            // Try to take 1 from any actor.
+            // 2. Try to take 1 from any actor.
+            //    This only fails if all the actors are currently processing a result in a thread.
             for (final Actor a : actors) {
                 try {
-                    return a.next();
+                    t = a.tryNext();
+                    if (t != null) {
+                        scheduleDeferedActors();
+                        return t;
+                    }
                 }
                 catch (final NoSuchElementException nse) {
                     // Nop
                 }
             }
 
+            // Step 1. tells us there is an element to be had.
+            // Step 2. tells us all actors are in threads generating an element.
+            // 3. We may safely just wait for the result.
             try {
+                scheduleDeferedActors();
                 return resultsQueue.take();
             }
             catch (final InterruptedException e) {
@@ -149,13 +155,33 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
     }
 
     /**
+     * Reschedule actors that have gone to sleep.
+     */
+    private void scheduleDeferedActors() {
+        // Always restart when we call next.
+        for (int i = deferQueue.size(); i > 0; i--) {
+            executor.execute(deferQueue.poll());
+        }
+    }
+
+    /**
      * A {@link Runnable} that owns a particular {@link Iterator}.
      */
     private class Actor implements Runnable {
+
+        /**
+         * A lock to explicitly protect access to the {@link #iterator}.
+         *
+         * This lock also, when locked, signals that this Actor (or the owning ParallelIteratorIterator) is
+         * in a thread doing work. If this is locked, a result will be generated.
+         */
+        private Lock lock;
+
         private Iterator<T> iterator;
 
         public Actor(final Iterator<T> iterator) {
             this.iterator = iterator;
+            this.lock = new ReentrantLock();
         }
 
         /**
@@ -170,11 +196,15 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             while (hasNext && resultsQueue.remainingCapacity() >= actors.size()) {
 
                 // On each iteration collect if this iterator has more elements, and if yes, the element.
-                synchronized (iterator) {
+                lock.lock();
+                try {
                     hasNext = iterator.hasNext();
                     if (hasNext) {
                         resultsQueue.add(iterator.next());
                     }
+                }
+                finally {
+                    lock.unlock();
                 }
             }
 
@@ -185,15 +215,32 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             }
         }
         
-        public T next() {
-            synchronized(iterator) {
-                return iterator.next();
+        /**
+         * Try to lock and fetch the next value from this actor's iterator.
+         *
+         * @return Null if unable to lock, the value otherwise.
+         */
+        public T tryNext() {
+            if (lock.tryLock()) {
+                try {
+                    return iterator.next();
+                }
+                finally {
+                    lock.unlock();
+                }
+            }
+            else {
+                return null;
             }
         }
 
         public boolean hasNext() {
-            synchronized (iterator) {
+            lock.lock();
+            try {
                 return iterator.hasNext();
+            }
+            finally {
+                lock.unlock();
             }
         }
     }
