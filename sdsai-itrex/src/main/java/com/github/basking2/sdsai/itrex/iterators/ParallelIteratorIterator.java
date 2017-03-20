@@ -119,12 +119,22 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             executor.execute(deferQueue.poll());
         }
 
-        // If we don't have a result...
+        // At this point we know there are pending results, we just need to get them.
         while (!hasResult) {
 
             // recheck that there is an element to be had and then wait.
             if (!hasNext()) {
                 throw new NoSuchElementException();
+            }
+            
+            // Try to take 1 from any actor.
+            for (final Actor a : actors) {
+                try {
+                    return a.next();
+                }
+                catch (final NoSuchElementException nse) {
+                    // Nop
+                }
             }
 
             try {
@@ -153,7 +163,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
          */
         @Override
         public void run() {
-
+            
             boolean hasNext = true;
 
             // While we can fetch and place a result, do so.
@@ -172,6 +182,12 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             // So we go on the defer queue. We'll be rescheduled later.
             if (hasNext) {
                 deferQueue.add(this);
+            }
+        }
+        
+        public T next() {
+            synchronized(iterator) {
+                return iterator.next();
             }
         }
 
