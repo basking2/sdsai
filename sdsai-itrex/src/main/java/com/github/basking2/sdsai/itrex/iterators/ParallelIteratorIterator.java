@@ -203,6 +203,10 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
                         resultsQueue.add(iterator.next());
                     }
                 }
+                catch (final Throwable t) {
+                    // This should not happen, but report if it does.
+                    t.printStackTrace();
+                }
                 finally {
                     lock.unlock();
                 }
