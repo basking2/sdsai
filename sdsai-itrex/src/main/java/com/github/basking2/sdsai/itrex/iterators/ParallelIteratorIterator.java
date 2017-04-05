@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 /**
  * Fetch from a set of iterators concurrently and return the first ready element.
@@ -17,6 +18,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
     final List<Actor> actors;
     final private Executor executor;
     final private BlockingQueue<Actor> deferQueue;
+    final private Consumer<Throwable> reportError;
 
     /**
      * Holds the results of iteration.
@@ -28,6 +30,14 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
      * This does man that N extra elements may be fetched under very precise timing conditions.
      */
     final private BlockingQueue<T> resultsQueue;
+
+    public ParallelIteratorIterator(
+        final Executor executor,
+        final int queueSize,
+        final List<Iterator<T>> inputs
+    ) {
+        this(executor, queueSize, inputs, e -> e.printStackTrace());
+    }
 
     /**
      * Constructor.
@@ -41,13 +51,16 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
      *                  producing iterator will do this.
      * @param inputs The list of input iterators. Each iterator may be accessed in parallel with another.
      *               If iterators share resources, this behavior must be accounted for.
+     * @param reportError A way to communicate errors.
      */
     public ParallelIteratorIterator(
-            final Executor executor,
-            final int queueSize,
-            final List<Iterator<T>> inputs
+        final Executor executor,
+        final int queueSize,
+        final List<Iterator<T>> inputs,
+        final Consumer<Throwable> reportError
     )
     {
+        this.reportError = reportError;
         final List<Actor> actorsTmp = new ArrayList<>(inputs.size());
 
         // Schedule all iterators to populate the results queue.
@@ -67,6 +80,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
 
         // Start all actors.
         for (final Actor a : actors) {
+            // We don't catch any errors here because the user will get them by normal exception propagation.
             executor.execute(a);
         }
     }
@@ -147,7 +161,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
                 return resultsQueue.take();
             }
             catch (final InterruptedException e) {
-                e.printStackTrace();
+                reportError.accept(e);
             }
         }
 
@@ -160,7 +174,12 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
     private void scheduleDeferedActors() {
         // Always restart when we call next.
         for (int i = deferQueue.size(); i > 0; i--) {
-            executor.execute(deferQueue.poll());
+            try {
+                executor.execute(deferQueue.poll());
+            }
+            catch (final Throwable t) {
+                reportError.accept(t);
+            }
         }
     }
 
@@ -205,7 +224,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
                 }
                 catch (final Throwable t) {
                     // This should not happen, but report if it does.
-                    t.printStackTrace();
+                    reportError.accept(t);
                 }
                 finally {
                     lock.unlock();
