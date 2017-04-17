@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.itrex;
 
 import org.jline.reader.*;
+import org.jline.reader.impl.history.DefaultHistory;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
@@ -25,11 +26,12 @@ public class Shell {
 
         final Terminal terminal = TerminalBuilder.builder()
                 .name("Itrex")
-                .system(false)
+                .system(true)
                 .build();
 
         final LineReader lineReader = LineReaderBuilder.builder()
                 .terminal(terminal)
+                .history(new DefaultHistory())
                 //.completer(new MyCompleter())
                 //.highlighter(new MyHighlighter())
                 //.parser(new MyParser())
