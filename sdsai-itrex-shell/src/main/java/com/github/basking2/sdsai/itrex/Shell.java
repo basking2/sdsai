@@ -1,5 +1,9 @@
 package com.github.basking2.sdsai.itrex;
 
+import org.jline.reader.*;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,20 +16,30 @@ public class Shell {
 
     private static String EXIT_OBJECT = "exiting...";
 
-    public static final void main(final String[] argv) {
+    public static final void main(final String[] argv) throws IOException {
         Evaluator evaluator = buildEvaluator();
 
         boolean run = true;
 
         final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
+        final Terminal terminal = TerminalBuilder.builder()
+                .name("Itrex")
+                .system(false)
+                .build();
+
+        final LineReader lineReader = LineReaderBuilder.builder()
+                .terminal(terminal)
+                //.completer(new MyCompleter())
+                //.highlighter(new MyHighlighter())
+                //.parser(new MyParser())
+                .build();
+
         while (run) {
             try {
-                prompt();
-
                 System.out.flush();
 
-                final String expStr = collectExpression(input);
+                final String expStr = collectExpression(lineReader);
 
                 final Object exp = new SimpleExpressionParser(expStr).parse();
 
@@ -46,17 +60,17 @@ public class Shell {
         }
     }
 
-    public static final void prompt() {
-        System.out.printf("exp: ");
-    }
-
-    public static final String collectExpression(final BufferedReader input) throws IOException {
+    public static final String collectExpression(final LineReader lineReader) throws IOException {
         final StringBuilder sb = new StringBuilder();
 
         boolean parsed = false;
 
         while (! parsed) {
-            final String line = input.readLine();
+            final String line = lineReader.readLine("itrex> ");
+
+            if (line == null) {
+                return "[exit]";
+            }
 
             sb.append(line);
 
