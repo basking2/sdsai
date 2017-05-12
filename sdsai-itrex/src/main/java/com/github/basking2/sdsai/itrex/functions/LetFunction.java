@@ -16,8 +16,8 @@ public class LetFunction implements FunctionInterface<Object>, HelpfulFunction {
             throw new SExprRuntimeException("Let argument iterator is not an evaluating iterator. Can't modify environment. Let may not be used in expressions like curry or compose as it proxies access to the evaluation iterator.");
         }
 
-        // Build the new context.
-        final EvaluationContext newContext = new EvaluationContext(evaluationContext);
+        // Build the new context with the same arguments.
+        final EvaluationContext newContext = new EvaluationContext(evaluationContext, evaluationContext.getArguments());
 
         // Cast the iterator down so we can influence the context.
         @SuppressWarnings("unchecked")

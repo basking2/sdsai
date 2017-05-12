@@ -64,3 +64,21 @@ The above are all double values.
   It is taken to be a string. There are no identifiers or variables
   in this expression language, just values. Semantic meaning
   is added by ItrEx if the resultant structure is passed to it for evaluation.
+
+## Functions
+
+To define a simple function, you simply call the +function+ command on a thing
+to be evaluated.
+
+.A simple function.
+----
+[[function [if [hasArg] [arg] []]] hi]
+----
+
+.Naming a function.
+----
+[let
+    [set f [function [if [hasArg] [arg] []]]]
+    [[get f] hi]
+]
+----

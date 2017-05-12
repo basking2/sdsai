@@ -1,8 +1,10 @@
 package com.github.basking2.sdsai.itrex;
 
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
+import com.github.basking2.sdsai.itrex.iterators.Iterators;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -12,14 +14,23 @@ public class EvaluationContext {
     private Map<Object, FunctionInterface<? extends Object>> functionRegistry = new HashMap<>();
     private Map<Object, Object> env = new HashMap<>();
 
+    /**
+     * To support function calls we must hold an arguments record.
+     *
+     * A function call does not require a sub-context, but one is recommended.
+     * This prevents a calling function's argument from being lost by another function's arguments.
+     */
+    private Iterator<?> arguments;
+
     protected EvaluationContext()
     {
-        this(null);
+        this(null, Iterators.EMPTY_ITERATOR);
     }
 
-    public EvaluationContext(final EvaluationContext parent)
+    public EvaluationContext(final EvaluationContext parent, final Iterator<?> arguments)
     {
         this.parent = parent;
+        this.arguments = arguments;
     }
 
     public void set(final Object key, final Object value) {
@@ -58,5 +69,13 @@ public class EvaluationContext {
         }
 
         return null;
+    }
+
+    public void setArguments(final Iterator<?> arguments) {
+        this.arguments = arguments;
+    }
+
+    public Iterator<?> getArguments() {
+        return arguments;
     }
 }

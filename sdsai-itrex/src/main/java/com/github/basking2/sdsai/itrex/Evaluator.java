@@ -9,6 +9,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
+import com.github.basking2.sdsai.itrex.functions.function.ArgFunction;
+import com.github.basking2.sdsai.itrex.functions.function.FunctionFunction;
+import com.github.basking2.sdsai.itrex.functions.function.HasArgFunction;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
 import com.github.basking2.sdsai.itrex.packages.CastingPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
@@ -79,6 +82,11 @@ public class Evaluator {
         register("logWarn", new LogFunction(LogFunction.LEVEL.WARN));
         register("logError", new LogFunction(LogFunction.LEVEL.ERROR));
 
+        // Add the function functions.
+        register("function", new FunctionFunction(this));
+        register("arg", new ArgFunction());
+        register("hasArg", new HasArgFunction());
+
         // Import the string package.
         evaluate(new String[]{"import", StringPackage.class.getCanonicalName()});
 
@@ -127,7 +135,7 @@ public class Evaluator {
      * @return The result of the evaluation.
      */
     public Object evaluate(final Object o) {
-        return evaluate(o, new EvaluationContext(rootContext));
+        return evaluate(o, new EvaluationContext(rootContext, Iterators.EMPTY_ITERATOR));
     }
 
     @SuppressWarnings("unchecked")
@@ -186,6 +194,6 @@ public class Evaluator {
     }
 
     public EvaluationContext getChildEvaluationContext() {
-        return new EvaluationContext(rootContext);
+        return new EvaluationContext(rootContext, Iterators.EMPTY_ITERATOR);
     }
 }

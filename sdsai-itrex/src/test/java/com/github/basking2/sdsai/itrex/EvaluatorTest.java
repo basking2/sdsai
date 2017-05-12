@@ -155,6 +155,18 @@ public class EvaluatorTest {
     }
 
     @Test
+    public void testCompose2() {
+        final Evaluator evaluator = new Evaluator();
+
+        final Object expression = parseExpression("[toString [list a b]]");
+
+        @SuppressWarnings("unchecked")
+        String result = (String) evaluator.evaluate(expression);
+
+        System.out.println(result);
+    }
+
+    @Test
     public void testFlatten() {
         final Evaluator evaluator = new Evaluator();
         @SuppressWarnings("unchecked")
@@ -226,5 +238,23 @@ public class EvaluatorTest {
         assertFalse((Boolean)e.evaluate(parseExpression("[and [not [and]] 2]")));
 
         assertFalse((Boolean)e.evaluate(parseExpression("[not astring]")));
+    }
+
+    @Test
+    public void testFunction() {
+        final Evaluator e = new Evaluator();
+        assertFalse((Boolean)e.evaluate((parseExpression("[[function [hasArg]]]"))));
+
+        assertTrue((Boolean)e.evaluate((parseExpression("[[function [hasArg]] hi]"))));
+
+        assertEquals("hi", (String)e.evaluate((parseExpression("[[function [arg]] hi]"))));
+        assertEquals("hi", (String)e.evaluate((parseExpression("[[function [if [hasArg] [arg] []]] hi]"))));
+        assertEquals("hi", (String)e.evaluate((
+                parseExpression(
+                        "[let "+
+                        "    [set f [function [if [hasArg] [arg] []]]] "+
+                        "     [[get f] hi]"+
+                        "]"
+                ))));
     }
 }
