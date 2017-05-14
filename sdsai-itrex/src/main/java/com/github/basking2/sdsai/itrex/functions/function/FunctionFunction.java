@@ -2,7 +2,6 @@ package com.github.basking2.sdsai.itrex.functions.function;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
-import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
 import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 

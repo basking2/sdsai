@@ -252,6 +252,10 @@ public class EvaluatorTest {
         assertEquals("hi", (String)e.evaluate((
                 parseExpression(
                         "[let "+
+                        "    [* This is the comment block? Yup. It is. " +
+                       " And it's [] here [hi let] no!" +
+                        "*] " +
+                        "[* And a second comment. *]" +
                         "    [set f [function [if [hasArg] [arg] []]]] "+
                         "     [[get f] hi]"+
                         "]"

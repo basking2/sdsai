@@ -28,6 +28,15 @@ public class SimpleExpressionParser {
     public static final Pattern COMMA = Pattern.compile("^\\s*,");
     public static final Pattern OPEN_BRACKET = Pattern.compile("^\\s*\\[");
     public static final Pattern CLOSE_BRACKET = Pattern.compile("^\\s*\\]");
+
+    public static final Pattern BLOCK_COMMENT = Pattern.compile(
+            "^\\s*\\[\\*" +
+
+            "([^*]|\\*[^\\]])*" +
+
+            "\\*\\]"
+    );
+
     public static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
     public static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
 
@@ -35,7 +44,7 @@ public class SimpleExpressionParser {
     public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
     public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+|\\d+D|\\d+d)");
 
-    public static final Pattern WORD = Pattern.compile("^(?:\\w+)");
+    public static final Pattern WORD = Pattern.compile("^(?:[\\w\\.]+)");
 
     private final String expression;
     private int position;
@@ -51,7 +60,7 @@ public class SimpleExpressionParser {
     }
 
     private static int matchOrNeg1(final String expression, final Pattern pattern, int start) {
-        Matcher m = pattern.matcher(expression).region(start, expression.length());
+        final Matcher m = pattern.matcher(expression).region(start, expression.length());
         if (m.find()) {
             return m.group().length();
         }
@@ -69,6 +78,10 @@ public class SimpleExpressionParser {
 
     private static int closeBracket(final String expression, final int start) {
         return matchOrNeg1(expression, CLOSE_BRACKET, start);
+    }
+
+    private static int blockComment(final String expression, final int start) {
+        return matchOrNeg1(expression, BLOCK_COMMENT, start);
     }
 
     private void skipWs() {
@@ -90,8 +103,17 @@ public class SimpleExpressionParser {
         };
     }
 
-    final Object parse() {
+    final public Object parse() {
         skipWs();
+
+        for (
+                int i = blockComment(expression, position);
+                i >= 0;
+                i = blockComment(expression, position)
+        ) {
+
+            position += i;
+        }
 
         int i = openBracket(expression, position);
 
