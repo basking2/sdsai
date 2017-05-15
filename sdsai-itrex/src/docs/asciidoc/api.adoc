@@ -20,10 +20,12 @@ endif::[]
     Returns the version of the API.
 
 ## Functional
+
 `[curry <function name> [args...]]`::
     Return a new function that will call the
     +function name+ with the given arguments and any
     additional arguments passed to the returned function.
+
 `[compose <function 1> <function 2>...]`::
     Compose 1 or more functions (_not_ function names) into
     a into a single function. Each function should take only
@@ -36,6 +38,30 @@ endif::[]
 ----
 [[compose [curry f] [curry g]] "hello"]
 ----
+
+`[function [...]`::
+    Construct a function that can be called or used. See the `[args]`, `[arg]` and `[hasArg]`
+    functions. +
++
+----
+[let
+    [set f [function [if [hasArg] [arg] []]]]
+    [[get f] hi]
+]
+----
+
+`[hasArg]`:: Returns true if the evaluation context has an
+    argument remaining. Function calls receive a new
+    argument list.
+
+`[arg]`:: Pull one argument value off the argument list
+    passed to the evaluation context. This is how a function
+    should get its arguments.
+    This will cause a NoSuchElementException to be thrown.
+    Make sure `[hasArg]` is true before calling this.
+
+`[args]`:: Return all arguments passed to the evalution context
+    as an iterator.
 
 ## List
 
@@ -64,8 +90,10 @@ endif::[]
 
 ## String
 
-+[stringJoin joinString string1 string2]+::
++[stringJoin joinString string1 string2...]+::
     Takes 1 or more strings. Returns a string joined by the first string.
+    If this encounters an iterator as an argument it will drain the iterator,
+    joining each of those elements as a string.
 +[stringSplit splitPattern string]+::
     Split the second string using the first string as a regular expression.
 +[stringConcat string1 string2]+::
@@ -106,15 +134,8 @@ endif::[]
 +[logError ...]+::
     Log all arguments at +ERROR+. This is very similar to +print+.
 
-## Conditional
+## Looping / Iteration
 
-+[if <predicate> <true branch> <false branch>]+::
-    If +predicate+ is true, then the +true branch+ is evaluted
-    and returned.
-    If +predicate+ is false _and_ +if+ has not been curried or composed
-    with another function, the +true branch+ is skipped and the +false branch+
-    is evaluated and returned. If your +true branch+ has no side effects
-    and is not computationally expensive, this should not make any difference.
 +[for <name> <iterable> <body>]+::
     For sets +name+ to each value in +iterable+. It will then evaluate the +body+
     over and over, for each value in +iterable+. The last evaluated value of
@@ -130,6 +151,25 @@ endif::[]
    [set i 0]
    [for j [list 1 2 3 4] [set i [add [get i] [get j]]]]]
 ----
+
++[range [start] <stop> [step]]+::
+    Return an iterator that will walk from the +start+ to the +stop+
+    by adding the +step+ value. If 1 arguments i passed, it is treated
+    as the stop value, start is assumed to be 0 and step is assumed to be 1.
+    If 2 values are given they are assumed to be the start and the stop values
+    and the step is assumed to be 1. +
++
+This throws an exception if the range would result in an infinite loop.
+
+## Conditional
+
++[if <predicate> <true branch> <false branch>]+::
+    If +predicate+ is true, then the +true branch+ is evaluated
+    and returned.
+    If +predicate+ is false _and_ +if+ has not been curried or composed
+    with another function, the +true branch+ is skipped and the +false branch+
+    is evaluated and returned. If your +true branch+ has no side effects
+    and is not computationally expensive, this should not make any difference.
 +[and <arg1> <arg2>...]+::
     This returns the logical +and+ of the arguments. An argument is considered
     false if it is literally a +False+ object or +null+. It is true otherwise.

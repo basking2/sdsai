@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
 import com.github.basking2.sdsai.itrex.functions.function.ArgFunction;
+import com.github.basking2.sdsai.itrex.functions.function.ArgsFunction;
 import com.github.basking2.sdsai.itrex.functions.function.FunctionFunction;
 import com.github.basking2.sdsai.itrex.functions.function.HasArgFunction;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
@@ -85,6 +86,7 @@ public class Evaluator {
         // Add the function functions.
         register("function", new FunctionFunction(this));
         register("arg", new ArgFunction());
+        register("args", new ArgsFunction());
         register("hasArg", new HasArgFunction());
 
         // Import the string package.
@@ -112,6 +114,7 @@ public class Evaluator {
         register("set", new SetFunction());
         register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
         register("for", new ForFunction(this));
+        register("range", new RangeFunction());
         register("tail", (iterator, ctx) -> {
             Iterator<?> i = toIterator(iterator.next());
             i.next();

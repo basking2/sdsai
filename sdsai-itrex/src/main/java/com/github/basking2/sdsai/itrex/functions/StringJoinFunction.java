@@ -16,9 +16,19 @@ public class StringJoinFunction implements FunctionInterface<String> {
         final StringBuilder sb = new StringBuilder();
 
         while (iterator.hasNext()) {
-            sb.append(iterator.next().toString()).append(s);
+            final Object o = iterator.next();
+            if (o instanceof Iterator) {
+                @SuppressWarnings("unchecked")
+                final Iterator<Object> i = (Iterator<Object>)o;
+                while (i.hasNext()) {
+                    sb.append(i.next().toString()).append(s);
+                }
+            }
+            else {
+                sb.append(o.toString()).append(s);
+            }
         }
 
-        return sb.substring(0, sb.length() - s.length());
+        return sb.delete(sb.length() - s.length(), sb.length()).toString();
     }
 }

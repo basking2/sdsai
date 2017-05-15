@@ -82,3 +82,8 @@ to be evaluated.
     [[get f] hi]
 ]
 ----
+
+When a function is called, the evaluation context for it has
+a special value set, the arguments value. You can access the values
+in the `arguments` iterator by calling `[hasArgs]`, `[arg]` and
+`[args]`. See the api documentation for the exact behavior of each.
