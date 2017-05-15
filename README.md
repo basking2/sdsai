@@ -1,5 +1,7 @@
 # sdsai
 
+# [Homepage](https://basking2.github.io/sdsai)
+
 ![Travis Build Status](https://travis-ci.org/basking2/sdsai.svg?branch=master "travis-ci")
 
 Sam's Data-structures and AI - a collection of Java and Scala utility code.
