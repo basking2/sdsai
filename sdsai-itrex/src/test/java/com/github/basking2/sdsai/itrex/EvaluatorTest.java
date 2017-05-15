@@ -266,7 +266,7 @@ public class EvaluatorTest {
     public void testCrash01() {
         final Evaluator e = new Evaluator();
         final Object o = parseExpression("[stringJoin \",\n\" [map [curry toString] [range 0 101 1]]]");
-        System.out.println(e.evaluate(o));
+        e.evaluate(o);
     }
 
 }
