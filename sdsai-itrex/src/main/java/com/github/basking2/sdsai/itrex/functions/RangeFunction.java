@@ -20,19 +20,19 @@ public class RangeFunction implements FunctionInterface<Iterator<Integer>> {
             return emptyIterator;
         }
 
-        final int start = (Integer)iterator.next();
+        final int start = Integer.valueOf(iterator.next().toString());
         if (!iterator.hasNext()) {
             // When there is no 2nd argument, start is used as the stop value.
             // Start is 0 and step is 1.
             return new RangeIterator(0, start, 1);
         }
 
-        final int stop = (Integer)iterator.next();
+        final int stop = Integer.valueOf(iterator.next().toString());
         if (!iterator.hasNext()) {
             return new RangeIterator(start, stop, 1);
         }
 
-        final int step = (Integer)iterator.next();
+        final int step = Integer.valueOf(iterator.next().toString());
 
         return new RangeIterator(start, stop, step);
     }
