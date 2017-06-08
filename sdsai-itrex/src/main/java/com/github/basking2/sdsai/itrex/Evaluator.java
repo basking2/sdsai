@@ -9,10 +9,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
-import com.github.basking2.sdsai.itrex.functions.function.ArgFunction;
-import com.github.basking2.sdsai.itrex.functions.function.ArgsFunction;
-import com.github.basking2.sdsai.itrex.functions.function.FunctionFunction;
-import com.github.basking2.sdsai.itrex.functions.function.HasArgFunction;
+import com.github.basking2.sdsai.itrex.functions.function.*;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
 import com.github.basking2.sdsai.itrex.packages.CastingPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
@@ -85,6 +82,7 @@ public class Evaluator {
 
         // Add the function functions.
         register("function", new FunctionFunction(this));
+        register("register", new RegisterFunctionFunction(this));
         register("arg", new ArgFunction());
         register("args", new ArgsFunction());
         register("hasArg", new HasArgFunction());
