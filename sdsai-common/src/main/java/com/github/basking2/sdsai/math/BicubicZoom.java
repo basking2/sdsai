@@ -10,6 +10,20 @@ public class BicubicZoom {
 
 	/**
 	 * Zoom region
+	 *
+	 * @param dataIn The source data.
+	 * @param xIn Starting x in the source data.
+	 * @param yIn Starting y in the source data.
+	 * @param widthIn How wide the region to interpolate is.
+	 * @param heightIn How high the region to interpolate is.
+	 * @param strideIn How wide the source data is. That is, we may zoom a 10x10 region into a 30x30 image.
+	 *
+	 * @param dataOut The destination array.
+	 * @param xOut Starting x in the destination data.
+	 * @param yOut Starting y in the destination data.
+	 * @param widthOut How wide the region to write into is.
+	 * @param heightOut How high the region to write into is.
+	 * @param strideOut How wide the destination data is.
 	 */
 	public void zoom
 	(
