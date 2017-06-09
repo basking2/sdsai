@@ -100,8 +100,6 @@ public class BicubicZoom {
 		final double[][] values = new double[widthIn + 2][heightIn + 2];
 
 		for (int i = 0; i < widthIn; ++i) {
-			// Because i and j cover the same range, we can initialize *both*
-			// xPoints and yPoints arrays here using the i value.
 			xPoints[i+1] = i * scale;
 
 			final double[] array = values[i+1];
