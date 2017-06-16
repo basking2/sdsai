@@ -38,7 +38,9 @@ public class SimpleExpressionParser {
     );
 
     public static final Pattern FIRST_QUOTE = Pattern.compile("^\\s*\"");
-    public static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\|\\\"|[^\"])*)\"");
+
+
+    public static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\\\\\|\\\\\"|[^\"])*)\"");
 
     public static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
     public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");

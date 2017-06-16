@@ -4,6 +4,8 @@ import static com.github.basking2.sdsai.itrex.SimpleExpressionParser.parseExpres
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 
@@ -107,4 +109,23 @@ public class SimpleExpressionParserTest {
         assertTrue(o == null);
         
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testExpression() {
+
+        final String expr = "[let \n" +
+                "     [set lt \"val:305.37\"]]\n" +
+                "     [set gt \"val:305.37\"]]\n" +
+                "     ]\n";
+
+        SimpleExpressionParser sep = new SimpleExpressionParser(expr);
+        Object o = sep.parse();
+
+        List l = (List)o;
+        List l2 = (List)l.get(1);
+        assertEquals("val:305.37", l2.get(2).toString());
+
+    }
+
 }
