@@ -21,9 +21,10 @@ public class RegisterFunctionFunction implements FunctionInterface<FunctionInter
 
     @Override
     public FunctionInterface<Object> apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
-        final FunctionInterface<Object> func =  f.apply(iterator, evaluationContext);
-
         final Object name = iterator.next();
+
+        @SuppressWarnings("unchecked")
+        final FunctionInterface<Object> func =  (FunctionInterface<Object>)iterator.next();
 
         evaluationContext.register(name, func);
 

@@ -63,6 +63,19 @@ endif::[]
 `[args]`:: Return all arguments passed to the evalution context
     as an iterator.
 
+`[register <name> <function>]`:: Register the given function under the given name. +
++
+A typical usage would be +
++
+----
+[register f [function [toString [arg]]]]
+----
++
+This registers the funciton under the name `f`.
+The reason to separate `register` from `function` is to allow for
+constructions such as `[register f [curry...]]` and
+`[register f [compose...]]`.
+
 ## List
 
 +[map <function> <iterator>]+::

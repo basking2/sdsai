@@ -21,6 +21,11 @@ with it.
 * Functional
   * `[curry function arg1 arg2...]`
   * `[compose function1 function2...]`
+  * `[function functionBody]`
+  * `[register f a_function]`
+    * eg. `[register f [function [body]]]`
+    * eg. `[register f [curry f a b c]]`
+    * eg. `[register f [compose f g]]`
 * List
   * `[map function iterator]`
   * `[head iterator]`

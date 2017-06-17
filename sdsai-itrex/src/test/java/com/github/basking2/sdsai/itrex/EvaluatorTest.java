@@ -269,4 +269,27 @@ public class EvaluatorTest {
         e.evaluate(o);
     }
 
+    @Test
+    public void testNamedFunction() {
+        final Evaluator e = new Evaluator();
+        final Object o = parseExpression("[let \n"+
+                "[register f [curry toString]]\n" +
+                "[f 4.1d]" +
+                "]");
+        final String s = e.evaluate(o).toString();
+
+        assertEquals("4.1", s);
+    }
+
+    @Test
+    public void testNamedFunction2() {
+        final Evaluator e = new Evaluator();
+        final Object o = parseExpression("[let \n"+
+                "[register f [function [toString [arg]]]]\n" +
+                "[f 4.1d]" +
+                "]");
+        final String s = e.evaluate(o).toString();
+
+        assertEquals("4.1", s);
+    }
 }
