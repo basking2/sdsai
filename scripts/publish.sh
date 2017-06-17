@@ -14,7 +14,7 @@ do
 	rm -fr "javadocs/$proj" || true
 	mv "$proj/build/docs/javadoc" "javadocs/$proj" || true
 
-	rm -fr"docs/$proj" || true
+	rm -fr "docs/$proj" || true
 	mv "$proj/build/asciidoc/html5" "docs/$proj" || true
 done
 
