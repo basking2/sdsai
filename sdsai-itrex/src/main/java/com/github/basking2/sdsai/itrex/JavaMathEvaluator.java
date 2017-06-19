@@ -5,8 +5,8 @@ import java.lang.reflect.Method;
 
 import com.github.basking2.sdsai.itrex.functions.AbstractFunction1;
 import com.github.basking2.sdsai.itrex.functions.AbstractFunction2;
-import com.github.basking2.sdsai.itrex.functions.CastingFunctionFactory;
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
+import com.github.basking2.sdsai.itrex.util.TypeConversion;
 
 /**
  * An {@link Evaluator} that binds {@link Math} functions.
@@ -70,12 +70,12 @@ public class JavaMathEvaluator extends Evaluator {
         @Override
         protected Object applyImpl(Object o1, Object o2, EvaluationContext context) {
             if (o1 instanceof Double) {
-                o2 = CastingFunctionFactory.castToDouble(o2);
+                o2 = TypeConversion.toDouble(o2);
             } else if (o2 instanceof Double) {
-                o1 = CastingFunctionFactory.castToDouble(o1);
+                o1 = TypeConversion.toDouble(o1);
             } else if (!o1.getClass().isInstance(o2.getClass())) {
-                o1 = CastingFunctionFactory.castToDouble(o1);
-                o2 = CastingFunctionFactory.castToDouble(o2);
+                o1 = TypeConversion.toDouble(o1);
+                o2 = TypeConversion.toDouble(o2);
             }
 
             final Method m;
