@@ -71,4 +71,18 @@ public class TypeConversion {
             throw new IllegalArgumentException("Cannot cast " + o.getClass().getName() + " to double.");
         }
     }
+
+    public static boolean toBoolean(final Object o) {
+        if (o instanceof Boolean) {
+            return (Boolean) o;
+        }
+
+        for (final String falsy : new String[]{ "false", "0", "no", "f", "off"}) {
+            if (falsy.equalsIgnoreCase(o.toString())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

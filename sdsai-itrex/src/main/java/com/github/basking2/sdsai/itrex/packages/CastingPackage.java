@@ -12,4 +12,5 @@ public class CastingPackage {
     public static final FunctionInterface<Float> toFloat = (itr, ctx) -> TypeConversion.toFloat(itr.next());
     public static final FunctionInterface<Long> toLong =  (itr, ctx) -> TypeConversion.toLong(itr.next());
     public static final FunctionInterface<Double> toDouble =  (itr, ctx) -> TypeConversion.toDouble(itr.next());
+    public static final FunctionInterface<Boolean> toBoolean =  (itr, ctx) -> TypeConversion.toBoolean(itr.next());
 }
