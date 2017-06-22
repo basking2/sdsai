@@ -5,7 +5,7 @@ import com.github.basking2.sdsai.itrex.Evaluator;
 
 import java.util.Iterator;
 
-public class EvaluatingIterator<T extends Object> implements Iterator<T> {
+public class EvaluatingIterator<T> implements Iterator<T> {
 
     private Iterator<Object> itr;
     private boolean evaluationEnabled;

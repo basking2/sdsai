@@ -21,7 +21,7 @@ public class FlattenFunction implements FunctionInterface<Iterator<Object>> {
     @Override
     public Iterator<Object> apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
 
-        Iterator<Iterator<? extends Object>> itrItrObj = mapIterator(iterator, e -> {
+        Iterator<Iterator<Object>> itrItrObj = mapIterator(iterator, e -> {
             if (e instanceof Iterator) {
                 return (Iterator<Object>) e;
             }
@@ -38,6 +38,6 @@ public class FlattenFunction implements FunctionInterface<Iterator<Object>> {
 
         });
 
-        return new IteratorIterator<Object>(itrItrObj);
+        return new IteratorIterator<>(itrItrObj);
     }
 }

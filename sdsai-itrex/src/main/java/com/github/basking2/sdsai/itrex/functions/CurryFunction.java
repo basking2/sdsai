@@ -16,7 +16,7 @@ import static java.util.Arrays.asList;
 public class CurryFunction implements HelpfulFunction, FunctionInterface<FunctionInterface<Object>> {
 
     @Override
-    public FunctionInterface<Object> apply(final Iterator<? extends Object> args, final EvaluationContext evaluationContext) {
+    public FunctionInterface<Object> apply(final Iterator<?> args, final EvaluationContext evaluationContext) {
 
         if (!args.hasNext()) {
             throw new SExprRuntimeException("CurryFunction requires at least 1 argument.");
@@ -33,8 +33,10 @@ public class CurryFunction implements HelpfulFunction, FunctionInterface<Functio
         // Now return a new function that...
         return new FunctionInterface<Object>() {
             @Override
-            public Object apply(final Iterator<? extends Object> args3, final EvaluationContext evaluationContext) {
-                return function.apply(new IteratorIterator<Object>(asList(args2.iterator(), args3)), evaluationContext);
+            public Object apply(final Iterator<?> args3, final EvaluationContext evaluationContext) {
+                @SuppressWarnings("unchecked")
+                final Iterator<Object> args3Downcast = (Iterator<Object>)args3;
+                return function.apply(new IteratorIterator<>(asList(args2.iterator(), args3Downcast)), evaluationContext);
             }
         };
     }
