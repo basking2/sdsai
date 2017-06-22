@@ -1,35 +1,32 @@
-package com.github.basking2.sdsai.itrex;
+package com.github.basking2.sdsai.itrex.packages;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import com.github.basking2.sdsai.itrex.EvaluationContext;
+import com.github.basking2.sdsai.itrex.Evaluator;
+import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.functions.AbstractFunction1;
 import com.github.basking2.sdsai.itrex.functions.AbstractFunction2;
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
 import com.github.basking2.sdsai.itrex.util.TypeConversion;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * An {@link Evaluator} that binds {@link Math} functions.
  */
-public class JavaMathEvaluator extends Evaluator {
-
-    public JavaMathEvaluator() {
-        importMath();
-    }
-
-    public void importMath() {
-
+public class JavaMathPackage implements Package {
+    @Override
+    public void importTo(final Evaluator evaluator) {
         for (final Method m : Math.class.getMethods()) {
 
             final String functionName = m.getName();
 
             if (m.getParameterCount() == 2) {
                 FunctionInterface<? extends Object> f = new MathFunction2(functionName);
-                register(functionName, f);
+                evaluator.register(functionName, f);
             }
             else if (m.getParameterCount() == 1) {
                 FunctionInterface<? extends Object> f = new MathFunction1(functionName);
-                register(functionName, f);
+                evaluator.register(functionName, f);
             }
         }
     }
@@ -47,13 +44,13 @@ public class JavaMathEvaluator extends Evaluator {
                 final Method m = Math.class.getMethod(functionName, getPrimitiveType(o));
                 return m.invoke(null, o);
             }
-            catch (NoSuchMethodException e) {
+            catch (final NoSuchMethodException e) {
                 throw new SExprRuntimeException(e.getMessage(), e);
             }
-            catch (InvocationTargetException e) {
+            catch (final InvocationTargetException e) {
                 throw new SExprRuntimeException(e.getMessage(), e);
             }
-            catch (IllegalAccessException e) {
+            catch (final IllegalAccessException e) {
                 throw new SExprRuntimeException(e.getMessage(), e);
             }
         }

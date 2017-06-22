@@ -2,6 +2,8 @@ package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
+import com.github.basking2.sdsai.itrex.SExprRuntimeException;
+import com.github.basking2.sdsai.itrex.packages.Package;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;
@@ -13,9 +15,14 @@ import java.util.Iterator;
  */
 public class ImportFunction implements FunctionInterface<String> {
 
+    final Evaluator evaluator;
     final EvaluationContext evaluationContext;
 
-    public ImportFunction(final EvaluationContext evaluationContext) {
+    public ImportFunction(
+            final Evaluator evaluator,
+            final EvaluationContext evaluationContext
+    ) {
+        this.evaluator = evaluator;
         this.evaluationContext = evaluationContext;
     }
 
@@ -41,17 +48,34 @@ public class ImportFunction implements FunctionInterface<String> {
 
     /**
      * @param o The object to import.
+     *
      * @return Null on success or an error string.
      */
     private String doImport(final Object o) {
         if (o instanceof String) {
             try {
                 final Class<?> clazz = getClass().forName((String)o);
-                doImportStatics(clazz, clazz);
+
+                if (Package.class.isAssignableFrom(clazz)) {
+                    try {
+                        doImport(clazz.newInstance());
+                    } catch (InstantiationException e) {
+                        throw new SExprRuntimeException("Creating "+((String) o), e);
+                    } catch (IllegalAccessException e) {
+                        throw new SExprRuntimeException("Creating "+((String) o), e);
+                    }
+                }
+                else {
+                    doImportStatics(clazz, clazz);
+                }
             }
             catch (final ClassNotFoundException e) {
                 return e.getMessage();
             }
+        }
+        else if (o instanceof Package) {
+            final Package p = (Package)o;
+            p.importTo(evaluator);
         }
         else if (o instanceof Class) {
             return doImportStatics((Class)o, o);
