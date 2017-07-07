@@ -1,7 +1,9 @@
-package com.github.basking2.sdsai.itrex.functions;
+package com.github.basking2.sdsai.itrex.functions.functional;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
+import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
+import com.github.basking2.sdsai.itrex.functions.HelpfulFunction;
 import com.github.basking2.sdsai.itrex.iterators.IteratorIterator;
 
 import java.util.ArrayList;

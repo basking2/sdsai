@@ -3,15 +3,18 @@ package com.github.basking2.sdsai.itrex;
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.EMPTY_ITERATOR;
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
 import com.github.basking2.sdsai.itrex.functions.function.*;
+import com.github.basking2.sdsai.itrex.functions.functional.ComposeFunction;
+import com.github.basking2.sdsai.itrex.functions.functional.CurryFunction;
+import com.github.basking2.sdsai.itrex.functions.functional.MapFunction;
 import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
 import com.github.basking2.sdsai.itrex.packages.CastingPackage;
+import com.github.basking2.sdsai.itrex.packages.FunctionalPackage;
 import com.github.basking2.sdsai.itrex.packages.StringPackage;
 import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.iterators.Iterators;
@@ -96,9 +99,9 @@ public class Evaluator {
         // And or not eq...
         evaluate(new String[]{"import", BooleanPackage.class.getCanonicalName()});
 
-        register("curry", new CurryFunction());
-        register("compose", new ComposeFunction());
-        register("map", new MapFunction());
+        // Map, fold, etc...
+        evaluate(new String[]{"import", FunctionalPackage.class.getCanonicalName()});
+
         register("last", new LastFunction());
         register("flatten", new FlattenFunction());
         register("list", new ListFunction());

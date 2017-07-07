@@ -18,7 +18,7 @@ public abstract class AbstractFunction2<T1, T2, R> implements FunctionInterface<
         final T2 arg2 = getArgument(iterator, "2");
 
         try {
-            return applyImpl(arg1, arg2, evaluationContext);
+            return applyImpl(arg1, arg2, iterator, evaluationContext);
         }
         catch (final ClassCastException e) {
             throw new SExprRuntimeException("Casting argument.", e);
@@ -30,8 +30,9 @@ public abstract class AbstractFunction2<T1, T2, R> implements FunctionInterface<
      *
      * @param t1 The desired parameter.
      * @param t2 The desired parameter.
+     * @param rest Any unused arguments.
      * @param context The evaluation context.
      * @return The produced object.
      */
-    protected abstract R applyImpl(T1 t1, T2 t2, EvaluationContext context);
+    protected abstract R applyImpl(T1 t1, T2 t2, Iterator<?> rest, EvaluationContext context);
 }

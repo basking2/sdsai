@@ -10,6 +10,7 @@ import com.github.basking2.sdsai.itrex.util.TypeConversion;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 /**
  */
@@ -39,7 +40,7 @@ public class JavaMathPackage implements Package {
         }
 
         @Override
-        protected Object applyImpl(Object o, EvaluationContext context) {
+        protected Object applyImpl(Object o, Iterator<?> rest, EvaluationContext context) {
             try {
                 final Method m = Math.class.getMethod(functionName, getPrimitiveType(o));
                 return m.invoke(null, o);
@@ -65,7 +66,7 @@ public class JavaMathPackage implements Package {
         }
 
         @Override
-        protected Object applyImpl(Object o1, Object o2, EvaluationContext context) {
+        protected Object applyImpl(Object o1, Object o2, Iterator<?> rest, EvaluationContext context) {
             if (o1 instanceof Double) {
                 o2 = TypeConversion.toDouble(o2);
             } else if (o2 instanceof Double) {

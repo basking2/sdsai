@@ -20,6 +20,10 @@ compileJava {
 	options.compilerArgs << '-Xlint:unchecked'
 }
 
+compileTestJava {
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
 repositories {
 }
 

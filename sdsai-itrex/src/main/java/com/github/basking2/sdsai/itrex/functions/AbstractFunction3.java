@@ -18,7 +18,7 @@ public abstract class AbstractFunction3<T1, T2, T3, R> implements FunctionInterf
         final T3 arg3 = getArgument(iterator, "3");
 
         try {
-            return applyImpl(arg1, arg2, arg3, evaluationContext);
+            return applyImpl(arg1, arg2, arg3, iterator, evaluationContext);
         }
         catch (final ClassCastException e) {
             throw new SExprRuntimeException("Casting argument.", e);
@@ -29,8 +29,9 @@ public abstract class AbstractFunction3<T1, T2, T3, R> implements FunctionInterf
      * @param arg1 The first argument.
      * @param arg2 The second argument.
      * @param arg3 The third argument.
+     * @param rest Any unused arguments.
      * @param context The evaluation context.
      * @return The result.
      */
-    protected abstract R applyImpl(T1 arg1, T2 arg2, T3 arg3, EvaluationContext context);
+    protected abstract R applyImpl(T1 arg1, T2 arg2, T3 arg3, Iterator<?> rest, EvaluationContext context);
 }
