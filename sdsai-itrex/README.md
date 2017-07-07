@@ -18,14 +18,20 @@ with it.
     registry of functions.
 * Info
   * `[version]`
-* Functional
-  * `[curry function arg1 arg2...]`
-  * `[compose function1 function2...]`
+* Function
+  * `[arg]`
+  * `[args]`
   * `[function functionBody]`
+  * `[hasArg]`
   * `[register f a_function]`
     * eg. `[register f [function [body]]]`
     * eg. `[register f [curry f a b c]]`
     * eg. `[register f [compose f g]]`
+* Functional
+  * `[curry function arg1 arg2...]`
+  * `[compose function1 function2...]`
+  * `[fold function init [ele1 ele2...]]`
+  * `[foldLeft function init [ele1 ele2...]]`
 * List
   * `[map function iterator]`
   * `[head iterator]`
