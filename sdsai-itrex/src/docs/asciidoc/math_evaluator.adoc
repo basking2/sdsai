@@ -17,8 +17,7 @@ endif::[]
 
 ## ItrEx Math Evaluator
 
-ItrEx comes with an Evaluator (+JavaMathEvaluator+) that will try to
-dynamically look up methods in +java.lang.Math+.
+ItrEx imports +java.util.Math+'s static functions.
 Here are some examples.
 
 .Example 1: Get the absolute value.

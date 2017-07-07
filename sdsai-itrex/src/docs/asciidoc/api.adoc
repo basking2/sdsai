@@ -19,25 +19,16 @@ endif::[]
 `[version]`::
     Returns the version of the API.
 
-## Functional
+## Function
 
-`[curry <function name> [args...]]`::
-    Return a new function that will call the
-    +function name+ with the given arguments and any
-    additional arguments passed to the returned function.
+`[arg]`:: Pull one argument value off the argument list
+    passed to the evaluation context. This is how a function
+    should get its arguments.
+    This will cause a NoSuchElementException to be thrown.
+    Make sure `[hasArg]` is true before calling this.
 
-`[compose <function 1> <function 2>...]`::
-    Compose 1 or more functions (_not_ function names) into
-    a into a single function. Each function should take only
-    1 argument, that returned from the following function.
-    The last function may take any number of arguments.
-    The +compose+ function does not take function names, but
-    functions. Use +curry+ with no arguments to fetch functions by name. +
-+
-.Curry Example: This runs f(g("hello")).
-----
-[[compose [curry f] [curry g]] "hello"]
-----
+`[args]`:: Return all arguments passed to the evalution context
+    as an iterator.
 
 `[function [...]`::
     Construct a function that can be called or used. See the `[args]`, `[arg]` and `[hasArg]`
@@ -54,15 +45,6 @@ endif::[]
     argument remaining. Function calls receive a new
     argument list.
 
-`[arg]`:: Pull one argument value off the argument list
-    passed to the evaluation context. This is how a function
-    should get its arguments.
-    This will cause a NoSuchElementException to be thrown.
-    Make sure `[hasArg]` is true before calling this.
-
-`[args]`:: Return all arguments passed to the evalution context
-    as an iterator.
-
 `[register <name> <function>]`:: Register the given function under the given name. +
 +
 A typical usage would be +
@@ -75,6 +57,34 @@ This registers the funciton under the name `f`.
 The reason to separate `register` from `function` is to allow for
 constructions such as `[register f [curry...]]` and
 `[register f [compose...]]`.
+
+## Functional
+
+`[compose <function 1> <function 2>...]`::
+    Compose 1 or more functions (_not_ function names) into
+    a into a single function. Each function should take only
+    1 argument, that returned from the following function.
+    The last function may take any number of arguments.
+    The +compose+ function does not take function names, but
+    functions. Use +curry+ with no arguments to fetch functions by name. +
++
+.Curry Example: This runs f(g("hello")).
+----
+[[compose [curry f] [curry g]] "hello"]
+----
+
+`[curry <function name> [args...]]`::
+    Return a new function that will call the
+    +function name+ with the given arguments and any
+    additional arguments passed to the returned function.
+
+`[foldLeft <function 1> <initial> [elements...]]`::
+    This is aliased as +fold+.
+    Fold the elements in the list of elements using
+    +function 1+ with the given initial value.
+    The +function 1+ function should take two arguments. The
+    first is the folded value (starting with the +initial+ value)
+    and the second argument is an element in the given list of elements.
 
 ## List
 
