@@ -5,7 +5,7 @@
 set -x
 set -e
 
-git pull -r
+#git pull -r
 ./gradlew clean check asciidoctor install
 git checkout gh-pages
 
