@@ -1,10 +1,7 @@
 package com.github.basking2.sdsai.itrex.packages;
 
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
-import com.github.basking2.sdsai.itrex.functions.functional.ComposeFunction;
-import com.github.basking2.sdsai.itrex.functions.functional.CurryFunction;
-import com.github.basking2.sdsai.itrex.functions.functional.FoldLeftFunction;
-import com.github.basking2.sdsai.itrex.functions.functional.MapFunction;
+import com.github.basking2.sdsai.itrex.functions.functional.*;
 
 import java.util.Iterator;
 
@@ -17,5 +14,5 @@ public class FunctionalPackage {
     public static final FunctionInterface<Iterator<Object>> map = new MapFunction();
     public static final FunctionInterface<Object> foldLeft = new FoldLeftFunction();
     public static final FunctionInterface<Object> fold = foldLeft;
-
+    public static final FunctionInterface<Object> callFlattened = new CallFlattenedFunction();
 }

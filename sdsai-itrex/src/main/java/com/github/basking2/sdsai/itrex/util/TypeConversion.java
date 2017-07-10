@@ -72,7 +72,22 @@ public class TypeConversion {
         }
     }
 
+    /**
+     * Convert the parameter o to a boolean using its truthy or falsey ness.
+     *
+     * <ol>
+     *     <li>Null is false.</li>
+     *     <li>The strings "false", "0", "no", "f", and "off" all result in a false value.
+     *     <li>Everything not listed above results in true.</li>
+     * </ol>
+     * @param o The object to convert to a boolean.
+     * @return The boolean value of {@code o}.
+     */
     public static boolean toBoolean(final Object o) {
+        if (o == null) {
+            return false;
+        }
+
         if (o instanceof Boolean) {
             return (Boolean) o;
         }

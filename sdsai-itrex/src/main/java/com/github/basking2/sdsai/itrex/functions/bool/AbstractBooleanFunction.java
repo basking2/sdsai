@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.itrex.functions.bool;
 
 import com.github.basking2.sdsai.itrex.functions.AbstractAggregatingFunction;
+import com.github.basking2.sdsai.itrex.util.TypeConversion;
 
 /**
  * Perform a boolean function on all arguments.
@@ -21,19 +22,7 @@ public abstract class AbstractBooleanFunction extends AbstractAggregatingFunctio
 
     @Override
     public Boolean applyT(Boolean aBoolean, Object o) {
-        return booleanOperation(aBoolean, convertToBoolean(o));
-    }
-
-    private Boolean convertToBoolean(final Object o) {
-        if (o == null) {
-            return Boolean.FALSE;
-        }
-
-        if (o instanceof Boolean) {
-            return (Boolean)o;
-        }
-
-        return true;
+        return booleanOperation(aBoolean, TypeConversion.toBoolean(o));
     }
 
     public abstract Boolean booleanOperation(Boolean b1, Boolean b2);

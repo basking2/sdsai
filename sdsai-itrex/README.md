@@ -28,6 +28,7 @@ with it.
     * eg. `[register f [curry f a b c]]`
     * eg. `[register f [compose f g]]`
 * Functional
+  * `[callFlattened fn arg1 [list arg2 arg3] arg4]`
   * `[curry function arg1 arg2...]`
   * `[compose function1 function2...]`
   * `[fold function init [ele1 ele2...]]`
