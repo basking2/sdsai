@@ -12,10 +12,7 @@ import com.github.basking2.sdsai.itrex.functions.function.*;
 import com.github.basking2.sdsai.itrex.functions.functional.ComposeFunction;
 import com.github.basking2.sdsai.itrex.functions.functional.CurryFunction;
 import com.github.basking2.sdsai.itrex.functions.functional.MapFunction;
-import com.github.basking2.sdsai.itrex.packages.BooleanPackage;
-import com.github.basking2.sdsai.itrex.packages.CastingPackage;
-import com.github.basking2.sdsai.itrex.packages.FunctionalPackage;
-import com.github.basking2.sdsai.itrex.packages.StringPackage;
+import com.github.basking2.sdsai.itrex.packages.*;
 import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.iterators.Iterators;
 
@@ -102,8 +99,10 @@ public class Evaluator {
         // Map, fold, etc...
         evaluate(new String[]{"import", FunctionalPackage.class.getCanonicalName()});
 
+        // Iterator functions.
+        evaluate(new String[]{"import", IteratorPackage.class.getCanonicalName()});
+
         register("last", new LastFunction());
-        register("flatten", new FlattenFunction());
         register("list", new ListFunction());
         register("dict", new DictFunction());
         register("listFlatten", new ListFlattenFunction());
