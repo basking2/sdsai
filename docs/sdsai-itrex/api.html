@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>ItrEx Api 1.0.10-SNAPSHOT</title>
+<title>ItrEx Api 1.0.10</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>ItrEx Api 1.0.10-SNAPSHOT</h1>
+<h1>ItrEx Api 1.0.10</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -631,6 +631,20 @@ This is more tolerant than the flatten function.</p>
 elements of each of those argument iterators.
 Unlike <code>listFlatten</code>, this does not materialize the inputs into
 a list, allowing for memory savings.</p>
+</dd>
+<dt class="hdlist1"><code>[flatten2 &lt; &lt;iterator1&gt;, &lt;iterator2&gt; &gt;, &lt; &lt;iterator3&gt;, &lt;iterator4&gt; &gt;</code></dt>
+<dd>
+<p>Just <code>flatten</code> will take iterators and concatenate them. However, when dealing with the
+output of something like a call to <code>[map]</code> you can easily end up with a single iterator
+that contains iterators. In this case, flatten would just return that single iterator with no change.
+What we really want is a way to unwrap the outer iterator and concatenate the inner elements. <code>Flatten2</code> does
+this. It is equivalent to a call to <code>[callFlatten [curry flatten]] &#8230;&#8203;]</code>.<br></p>
+<div class="listingblock">
+<div class="title">Flatten2 Example: This returns the iterator [1, 2, 3, 4, 5, 6]</div>
+<div class="content">
+<pre>[flatten2 [list [list 1 2] [list 3, 4]] [list 5 6]]</pre>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -937,7 +951,7 @@ list.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-07-10 00:18:58 -05:00
+Last updated 2017-07-17 20:04:53 -05:00
 </div>
 </div>
 </body>
