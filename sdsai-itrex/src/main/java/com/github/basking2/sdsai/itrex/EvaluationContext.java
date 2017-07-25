@@ -39,8 +39,8 @@ public class EvaluationContext {
 
     public Object get(final Object key) {
         for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
-            if (env.containsKey(key)) {
-                return env.get(key);
+            if (ec.env.containsKey(key)) {
+                return ec.env.get(key);
             }
         }
 
@@ -49,7 +49,7 @@ public class EvaluationContext {
 
     public boolean containsKey(final Object key) {
         for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
-            if (env.containsKey(key)) {
+            if (ec.env.containsKey(key)) {
                 return true;
             }
         }

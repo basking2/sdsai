@@ -292,4 +292,18 @@ public class EvaluatorTest {
 
         assertEquals("4.1", s);
     }
+
+    @Test
+    public void testFunctionScoping() {
+        final Evaluator e = new Evaluator();
+        final Object o = parseExpression("[last \n"+
+                "[set t 1]\n"+
+                "[register f [function [toString [get t]]]]\n" +
+                "[set t 2]\n"+
+                "[f]" +
+                "]");
+        final String s = e.evaluate(o).toString();
+
+        assertEquals("2", s);
+    }
 }
