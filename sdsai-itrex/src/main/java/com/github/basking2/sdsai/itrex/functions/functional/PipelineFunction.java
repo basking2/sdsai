@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * A function that returns a function that ties many functions together.
  *
- * For readability any strings that are "|" or "=>" are ignored.
+ * For readability any strings that are "|" or "=&lt;" are ignored.
  */
 public class PipelineFunction implements FunctionInterface<FunctionInterface<Object>> {
 
