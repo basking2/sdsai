@@ -110,6 +110,20 @@ function calls.
     first is the folded value (starting with the +initial+ value)
     and the second argument is an element in the given list of elements.
 
+`[pipeline <function or function name>]`::
+    Given functions or function names, this will return a function that
+    passes the result of the first function to the second function as an argument, and so on.
+    The effect is that the functions for a processing pipeline.
+    This is similar to `[compose]` but instead of `f(g(x))` this results in `g(f(x))`.
+    Note that `[pipeline]` executes procedurally in order while `[compose]` will
+    execute its functions recursively in reverse order. This typically only matters
+    for scoping variables. +
++
+.Pipeline Example: This runs g(f("hello")).
+----
+[[pipeline [curry f] [curry g]] "hello"]
+----
+
 ## List
 
 +[map <function> <iterator>]+::
