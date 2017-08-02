@@ -15,4 +15,5 @@ public class FunctionalPackage {
     public static final FunctionInterface<Object> foldLeft = new FoldLeftFunction();
     public static final FunctionInterface<Object> fold = foldLeft;
     public static final FunctionInterface<Object> callFlattened = new CallFlattenedFunction();
+    public static final FunctionInterface<FunctionInterface<Object>> pipeline = new PipelineFunction();
 }
