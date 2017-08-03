@@ -19,6 +19,22 @@ endif::[]
 `[version]`::
     Returns the version of the API.
 
+`[import <string or class>]`::
+    Import functions into the root evaluation context.
+    If the argument is a string, the class it points to is
+    loaded. If the class is a +Package+ class, then its
+    +importTo+ function is called. If the class is
+    another type, then all static memebers that are
+    +FunctionInterface+ types are registered as functions.
+
+`[evalItrml <file>]`::
+    Load the given file into memory, parse it as an
+    +.itrml+ file and evaluate it in the current
+    evaluation context. If you use this to load custom
+    functions, realize that this must be evaluated under
+    the root context or the function registrations will
+    be discarded.
+
 ## Function
 
 `[arg]`:: Pull one argument value off the argument list
