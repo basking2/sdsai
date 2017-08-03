@@ -66,6 +66,7 @@ public class Evaluator {
     public void importBase() {
         register("help", new HelpFunction());
         register("import", new ImportFunction(this, rootContext));
+        register("evalItrml", new EvalItrmlFunction(this));
         register("version", new VersionFunction());
     }
 

@@ -1,0 +1,4 @@
+[last
+    [register foo [function foo]]
+    [foo]
+]
