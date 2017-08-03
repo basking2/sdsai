@@ -48,6 +48,7 @@ public class PipelineFunction implements FunctionInterface<FunctionInterface<Obj
             @Override
             public Object apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
                 Object result = null;
+                @SuppressWarnings("unchecked")
                 Iterator<Object> args = (Iterator<Object>)iterator;
                 for (final FunctionInterface<?> f : pipeline) {
                     result = f.apply(args, evaluationContext);

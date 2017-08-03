@@ -24,6 +24,7 @@ public class IteratorPackage implements Package {
      */
     public void importFlatten2(final Evaluator evaluator) {
 
+        @SuppressWarnings("unchecked")
         final FunctionInterface<Object> flatten2 = (FunctionInterface<Object>)evaluator.evaluate(
                 new Object[]{"curry", "callFlattened", new Object[]{"curry", "flatten"}}
         );
