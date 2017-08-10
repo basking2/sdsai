@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.github.basking2.sdsai.itrex.util.Reflection.isAssignable;
+
 public class JavaNewFunction extends AbstractFunction1<Object, Object> {
     @Override
     protected Object applyImpl(final Object target, final Iterator<?> rest, final EvaluationContext context) {
@@ -82,7 +84,7 @@ public class JavaNewFunction extends AbstractFunction1<Object, Object> {
                 final Class<?>[] parameterTypes = constructor.getParameterTypes();
 
                 for (int i = 0; i < parameterTypes.length; ++i) {
-                    if (!parameterTypes[i].isAssignableFrom(argumentTypes[i])) {
+                    if (!isAssignable(parameterTypes[i], argumentTypes[i])) {
                         break nomatch;
                     }
                 }

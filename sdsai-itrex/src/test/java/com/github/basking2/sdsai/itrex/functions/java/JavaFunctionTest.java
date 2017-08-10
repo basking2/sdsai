@@ -36,7 +36,7 @@ public class JavaFunctionTest {
         // Import java package.
         e.evaluate(asList("import", JavaPackage.class.getCanonicalName()), ctx);
 
-        final ArrayList<Object> al = (ArrayList<Object>)e.evaluate(parseExpression("[set al [javaNew [classOf java.util.ArrayList]]]"), ctx);
+        final ArrayList<Object> al = (ArrayList<Object>)e.evaluate(parseExpression("[set al [javaNew [classOf java.util.ArrayList] 3]]"), ctx);
 
         assertEquals(0, al.size());
 
@@ -46,6 +46,7 @@ public class JavaFunctionTest {
         assertEquals(2, al.size());
         assertEquals("foo", al.get(0));
         assertEquals("bar", al.get(1));
-        // assertEquals("foo", (String)e.evaluate(parseExpression("[java get [get al] [java intValue 0]]"), ctx));
+        assertEquals(al.get(0), (String)e.evaluate(parseExpression("[java get [get al] 0]"), ctx));
+        assertEquals(al.get(1), (String)e.evaluate(parseExpression("[java get [get al] 1]"), ctx));
     }
 }

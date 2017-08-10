@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.github.basking2.sdsai.itrex.util.Reflection.isAssignable;
+
 /**
  * Function that takes the name of a function, a target object, and a list or iterable of arguments.
  *
@@ -98,7 +100,7 @@ public class JavaFunction extends AbstractFunction2<String, Object, Object> {
                     final Class<?>[] parameterTypes = method.getParameterTypes();
 
                     for (int i = 0; i < parameterTypes.length; ++i) {
-                        if (!parameterTypes[i].isAssignableFrom(argumentTypes[i])) {
+                        if (!isAssignable(parameterTypes[i], argumentTypes[i])) {
                             break nomatch;
                         }
                     }
