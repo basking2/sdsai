@@ -29,6 +29,19 @@ public class JavaFunctionTest {
     }
 
     @Test
+    public void testThatAStringConvertsToAClass() {
+        final Evaluator e = new Evaluator();
+        final EvaluationContext ctx = e.getRootEvaluationContext();
+
+        // Import java package.
+        e.evaluate(asList("import", JavaPackage.class.getCanonicalName()), ctx);
+
+        final String al = (String)e.evaluate(parseExpression("[javaNew java.lang.String a-test]"), ctx);
+        assertEquals("a-test", al);
+
+    }
+
+    @Test
     public void testObjectMethods() {
         final Evaluator e = new Evaluator();
         final EvaluationContext ctx = e.getRootEvaluationContext();
