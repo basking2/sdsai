@@ -46,7 +46,7 @@ public class SimpleExpressionParser {
     public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
     public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+|\\d+D|\\d+d)");
 
-    public static final Pattern WORD = Pattern.compile("^(?:[\\w\\.]+)");
+    public static final Pattern WORD = Pattern.compile("^(?:[\\w\\.\\-:|]+)");
 
     private final String expression;
     private int position;
