@@ -3,9 +3,7 @@ package com.github.basking2.sdsai.itrex;
 import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
 import com.github.basking2.sdsai.itrex.iterators.Iterators;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  */
@@ -77,5 +75,20 @@ public class EvaluationContext {
 
     public Iterator<?> getArguments() {
         return arguments;
+    }
+
+    /**
+     * Get all functions from this context and all parent contexts.
+     *
+     * @return A set of all function identifiers that may be individually passed to {@link #getFunction(Object)}.
+     */
+    public Set<Object> getAllFunctions() {
+        final Set<Object> functions = new HashSet<>();
+
+        for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
+            functions.addAll(ec.functionRegistry.keySet());
+        }
+
+        return functions;
     }
 }
