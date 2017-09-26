@@ -109,6 +109,7 @@ public class Evaluator {
         register("listFlatten", new ListFlattenFunction());
         register("print", new PrintArgsFunction(System.out));
         register("printErr", new PrintArgsFunction(System.err));
+        register("case", new CaseFunction());
         register("if", new IfFunction());
         register("let", new LetFunction());
         register("get", new GetFunction());

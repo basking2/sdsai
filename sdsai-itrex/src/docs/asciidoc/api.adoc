@@ -252,6 +252,12 @@ This throws an exception if the range would result in an infinite loop.
 
 ## Conditional
 
++[case <predicate> <success>]+::
+    The case function is useful when used with the `find` function. Case takes two arguments and returns
+    a list of two results. The first argument to `case` is a predicate. If this evaluates to _true_,
+    then the second argument is evaluated and the list `[true, r]` is returned where `r` is the result
+    of the second expression's evaluation. If the predicate evaluates to _false_ then the list
+    `[false, null]` is returned.
 +[if <predicate> <true branch> <false branch>]+::
     If +predicate+ is true, then the +true branch+ is evaluated
     and returned.
