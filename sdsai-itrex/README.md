@@ -57,6 +57,7 @@ with it.
   * `[logError arg1 arg2... ]` - Like print, but logs at `ERROR` level.
 * Conditional
   * `[if predicate truebranch falsebranch]`
+  * `[caseList [case predicate truebranch]...]`
 * Variables
   * `[let]`
   * `[get name]`
