@@ -35,6 +35,29 @@ public class EvaluationContext {
         env.put(key, value);
     }
 
+    /**
+     * This is like set, but updates an already existing variable in the scope it is defined in.
+     *
+     * A call to set will merely set the variable in the current context, and that value will be lost on exit.
+     *
+     * This is a way to create side-effects, a very not-function practice, but sometimes necessary.
+     *
+     * If the value is not found to update an exception is thrown
+     *
+     * @param key The key to set.
+     * @param value The value to associate with the key.
+     */
+    public void update(final Object key, final Object value) {
+        for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
+            if (ec.env.containsKey(key)) {
+                ec.env.put(key, value);
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException("Attempt to update "+key+" when it is not yet defined.");
+    }
+
     public Object get(final Object key) {
         for (EvaluationContext ec = this; ec != null; ec = ec.parent) {
             if (ec.env.containsKey(key)) {

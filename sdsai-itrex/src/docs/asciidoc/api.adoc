@@ -327,6 +327,10 @@ evaluating it. This works, but is less elegant.
 +[set <name> <value>]+::
     Set the name to the given value. If there is already a value
     set, it is discarded.
++[update <name> <value>]+::
+    Update the name to the given value in the context in which
+    is was defined. If there is _not_ already a value
+    set, this is an error and an exception is raised.
 
 ## Concurrency
 

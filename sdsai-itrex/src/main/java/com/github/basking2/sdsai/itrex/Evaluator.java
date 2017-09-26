@@ -115,6 +115,7 @@ public class Evaluator {
         register("let", new LetFunction());
         register("get", new GetFunction());
         register("set", new SetFunction());
+        register("update", new UpdateFunction());
         register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
         register("for", new ForFunction(this));
         register("range", new RangeFunction());
