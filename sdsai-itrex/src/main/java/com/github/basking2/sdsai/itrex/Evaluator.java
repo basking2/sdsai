@@ -110,6 +110,7 @@ public class Evaluator {
         register("print", new PrintArgsFunction(System.out));
         register("printErr", new PrintArgsFunction(System.err));
         register("case", new CaseFunction());
+        register("caseList", new CaseListFunction());
         register("if", new IfFunction());
         register("let", new LetFunction());
         register("get", new GetFunction());
