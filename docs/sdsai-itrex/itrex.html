@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>SDSAI ItrEx 1.0.10</title>
+<title>SDSAI ItrEx 1.0.15-SNAPSHOT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>SDSAI ItrEx 1.0.10</h1>
+<h1>SDSAI ItrEx 1.0.15-SNAPSHOT</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -496,6 +496,24 @@ ItrEx does provide a few basic functions, but mostly to support evaluation.</p>
 <dt class="hdlist1"><code>[version]</code></dt>
 <dd>
 <p>Returns the version of the API.</p>
+</dd>
+<dt class="hdlist1"><code>[import &lt;string or class&gt;]</code></dt>
+<dd>
+<p>Import functions into the root evaluation context.
+If the argument is a string, the class it points to is
+loaded. If the class is a <code>Package</code> class, then its
+<code>importTo</code> function is called. If the class is
+another type, then all static memebers that are
+<code>FunctionInterface</code> types are registered as functions.</p>
+</dd>
+<dt class="hdlist1"><code>[evalItrml &lt;file&gt;]</code></dt>
+<dd>
+<p>Load the given file into memory, parse it as an
+<code>.itrml</code> file and evaluate it in the current
+evaluation context. If you use this to load custom
+functions, realize that this must be evaluated under
+the root context or the function registrations will
+be discarded.</p>
 </dd>
 </dl>
 </div>
@@ -622,6 +640,22 @@ Fold the elements in the list of elements using
 The <code>function 1</code> function should take two arguments. The
 first is the folded value (starting with the <code>initial</code> value)
 and the second argument is an element in the given list of elements.</p>
+</dd>
+<dt class="hdlist1"><code>[pipeline &lt;function or function name&gt;]</code></dt>
+<dd>
+<p>Given functions or function names, this will return a function that
+passes the result of the first function to the second function as an argument, and so on.
+The effect is that the functions for a processing pipeline.
+This is similar to <code>[compose]</code> but instead of <code>f(g(x))</code> this results in <code>g(f(x))</code>.
+Note that <code>[pipeline]</code> executes procedurally in order while <code>[compose]</code> will
+execute its functions recursively in reverse order. This typically only matters
+for scoping variables.<br></p>
+<div class="listingblock">
+<div class="title">Pipeline Example: This runs g(f("hello")).</div>
+<div class="content">
+<pre>[[pipeline [curry f] [curry g]] "hello"]</pre>
+</div>
+</div>
 </dd>
 </dl>
 </div>
@@ -814,6 +848,29 @@ and the step is assumed to be 1.<br></p>
 <h3 id="_conditional">Conditional</h3>
 <div class="dlist">
 <dl>
+<dt class="hdlist1"><code>[caseList [case &#8230;&#8203;], [case &#8230;&#8203;] &#8230;&#8203;]</code></dt>
+<dd>
+<p>The <code>caseList</code> function is built to work with <code>case</code> functions, but this is not necessary.
+Find will evaluate each of its arguments, in order, until it finds a result.
+A result is <em>found</em> if the argument either evaluates to <em>true</em> or is an interable object
+and its first element evaluates to <em>true</em>. In the case of an iterable element, the second
+element in the iterable is returned as the actual result. In the case of a non-iterable,
+then just true is returned.
+If nothing is found, then null (not <em>false</em>) is returned.<br></p>
+<div class="paragraph">
+<p>Case Lists are slightly preferred over <code>[if]</code> constructs because the implementation of <code>if</code>
+has to short-circuit the evaluating iterator in order to skip over the <code>then</code> clause without
+evaluating it. This works, but is less elegant.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>[case &lt;predicate&gt; &lt;success&gt;]</code></dt>
+<dd>
+<p>The case function is useful when used with the <code>find</code> function. Case takes two arguments and returns
+a list of two results. The first argument to <code>case</code> is a predicate. If this evaluates to <em>true</em>,
+then the second argument is evaluated and the list <code>[true, r]</code> is returned where <code>r</code> is the result
+of the second expression&#8217;s evaluation. If the predicate evaluates to <em>false</em> then the list
+<code>[false, null]</code> is returned.</p>
+</dd>
 <dt class="hdlist1"><code>[if &lt;predicate&gt; &lt;true branch&gt; &lt;false branch&gt;]</code></dt>
 <dd>
 <p>If <code>predicate</code> is true, then the <code>true branch</code> is evaluated
@@ -1157,7 +1214,7 @@ rounded.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-07-17 20:04:53 -05:00
+Last updated 2017-09-26 11:31:14 -05:00
 </div>
 </div>
 </body>

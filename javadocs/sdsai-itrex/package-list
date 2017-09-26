@@ -3,6 +3,7 @@ com.github.basking2.sdsai.itrex.functions
 com.github.basking2.sdsai.itrex.functions.bool
 com.github.basking2.sdsai.itrex.functions.function
 com.github.basking2.sdsai.itrex.functions.functional
+com.github.basking2.sdsai.itrex.functions.java
 com.github.basking2.sdsai.itrex.iterators
 com.github.basking2.sdsai.itrex.packages
 com.github.basking2.sdsai.itrex.util
