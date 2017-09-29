@@ -71,6 +71,9 @@ public class Evaluator {
 
         // Import base.
         evaluate(new String[]{"import", BasePackage.class.getCanonicalName()});
+
+        // Import ITRML.
+        evaluate(new String[]{"evalItrml", "/base.itrml"}, getRootEvaluationContext());
     }
 
     /**

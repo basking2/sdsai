@@ -1,0 +1,3 @@
+[ last
+    [register mapFlat [function [map [curry callFlattened [arg]] [arg]]]]
+]
