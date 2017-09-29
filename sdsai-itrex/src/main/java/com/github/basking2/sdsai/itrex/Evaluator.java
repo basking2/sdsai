@@ -68,6 +68,9 @@ public class Evaluator {
         register("import", new ImportFunction(this, rootContext));
         register("evalItrml", new EvalItrmlFunction(this));
         register("version", new VersionFunction());
+
+        // Import base.
+        evaluate(new String[]{"import", BasePackage.class.getCanonicalName()});
     }
 
     /**
@@ -80,13 +83,6 @@ public class Evaluator {
         register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));
         register("logWarn", new LogFunction(LogFunction.LEVEL.WARN));
         register("logError", new LogFunction(LogFunction.LEVEL.ERROR));
-
-        // Add the function functions.
-        register("function", new FunctionFunction(this));
-        register("register", new RegisterFunctionFunction(this));
-        register("arg", new ArgFunction());
-        register("args", new ArgsFunction());
-        register("hasArg", new HasArgFunction());
 
         // Import the string package.
         evaluate(new String[]{"import", StringPackage.class.getCanonicalName()});
@@ -102,29 +98,6 @@ public class Evaluator {
 
         // Iterator functions.
         evaluate(new String[]{"import", IteratorPackage.class.getCanonicalName()});
-
-        register("last", new LastFunction());
-        register("list", new ListFunction());
-        register("dict", new DictFunction());
-        register("listFlatten", new ListFlattenFunction());
-        register("print", new PrintArgsFunction(System.out));
-        register("printErr", new PrintArgsFunction(System.err));
-        register("case", new CaseFunction());
-        register("caseList", new CaseListFunction());
-        register("if", new IfFunction());
-        register("let", new LetFunction());
-        register("get", new GetFunction());
-        register("set", new SetFunction());
-        register("update", new UpdateFunction());
-        register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
-        register("for", new ForFunction(this));
-        register("range", new RangeFunction());
-        register("tail", (iterator, ctx) -> {
-            Iterator<?> i = toIterator(iterator.next());
-            i.next();
-            return i;
-        });
-
 
         register("thread", new ThreadFunction(executor));
         register("join", new JoinFunction());

@@ -190,16 +190,18 @@ function calls.
 
 ## Casting
 
-+[toString arg]+::
++[string arg]+::
     Return the result of calling +toString()+ on the argument.
-+[toInt arg]+::
++[int arg]+::
     Convert the argument to an integer.
-+[toFloat arg]+::
++[float arg]+::
     Convert the argument to a float.
-+[toLong arg]+::
++[long arg]+::
     Convert the argument to a long.
-+[toDouble arg]+::
++[double arg]+::
     Convert the argument to a double.
++[boolean arg]+::
+    Convert the argument to a boolean.
 
 ## Printing
 
@@ -272,6 +274,9 @@ evaluating it. This works, but is less elegant.
     of the second expression's evaluation. If the predicate evaluates to _false_ then the list
     `[false, null]` is returned.
 
++[defaultCase <success>]+::
+    Equivalent to `[case [t] [...]]`.
+
 +[if <predicate> <true branch> <false branch>]+::
     If +predicate+ is true, then the +true branch+ is evaluated
     and returned.
@@ -279,6 +284,10 @@ evaluating it. This works, but is less elegant.
     with another function, the +true branch+ is skipped and the +false branch+
     is evaluated and returned. If your +true branch+ has no side effects
     and is not computationally expensive, this should not make any difference.
+
++[t]+:: Return true.
+
++[f]+:: Return false.
 
 +[and <arg1> <arg2>...]+::
     This returns the logical +and+ of the arguments. An argument is considered
