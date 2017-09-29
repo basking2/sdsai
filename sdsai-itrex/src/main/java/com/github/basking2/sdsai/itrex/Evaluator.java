@@ -90,6 +90,9 @@ public class Evaluator {
         // Register toInt, toLong, toFloat, toString, toDouble.
         evaluate(new String[]{"import", CastingPackage.class.getCanonicalName()});
 
+        // Dict.
+        evaluate(new String[]{"import", DictPackage.class.getCanonicalName()});
+
         // And or not eq...
         evaluate(new String[]{"import", BooleanPackage.class.getCanonicalName()});
 

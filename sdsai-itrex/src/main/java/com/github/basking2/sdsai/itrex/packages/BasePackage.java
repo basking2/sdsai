@@ -29,7 +29,6 @@ public class BasePackage implements Package {
 
         evaluator.register("last", new LastFunction());
         evaluator.register("list", new ListFunction());
-        evaluator.register("dict", new DictFunction());
         evaluator.register("listFlatten", new ListFlattenFunction());
         evaluator.register("if", new IfFunction());
         evaluator.register("let", new LetFunction());
