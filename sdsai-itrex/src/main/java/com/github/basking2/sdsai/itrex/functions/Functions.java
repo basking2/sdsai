@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
+import com.github.basking2.sdsai.itrex.util.TwoTuple;
 
 import java.util.Iterator;
 import java.util.function.BiFunction;
@@ -17,8 +18,8 @@ public class Functions {
         return new AbstractAggregatingFunction<T, R>(initial) {
 
             @Override
-            public R applyT(R r, T t) {
-                return f.apply(r, t);
+            public TwoTuple<Boolean, R> applyT(R r, T t) {
+                return new TwoTuple(Boolean.TRUE, f.apply(r, t));
             }
 
         };

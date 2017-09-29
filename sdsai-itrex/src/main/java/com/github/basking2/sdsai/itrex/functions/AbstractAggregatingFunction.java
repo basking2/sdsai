@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.SExprRuntimeException;
+import com.github.basking2.sdsai.itrex.util.TwoTuple;
 
 /**
  * This defines most of a function that takes a list of Ts, iterators of Ts or iterables over Ts
@@ -33,23 +34,23 @@ public abstract class AbstractAggregatingFunction<T, R> implements FunctionInter
     @Override
     public R apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
         
-        R r = initialValue;
+        TwoTuple<Boolean, R> r = new TwoTuple<>(Boolean.TRUE, initialValue);
 
-        while (iterator.hasNext()) {
+        while (r.l && iterator.hasNext()) {
             final Object o = iterator.next();
 
             final Iterator<T> tList = toIterator(o);
 
             if (tList != null) {
-                while (tList.hasNext()) {
-                    r = applyT(r, tList.next());
+                while (r.l && tList.hasNext()) {
+                    r = applyT(r.r, tList.next());
                 }
             } 
             else {
                 try {
                     @SuppressWarnings("unchecked")
                     final T t = (T)o;
-                    r = applyT(r, t);
+                    r = applyT(r.r, t);
                 }
                 catch (final ClassCastException e) {
                     throw new SExprRuntimeException(e.getMessage(), e);
@@ -57,8 +58,14 @@ public abstract class AbstractAggregatingFunction<T, R> implements FunctionInter
             }
         }
 
-        return r;
+        return r.r;
     }
-    
-    public abstract R applyT(R r, T t);
+
+    /**
+     *
+     * @param r Right value.
+     * @param t Left value.
+     * @return A two-tuple which, if the left value is true, aggregation will continue.
+     */
+    public abstract TwoTuple<Boolean, R> applyT(R r, T t);
 }
