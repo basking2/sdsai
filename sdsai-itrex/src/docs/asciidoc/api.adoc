@@ -156,6 +156,14 @@ function calls.
     of applying +function+ to those elements. The elements from the argument
     iterator are not mapped using +function+ until they are requested
     from the returned iterator.
++[mapFlat <function> <iterator>]+::
+    The function `[map]` passed the arguments to the function.
+    This function flattens the arguments before passing them to the `function`.
+    This is equivalent to +
++
+----
+    [map [curry callFlattened [curry someFunction]] [arg]]
+----
 +[head <iterator>]+::
     Return the first element.
 +[tail <iterator>]+::
