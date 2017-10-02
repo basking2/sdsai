@@ -11,14 +11,14 @@ public class OrFunction extends AbstractBooleanFunction {
     }
 
     @Override
-    public TwoTuple<Boolean, Boolean> booleanOperation(Boolean b1, Boolean b2) {
+    public Result booleanOperation(Boolean b1, Boolean b2) {
         final boolean b = b1 || b2;
         if (b) {
-            return new TwoTuple<>(Boolean.FALSE, b);
+            return new Result(false, b);
         }
         else {
             // b is false, so it could flip to true. Continue.
-            return new TwoTuple<>(Boolean.TRUE, b);
+            return new Result(true, b);
         }
     }
 }

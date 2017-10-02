@@ -1,7 +1,6 @@
 package com.github.basking2.sdsai.itrex.functions.bool;
 
 import com.github.basking2.sdsai.itrex.functions.AbstractAggregatingFunction;
-import com.github.basking2.sdsai.itrex.util.TwoTuple;
 import com.github.basking2.sdsai.itrex.util.TypeConversion;
 
 /**
@@ -22,10 +21,10 @@ public abstract class AbstractBooleanFunction extends AbstractAggregatingFunctio
     }
 
     @Override
-    public TwoTuple<Boolean, Boolean> applyT(Boolean aBoolean, Object o) {
+    public Result applyT(Boolean aBoolean, Object o) {
         return booleanOperation(aBoolean, TypeConversion.toBoolean(o));
     }
 
-    public abstract TwoTuple<Boolean, Boolean> booleanOperation(Boolean b1, Boolean b2);
+    public abstract Result booleanOperation(Boolean b1, Boolean b2);
 }
 
