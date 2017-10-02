@@ -6,8 +6,11 @@ import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
 import java.util.Map;
 
 public class DictPackage {
-    public static final FunctionInterface<Map<Object, Object>> dict = new DictFunction();
-    public static final FunctionInterface<Object> dictGet = (args, ctx) -> {
+
+    public static final String __package = "dict";
+
+    public static final FunctionInterface<Map<Object, Object>> mk = new DictFunction();
+    public static final FunctionInterface<Object> get = (args, ctx) -> {
         final Map<Object, Object> m = (Map<Object, Object>)args.next();
 
         final Object key = args.next();
@@ -22,7 +25,7 @@ public class DictPackage {
             return null;
         }
     };
-    public static final FunctionInterface<Map<Object, Object>> dictPut = (args, ctx) -> {
+    public static final FunctionInterface<Map<Object, Object>> put = (args, ctx) -> {
         final Map<Object, Object> m = (Map<Object, Object>)args.next();
         final Object key = args.next();
         final Object val = args.next();

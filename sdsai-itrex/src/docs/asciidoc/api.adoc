@@ -35,13 +35,13 @@ endif::[]
     the root context or the function registrations will
     be discarded.
 
-`[dict ke1 val1 key2 val2]`::
+`[dict.mk ke1 val1 key2 val2]`::
     Make a dictionary.
 
-`[dictPut dict key1 val1]`::
+`[dict.put dict key1 val1]`::
     Put a value to a dictionary. Returns the dictonary.
 
-`[dictGet dict key1 default]`::
+`[dict.get dict key1 default]`::
     Get a value from a dictionary. If the key is undefined the default is returned or null if no default is given.
 
 ## Function
