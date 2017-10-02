@@ -50,7 +50,6 @@ public class BasePackage implements Package {
         doRegister(evaluator, packageName, "long", (itr, ctx) -> TypeConversion.toLong(itr.next()));
         doRegister(evaluator, packageName, "double", (itr, ctx) -> TypeConversion.toDouble(itr.next()));
         doRegister(evaluator, packageName, "boolean", (itr, ctx) -> TypeConversion.toBoolean(itr.next()));
-        doRegister(evaluator, packageName, "boolean", (itr, ctx) -> TypeConversion.toBoolean(itr.next()));
     }
 
     private static void doRegister(final Evaluator evaluator, final String packageName, final String name, final FunctionInterface<?> fn) {
