@@ -55,6 +55,14 @@ endif::[]
 `[args]`:: Return all arguments passed to the evalution context
     as an iterator.
 
+`[fn <name> <optional body>]`::
+  If no body argument is provided `[fn]` will look up a defined
+  function and return it. If no function is defined for the given name
+  and exception is thrown. +
++
+If a body is given `[fn]` will define the function and register it. The funtion will
+still be returned. This usage is equivalent to `[register foo [function [...]]]`.
+
 `[function [...]`::
     Construct a function that can be called or used. See the `[args]`, `[arg]` and `[hasArg]`
     functions. +
