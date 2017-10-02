@@ -200,7 +200,7 @@ public class EvaluatorTest {
     public void testLogging() {
         final Evaluator evaluator = new Evaluator();
         for (LogFunction.LEVEL l : LogFunction.LEVEL.values()) {
-            final String function = "log"+l.toString().substring(0, 1) + l.toString().substring(1).toLowerCase();
+            final String function = "log."+l.toString().substring(0, 1).toLowerCase() + l.toString().substring(1).toLowerCase();
             evaluator.evaluate(asList(function, l));
         }
     }
@@ -212,11 +212,11 @@ public class EvaluatorTest {
         @SuppressWarnings("unchecked")
         List<String> l = (List<String>) evaluator.evaluate(
             asList(
-                    "stringSplit",
+                    "string.split",
                     ",",
-                    asList("stringJoin", ",",
-                        asList("stringConcat", "a", ":", "b"),
-                        asList("stringConcat", "c", ":", "d"))));
+                    asList("string.join", ",",
+                        asList("string.concat", "a", ":", "b"),
+                        asList("string.concat", "c", ":", "d"))));
 
         assertEquals(2, l.size());
         assertEquals("a:b", l.get(0));
@@ -265,7 +265,7 @@ public class EvaluatorTest {
     @Test
     public void testCrash01() {
         final Evaluator e = new Evaluator();
-        final Object o = parseExpression("[stringJoin \",\n\" [map [curry toString] [range 0 101 1]]]");
+        final Object o = parseExpression("[string.join \",\n\" [map [curry toString] [range 0 101 1]]]");
         e.evaluate(o);
     }
 

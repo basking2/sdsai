@@ -13,7 +13,9 @@ import java.util.List;
  * Evaluate: [import com.github.basking2.sdsai.itrex.packages.StringPackage]
  */
 public class StringPackage {
-    public static final FunctionInterface<String> stringJoin = new StringJoinFunction();
-    public static final FunctionInterface<String> stringConcat = new StringConcatFunction();
-    public static final FunctionInterface<List<String>> stringSplit = new StringSplitFunction();
+    public static final String __package = "string";
+
+    public static final FunctionInterface<String> join = new StringJoinFunction();
+    public static final FunctionInterface<String> concat = new StringConcatFunction();
+    public static final FunctionInterface<List<String>> split = new StringSplitFunction();
 }

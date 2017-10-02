@@ -41,8 +41,8 @@ endif::[]
 `[dictPut dict key1 val1]`::
     Put a value to a dictionary. Returns the dictonary.
 
-`[dictGet dict key1]`::
-    Get a value from a dictionary.
+`[dictGet dict key1 default]`::
+    Get a value from a dictionary. If the key is undefined the default is returned or null if no default is given.
 
 ## Function
 
@@ -196,13 +196,13 @@ function calls.
 
 ## String
 
-+[stringJoin joinString string1 string2...]+::
++[string.join joinString string1 string2...]+::
     Takes 1 or more strings. Returns a string joined by the first string.
     If this encounters an iterator as an argument it will drain the iterator,
     joining each of those elements as a string.
-+[stringSplit splitPattern string]+::
++[string.split splitPattern string]+::
     Split the second string using the first string as a regular expression.
-+[stringConcat string1 string2]+::
++[string.concat string1 string2]+::
     Concatenate all arguments as strings.
 
 ## Casting
@@ -233,13 +233,13 @@ function calls.
 
 ## Logging
 
-+[logDebug ...]+::
++[log.debug ...]+::
     Log all arguments at +DEBUG+. This is very similar to +print+.
-+[logInfo ...]+::
++[log.info ...]+::
     Log all arguments at +INFO+. This is very similar to +print+.
-+[logWarn ...]+::
++[log.warn ...]+::
     Log all arguments at +WARN+. This is very similar to +print+.
-+[logError ...]+::
++[log.error ...]+::
     Log all arguments at +ERROR+. This is very similar to +print+.
 
 ## Looping / Iteration

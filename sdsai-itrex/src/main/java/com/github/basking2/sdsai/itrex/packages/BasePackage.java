@@ -12,43 +12,53 @@ import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 public class BasePackage implements Package {
 
     @Override
-    public void importTo(final Evaluator evaluator) {
-        evaluator.register("case", new CaseFunction());
-        evaluator.register("defaultCase", new DefaultCaseFunction());
-        evaluator.register("caseList", new CaseListFunction());
+    public void importTo(final Evaluator evaluator, final String packageName) {
+        doRegister(evaluator, packageName, "case", new CaseFunction());
+        doRegister(evaluator, packageName, "defaultCase", new DefaultCaseFunction());
+        doRegister(evaluator, packageName, "caseList", new CaseListFunction());
 
         // Add the function functions.
-        evaluator.register("function", new FunctionFunction(evaluator));
-        evaluator.register("register", new RegisterFunctionFunction(evaluator));
-        evaluator.register("arg", new ArgFunction());
-        evaluator.register("args", new ArgsFunction());
-        evaluator.register("hasArg", new HasArgFunction());
+        doRegister(evaluator, packageName, "function", new FunctionFunction(evaluator));
+        doRegister(evaluator, packageName, "register", new RegisterFunctionFunction(evaluator));
+        doRegister(evaluator, packageName, "arg", new ArgFunction());
+        doRegister(evaluator, packageName, "args", new ArgsFunction());
+        doRegister(evaluator, packageName, "hasArg", new HasArgFunction());
 
-        evaluator.register("print", new PrintArgsFunction(System.out));
-        evaluator.register("printErr", new PrintArgsFunction(System.err));
+        doRegister(evaluator, packageName, "print", new PrintArgsFunction(System.out));
+        doRegister(evaluator, packageName, "printErr", new PrintArgsFunction(System.err));
 
-        evaluator.register("last", new LastFunction());
-        evaluator.register("list", new ListFunction());
-        evaluator.register("listFlatten", new ListFlattenFunction());
-        evaluator.register("if", new IfFunction());
-        evaluator.register("let", new LetFunction());
-        evaluator.register("get", new GetFunction());
-        evaluator.register("set", new SetFunction());
-        evaluator.register("update", new UpdateFunction());
-        evaluator.register("head", (iterator, ctx) -> toIterator(iterator.next()).next());
-        evaluator.register("for", new ForFunction(evaluator));
-        evaluator.register("range", new RangeFunction());
-        evaluator.register("tail", (iterator, ctx) -> {
+        doRegister(evaluator, packageName, "last", new LastFunction());
+        doRegister(evaluator, packageName, "list", new ListFunction());
+        doRegister(evaluator, packageName, "listFlatten", new ListFlattenFunction());
+        doRegister(evaluator, packageName, "if", new IfFunction());
+        doRegister(evaluator, packageName, "let", new LetFunction());
+        doRegister(evaluator, packageName, "get", new GetFunction());
+        doRegister(evaluator, packageName, "set", new SetFunction());
+        doRegister(evaluator, packageName, "update", new UpdateFunction());
+        doRegister(evaluator, packageName, "head", (iterator, ctx) -> toIterator(iterator.next()).next());
+        doRegister(evaluator, packageName, "for", new ForFunction(evaluator));
+        doRegister(evaluator, packageName, "range", new RangeFunction());
+        doRegister(evaluator, packageName, "tail", (iterator, ctx) -> {
             Iterator<?> i = toIterator(iterator.next());
             i.next();
             return i;
         });
 
-        evaluator.register("string", (itr, ctx) -> TypeConversion.toString(itr.next()));
-        evaluator.register("int", (itr, ctx) -> TypeConversion.toInt(itr.next()));
-        evaluator.register("float", (itr, ctx) -> TypeConversion.toFloat(itr.next()));
-        evaluator.register("long", (itr, ctx) -> TypeConversion.toLong(itr.next()));
-        evaluator.register("double", (itr, ctx) -> TypeConversion.toDouble(itr.next()));
-        evaluator.register("boolean", (itr, ctx) -> TypeConversion.toBoolean(itr.next()));
+        doRegister(evaluator, packageName, "string", (itr, ctx) -> TypeConversion.toString(itr.next()));
+        doRegister(evaluator, packageName, "int", (itr, ctx) -> TypeConversion.toInt(itr.next()));
+        doRegister(evaluator, packageName, "float", (itr, ctx) -> TypeConversion.toFloat(itr.next()));
+        doRegister(evaluator, packageName, "long", (itr, ctx) -> TypeConversion.toLong(itr.next()));
+        doRegister(evaluator, packageName, "double", (itr, ctx) -> TypeConversion.toDouble(itr.next()));
+        doRegister(evaluator, packageName, "boolean", (itr, ctx) -> TypeConversion.toBoolean(itr.next()));
+        doRegister(evaluator, packageName, "boolean", (itr, ctx) -> TypeConversion.toBoolean(itr.next()));
     }
+
+    private static void doRegister(final Evaluator evaluator, final String packageName, final String name, final FunctionInterface<?> fn) {
+        if (packageName == null || packageName.isEmpty()) {
+            evaluator.register(name, fn);
+        } else {
+            evaluator.register(packageName +"."+name, fn);
+        }
+    }
+
 }

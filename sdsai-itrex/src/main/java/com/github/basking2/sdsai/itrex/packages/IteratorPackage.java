@@ -9,10 +9,15 @@ import com.github.basking2.sdsai.itrex.functions.FunctionInterface;
  */
 public class IteratorPackage implements Package {
     @Override
-    public void importTo(final Evaluator evaluator) {
-        evaluator.register("flatten", new FlattenFunction());
+    public void importTo(final Evaluator evaluator, final String packageName) {
+        if (packageName == null || packageName.isEmpty()) {
+            evaluator.register("flatten", new FlattenFunction());
+        }
+        else {
+            evaluator.register(packageName + ".flatten", new FlattenFunction());
+        }
 
-        importFlatten2(evaluator);
+        importFlatten2(evaluator, packageName);
     }
 
     /**
@@ -22,13 +27,18 @@ public class IteratorPackage implements Package {
      *
      * @param evaluator The evaluator to register flatten2 against.
      */
-    public void importFlatten2(final Evaluator evaluator) {
+    public void importFlatten2(final Evaluator evaluator, final String packageName) {
 
         @SuppressWarnings("unchecked")
         final FunctionInterface<Object> flatten2 = (FunctionInterface<Object>)evaluator.evaluate(
                 new Object[]{"curry", "callFlattened", new Object[]{"curry", "flatten"}}
         );
 
-        evaluator.register("flatten2", flatten2);
+        if (packageName == null || packageName.isEmpty()) {
+            evaluator.register("flatten2", flatten2);
+        }
+        else {
+            evaluator.register(packageName + ".flatten2", flatten2);
+        }
     }
 }

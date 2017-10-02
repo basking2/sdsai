@@ -31,11 +31,24 @@ public class ImportFunction implements FunctionInterface<String> {
 
         final StringBuilder errors = new StringBuilder();
 
-        while (iterator.hasNext()) {
-            final String s = doImport(iterator.next());
-            if (s != null) {
-                errors.append(s).append("\n");
+        final Object importMe = iterator.next();
+
+        String destinationPackage = null;
+
+        if (iterator.hasNext()) {
+            final String keyWord = iterator.next().toString();
+            if (! "as".equals(keyWord)) {
+                throw new SExprRuntimeException("Expected \"as\" but got "+keyWord+" in import.");
             }
+
+            if (iterator.hasNext()) {
+                destinationPackage = iterator.next().toString();
+            }
+        }
+
+        final String s = doImport(importMe, destinationPackage);
+        if (s != null) {
+            errors.append(s).append("\n");
         }
 
         if (errors.length() > 0) {
@@ -51,14 +64,14 @@ public class ImportFunction implements FunctionInterface<String> {
      *
      * @return Null on success or an error string.
      */
-    private String doImport(final Object o) {
+    private String doImport(final Object o, final String destinationPackage) {
         if (o instanceof String) {
             try {
                 final Class<?> clazz = getClass().forName((String)o);
 
                 if (Package.class.isAssignableFrom(clazz)) {
                     try {
-                        doImport(clazz.newInstance());
+                        doImport(clazz.newInstance(), destinationPackage);
                     } catch (InstantiationException e) {
                         throw new SExprRuntimeException("Creating "+((String) o), e);
                     } catch (IllegalAccessException e) {
@@ -66,7 +79,7 @@ public class ImportFunction implements FunctionInterface<String> {
                     }
                 }
                 else {
-                    doImportStatics(clazz, clazz);
+                    doImportStatics(clazz, clazz, destinationPackage);
                 }
             }
             catch (final ClassNotFoundException e) {
@@ -75,19 +88,38 @@ public class ImportFunction implements FunctionInterface<String> {
         }
         else if (o instanceof Package) {
             final Package p = (Package)o;
-            p.importTo(evaluator);
+            p.importTo(evaluator, destinationPackage);
         }
         else if (o instanceof Class) {
-            return doImportStatics((Class)o, o);
+            return doImportStatics((Class)o, o, destinationPackage);
         }
         else {
-            return doImportStatics(o.getClass(), o);
+            return doImportStatics(o.getClass(), o, destinationPackage);
         }
 
         return null;
     }
 
-    private String doImportStatics(final Class<?> clazz, final Object target) {
+    private String doImportStatics(final Class<?> clazz, final Object target, final String destinationPackage) {
+        String packageName = null;
+
+        // If the user is not asking we import to a particular package, check for a given package name.
+        if (destinationPackage == null) {
+            for (final Field field: clazz.getFields()) {
+                if (field.getName().equals("__package")) {
+                    try {
+                        packageName = field.get(target).toString();
+                    } catch (IllegalAccessException e) {
+                        return e.getMessage();
+                    }
+                }
+            }
+        }
+        else {
+            packageName = destinationPackage;
+        }
+
+        // Find a package field.
         for (final Field field : clazz.getFields()) {
             final Object func;
             try {
@@ -96,7 +128,12 @@ public class ImportFunction implements FunctionInterface<String> {
                 return e.getMessage();
             }
             if (func != null && func instanceof FunctionInterface) {
-                evaluationContext.register(field.getName(), (FunctionInterface<?>) func);
+                if (packageName == null || packageName.isEmpty()) {
+                    evaluationContext.register(field.getName(), (FunctionInterface<?>) func);
+                }
+                else {
+                    evaluationContext.register(packageName + "." + field.getName(), (FunctionInterface<?>) func);
+                }
             }
         }
 

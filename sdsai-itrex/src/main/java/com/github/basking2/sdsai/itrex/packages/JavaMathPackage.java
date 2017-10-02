@@ -16,10 +16,20 @@ import java.util.Iterator;
  */
 public class JavaMathPackage implements Package {
     @Override
-    public void importTo(final Evaluator evaluator) {
+    public void importTo(final Evaluator evaluator, String packageName) {
+
         for (final Method m : Math.class.getMethods()) {
 
-            final String functionName = m.getName();
+            final String functionName;
+            if (packageName == null) {
+                functionName = "javamath." + m.getName();
+            }
+            else if (packageName.isEmpty()) {
+                functionName = m.getName();
+            }
+            else {
+                functionName = packageName + "." + m.getName();
+            }
 
             if (m.getParameterCount() == 2) {
                 FunctionInterface<? extends Object> f = new MathFunction2(functionName);

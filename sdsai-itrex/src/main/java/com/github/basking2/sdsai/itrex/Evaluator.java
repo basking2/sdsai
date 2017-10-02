@@ -82,10 +82,10 @@ public class Evaluator {
     public void importDefaults() {
         importBase();
 
-        register("logDebug", new LogFunction(LogFunction.LEVEL.DEBUG));
-        register("logInfo", new LogFunction(LogFunction.LEVEL.INFO));
-        register("logWarn", new LogFunction(LogFunction.LEVEL.WARN));
-        register("logError", new LogFunction(LogFunction.LEVEL.ERROR));
+        register("log.debug", new LogFunction(LogFunction.LEVEL.DEBUG));
+        register("log.info", new LogFunction(LogFunction.LEVEL.INFO));
+        register("log.warn", new LogFunction(LogFunction.LEVEL.WARN));
+        register("log.error", new LogFunction(LogFunction.LEVEL.ERROR));
 
         // Import the string package.
         evaluate(new String[]{"import", StringPackage.class.getCanonicalName()});
