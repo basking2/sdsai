@@ -42,19 +42,19 @@ with it.
   * `[listFlatten iterator1 iterator2...]`
   * `[flatten iterator1 iterator2...]`
 * String
-  * `[stringJoin joinString string1 string2]`
-  * `[stringSplit splitRegEx string]`
-  * `[stringConcat string1 string2...]`
+  * `[string.join joinString string1 string2]`
+  * `[string.split splitRegEx string]`
+  * `[string.concat string1 string2...]`
 * Printing
   * `[help]`
   * `[print arg1 arg2... ]` - Note, this returns an iterator.
     Arguments are only printed when the iterator elements are accessed.
   * `[printErr arg1 arg2... ]` - Like print, but prints to standard error.
 * Logging
-  * `[logDebug arg1 arg2... ]` - Like print, but logs at `DEBUG` level.
-  * `[logInfo arg1 arg2... ]` - Like print, but logs at `INFO` level.
-  * `[logWarn arg1 arg2... ]` - Like print, but logs at `WARN` level.
-  * `[logError arg1 arg2... ]` - Like print, but logs at `ERROR` level.
+  * `[log.debug arg1 arg2... ]` - Like print, but logs at `DEBUG` level.
+  * `[log.info arg1 arg2... ]` - Like print, but logs at `INFO` level.
+  * `[log.warn arg1 arg2... ]` - Like print, but logs at `WARN` level.
+  * `[log.error arg1 arg2... ]` - Like print, but logs at `ERROR` level.
 * Conditional
   * `[if predicate truebranch falsebranch]`
   * `[caseList [case predicate truebranch]...]`
