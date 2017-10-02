@@ -294,6 +294,18 @@ public class EvaluatorTest {
     }
 
     @Test
+    public void testNamedFunction3() {
+        final Evaluator e = new Evaluator();
+        final Object o = parseExpression("[let \n"+
+                "[fn f [toString [arg]]]\n" +
+                "[f 4.1d]" +
+                "]");
+        final String s = e.evaluate(o).toString();
+
+        assertEquals("4.1", s);
+    }
+
+    @Test
     public void testFunctionScoping() {
         final Evaluator e = new Evaluator();
         final Object o = parseExpression("[last \n"+

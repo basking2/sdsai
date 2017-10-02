@@ -19,7 +19,8 @@ public class BasePackage implements Package {
 
         // Add the function functions.
         doRegister(evaluator, packageName, "function", new FunctionFunction(evaluator));
-        doRegister(evaluator, packageName, "register", new RegisterFunctionFunction(evaluator));
+        doRegister(evaluator, packageName, "fn", new FnFunction(evaluator));
+        doRegister(evaluator, packageName, "register", new RegisterFunctionFunction());
         doRegister(evaluator, packageName, "arg", new ArgFunction());
         doRegister(evaluator, packageName, "args", new ArgsFunction());
         doRegister(evaluator, packageName, "hasArg", new HasArgFunction());

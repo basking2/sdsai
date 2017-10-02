@@ -13,11 +13,6 @@ import java.util.Iterator;
  * an additional argument, the function name to register it as.
  */
 public class RegisterFunctionFunction implements FunctionInterface<FunctionInterface<Object>> {
-    private final FunctionFunction f;
-
-    public RegisterFunctionFunction(final Evaluator evaluator) {
-        f = new FunctionFunction(evaluator);
-    }
 
     @Override
     public FunctionInterface<Object> apply(Iterator<?> iterator, EvaluationContext evaluationContext) {
