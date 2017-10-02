@@ -44,6 +44,9 @@ public class ImportFunction implements FunctionInterface<String> {
             if (iterator.hasNext()) {
                 destinationPackage = iterator.next().toString();
             }
+            else {
+                destinationPackage = "";
+            }
         }
 
         final String s = doImport(importMe, destinationPackage);
