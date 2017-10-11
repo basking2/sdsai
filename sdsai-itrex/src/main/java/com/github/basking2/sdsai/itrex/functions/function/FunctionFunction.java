@@ -37,6 +37,6 @@ public class FunctionFunction implements FunctionInterface<FunctionInterface<Obj
          * arguments in the evaluation context.
          */
         return (itr, ctx) ->
-            evaluator.evaluate(functionBody, new EvaluationContext(ctx, itr));
+            evaluator.evaluate(functionBody, EvaluationContext.functionCall(ctx, itr));
     }
 }

@@ -9,8 +9,8 @@ import java.util.*;
  */
 public class EvaluationContext {
     private EvaluationContext parent;
-    private Map<Object, FunctionInterface<? extends Object>> functionRegistry = new HashMap<>();
-    private Map<Object, Object> env = new HashMap<>();
+    private Map<Object, FunctionInterface<? extends Object>> functionRegistry;
+    private Map<Object, Object> env;
 
     /**
      * To support function calls we must hold an arguments record.
@@ -29,6 +29,30 @@ public class EvaluationContext {
     {
         this.parent = parent;
         this.arguments = arguments;
+        this.functionRegistry = new HashMap<>();
+        this.env = new HashMap<>();
+    }
+
+    public EvaluationContext(
+            final Map<Object, Object> env,
+            final Map<Object, FunctionInterface<? extends Object> > functionRegistry,
+            final Iterator<?> arguments,
+            final EvaluationContext parent
+    ) {
+        this.env = env;
+        this.functionRegistry = functionRegistry;
+        this.arguments = arguments;
+        this.parent = parent;
+    }
+
+    public static EvaluationContext functionCall(final EvaluationContext ctx, final Iterator<?> arguments)
+    {
+        return new EvaluationContext(
+                ctx.env,
+                ctx.functionRegistry,
+                arguments,
+                ctx
+        );
     }
 
     public void set(final Object key, final Object value) {
