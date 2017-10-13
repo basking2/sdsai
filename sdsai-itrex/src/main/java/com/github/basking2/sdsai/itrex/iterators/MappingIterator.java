@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.itrex.iterators;
 
+import com.github.basking2.sdsai.itrex.SExprRuntimeException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -33,8 +35,11 @@ public class MappingIterator<T, R> implements Iterator<R> {
         try {
             return f.map(iterator.next());
         }
-        catch (final Exception e) {
-            throw new NoSuchElementException(e.getMessage());
+        catch (final NoSuchElementException e) {
+            throw e;
+        }
+        catch (final Throwable e) {
+            throw new SExprRuntimeException(e.getMessage());
         }
     }
 
