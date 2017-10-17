@@ -39,7 +39,7 @@ public class MappingIterator<T, R> implements Iterator<R> {
             throw e;
         }
         catch (final Throwable e) {
-            throw new SExprRuntimeException(e.getMessage());
+            throw new SExprRuntimeException(e.getMessage(), e);
         }
     }
 
