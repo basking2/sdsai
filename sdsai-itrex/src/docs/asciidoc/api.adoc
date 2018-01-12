@@ -78,6 +78,28 @@ still be returned. This usage is equivalent to `[register foo [function [...]]]`
     argument remaining. Function calls receive a new
     argument list.
 
+`[nameArgs name1 name2...nameN]`:: Name each argument to the
+    function with the given names. Naming is done by
+    fetching the value from the argument iterator list
+    (making it unavailable to calls to `[arg]`) and stores
+    it in the evaluation context under the name. +
++
+For example the code +
++
+----
+[[function [nameArgs a b c]] 1 2 3 4]
+----
+will cause `[get a]` to be 1, `[get b]` to be 2, `[get c]` to be
+3 and 4 is left on the array list such that a call to `[arg]`
+will return 4.
++
+The case of +
++
+----
+[[function [nameArgs a b]] 1]
+----
+will set `a = 1` but leave `b` unset.
+
 `[register <name> <function>]`:: Register the given function under the given name. +
 +
 A typical usage would be +

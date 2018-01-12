@@ -5,13 +5,12 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.github.basking2.sdsai.itrex.EvaluationContext;
-import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.functions.LogFunction;
 import org.junit.Test;
 
@@ -317,5 +316,18 @@ public class EvaluatorTest {
         final String s = e.evaluate(o).toString();
 
         assertEquals("2", s);
+    }
+
+    @Test
+    public void testNameArgs() {
+        final Evaluator e = new Evaluator();
+        final EvaluationContext ctx = e.getChildEvaluationContext();
+        e.evaluate(parseExpression("[[function [nameArgs a b c d]] a b c d e]"), ctx);
+        assertEquals("a", ctx.get("a").toString());
+        assertEquals("b", ctx.get("b").toString());
+        assertEquals("c", ctx.get("c").toString());
+        assertEquals("d", ctx.get("d").toString());
+        assertNull(ctx.get("e"));
+
     }
 }
