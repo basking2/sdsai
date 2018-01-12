@@ -11,6 +11,7 @@ public class DictPackage {
 
     public static final FunctionInterface<Map<Object, Object>> mk = new DictFunction();
     public static final FunctionInterface<Object> get = (args, ctx) -> {
+        @SuppressWarnings("unchecked")
         final Map<Object, Object> m = (Map<Object, Object>)args.next();
 
         final Object key = args.next();
@@ -26,6 +27,7 @@ public class DictPackage {
         }
     };
     public static final FunctionInterface<Map<Object, Object>> put = (args, ctx) -> {
+        @SuppressWarnings("unchecked")
         final Map<Object, Object> m = (Map<Object, Object>)args.next();
         final Object key = args.next();
         final Object val = args.next();

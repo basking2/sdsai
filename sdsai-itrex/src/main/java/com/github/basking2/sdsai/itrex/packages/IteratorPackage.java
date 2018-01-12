@@ -21,11 +21,12 @@ public class IteratorPackage implements Package {
     }
 
     /**
-     * Build and register the "flattten2" function.
+     * Build and register the "flatten2" function.
      *
      * This requires the curry and flatten functions to already be registered.
      *
      * @param evaluator The evaluator to register flatten2 against.
+     * @param packageName The name of the package.
      */
     public void importFlatten2(final Evaluator evaluator, final String packageName) {
 
