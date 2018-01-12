@@ -4,24 +4,19 @@ import com.github.basking2.sdsai.itrex.EvaluationContext;
 
 import java.io.PrintStream;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
 
-public class PrintArgsFunction implements FunctionInterface<Iterator<?>> {
+public class TraceArgsFunction implements FunctionInterface<Iterator<?>> {
     final private PrintStream out;
 
-    public PrintArgsFunction(PrintStream out) {
+    public TraceArgsFunction(PrintStream out) {
         this.out = out;
     };
 
     @Override
     public Iterator<?> apply(final Iterator<?> iterator, final EvaluationContext evaluationContext) {
-
-        final List<Object> argList = new LinkedList<>();
-
-        iterator.forEachRemaining(arg -> {
+        return mapIterator(iterator, arg -> {
             if (arg == null) {
                 out.println("null");
             }
@@ -29,9 +24,7 @@ public class PrintArgsFunction implements FunctionInterface<Iterator<?>> {
                 out.println(arg + ":" + arg.getClass());
             }
 
-            argList.add(arg);
+            return arg;
         });
-
-        return argList.iterator();
     }
 }

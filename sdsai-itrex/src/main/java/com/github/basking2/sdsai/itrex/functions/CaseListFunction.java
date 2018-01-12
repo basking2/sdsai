@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * Find will evaluate each of its arguments, in order, until it _finds_ a result.
  *
- * A result is _found_ if the argument either evaluates to _true_ or is an interable object
+ * A result is _found_ if the argument either evaluates to _true_ or is an iterable object
  * and its first element evaluates to _true_. In the case of an iterable element, the second
  * element in the iterable is returned as the actual result. In the case of a non-iterable,
  * then just true is returned.

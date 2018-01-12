@@ -13,7 +13,7 @@ import java.util.List;
  * CaseFunction takes, first, an expression that yields a boolean.
  * Second it takes an expression that produces a result.
  *
- * If the first expression is true, then CaseFunction returns a list of first the true booolean and
+ * If the first expression is true, then CaseFunction returns a list of first the true boolean and
  * then the result of the second expression's evaluation.
  *
  * If the first expression is false, then CaseFunction returns a list of first the false boolean and

@@ -27,6 +27,8 @@ public class BasePackage implements Package {
 
         doRegister(evaluator, packageName, "print", new PrintArgsFunction(System.out));
         doRegister(evaluator, packageName, "printErr", new PrintArgsFunction(System.err));
+        doRegister(evaluator, packageName, "trace", new TraceArgsFunction(System.out));
+        doRegister(evaluator, packageName, "traceErr", new TraceArgsFunction(System.err));
 
         doRegister(evaluator, packageName, "last", new LastFunction());
         doRegister(evaluator, packageName, "list", new ListFunction());

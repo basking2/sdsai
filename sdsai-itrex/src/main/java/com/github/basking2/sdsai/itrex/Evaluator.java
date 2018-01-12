@@ -1,17 +1,12 @@
 package com.github.basking2.sdsai.itrex;
 
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.EMPTY_ITERATOR;
-import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
 
 import java.util.Iterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.github.basking2.sdsai.itrex.functions.*;
-import com.github.basking2.sdsai.itrex.functions.function.*;
-import com.github.basking2.sdsai.itrex.functions.functional.ComposeFunction;
-import com.github.basking2.sdsai.itrex.functions.functional.CurryFunction;
-import com.github.basking2.sdsai.itrex.functions.functional.MapFunction;
 import com.github.basking2.sdsai.itrex.packages.*;
 import com.github.basking2.sdsai.itrex.iterators.EvaluatingIterator;
 import com.github.basking2.sdsai.itrex.iterators.Iterators;
@@ -155,7 +150,7 @@ public class Evaluator {
         final FunctionInterface<? extends Object> operator;
 
         if (operatorObject instanceof FunctionInterface) {
-            // Temporary variable just to apply the SupressWarnings annotation to.
+            // Temporary variable just to apply the SuppressWarnings annotation to.
             @SuppressWarnings("unchecked")
             final FunctionInterface<? extends Object> tmpo = (FunctionInterface<? extends Object>)operatorObject;
 
