@@ -93,25 +93,25 @@ constructions such as `[register f [curry...]]` and
 
 ## Functional
 
-`[callFlattened fn [args...]`::
-    Call the function, +fn+ with the given arguments, flattened.
+`[callFlattened foo [args...]`::
+    Call the function, +foo+ with the given arguments, flattened.
     That is, any argument in the +args+ list that is a list
-    has its individual elements returned as arguments to +fn+.
+    has its individual elements returned as arguments to +foo+.
     Any argument in the +args+ list that is an iterable
     will have its individual elements returned as arguments to
-    +fn+. Other arguments are directly passed as elements
-    to +fn+. +
+    +foo+. Other arguments are directly passed as elements
+    to +foo+. +
 +
 This allows for +
 +
 ----
-[callFlattened fn [list a b] [list [list c d]]]
+[callFlattened foo [list a b] [list [list c d]]]
 ----
 to be constructed which will result in an execution
 equivalent to +
 +
 ----
-[fn a b [list c d]]
+[foo a b [list c d]]
 ----
 This is used, for instance, when +[map]+'ing lists into
 arguments that must be mixed with other arguments to
