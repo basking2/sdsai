@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>ItrEx Api 1.0.15-SNAPSHOT</title>
+<title>ItrEx Api 1.1.5-SNAPSHOT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>ItrEx Api 1.0.15-SNAPSHOT</h1>
+<h1>ItrEx Api 1.1.5-SNAPSHOT</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -475,6 +475,18 @@ functions, realize that this must be evaluated under
 the root context or the function registrations will
 be discarded.</p>
 </dd>
+<dt class="hdlist1"><code>[dict.mk ke1 val1 key2 val2]</code></dt>
+<dd>
+<p>Make a dictionary.</p>
+</dd>
+<dt class="hdlist1"><code>[dict.put dict key1 val1]</code></dt>
+<dd>
+<p>Put a value to a dictionary. Returns the dictonary.</p>
+</dd>
+<dt class="hdlist1"><code>[dict.get dict key1 default]</code></dt>
+<dd>
+<p>Get a value from a dictionary. If the key is undefined the default is returned or null if no default is given.</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -497,6 +509,16 @@ Make sure <code>[hasArg]</code> is true before calling this.</p>
 <p>Return all arguments passed to the evalution context
 as an iterator.</p>
 </dd>
+<dt class="hdlist1"><code>[fn &lt;name&gt; &lt;optional body&gt;]</code></dt>
+<dd>
+<p>If no body argument is provided <code>[fn]</code> will look up a defined
+function and return it. If no function is defined for the given name
+and exception is thrown.<br></p>
+<div class="paragraph">
+<p>If a body is given <code>[fn]</code> will define the function and register it. The funtion will
+still be returned. This usage is equivalent to <code>[register foo [function [...]]]</code>.</p>
+</div>
+</dd>
 <dt class="hdlist1"><code>[function [...]</code></dt>
 <dd>
 <p>Construct a function that can be called or used. See the <code>[args]</code>, <code>[arg]</code> and <code>[hasArg]</code>
@@ -515,6 +537,38 @@ functions.<br></p>
 <p>Returns true if the evaluation context has an
 argument remaining. Function calls receive a new
 argument list.</p>
+</dd>
+<dt class="hdlist1"><code>[nameArgs name1 name2...nameN]</code></dt>
+<dd>
+<p>Name each argument to the
+function with the given names. Naming is done by
+fetching the value from the argument iterator list
+(making it unavailable to calls to <code>[arg]</code>) and stores
+it in the evaluation context under the name.<br></p>
+<div class="paragraph">
+<p>For example the code<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[[function [nameArgs a b c]] 1 2 3 4]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will cause <code>[get a]</code> to be 1, <code>[get b]</code> to be 2, <code>[get c]</code> to be
+3 and 4 is left on the array list such that a call to <code>[arg]</code>
+will return 4.</p>
+</div>
+<div class="paragraph">
+<p>The case of<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[[function [nameArgs a b]] 1]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will set <code>a = 1</code> but leave <code>b</code> unset.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>[register &lt;name&gt; &lt;function&gt;]</code></dt>
 <dd>
@@ -543,21 +597,21 @@ constructions such as <code>[register f [curry...]]</code> and
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>[callFlattened fn [args...]</code></dt>
+<dt class="hdlist1"><code>[callFlattened foo [args...]</code></dt>
 <dd>
-<p>Call the function, <code>fn</code> with the given arguments, flattened.
+<p>Call the function, <code>foo</code> with the given arguments, flattened.
 That is, any argument in the <code>args</code> list that is a list
-has its individual elements returned as arguments to <code>fn</code>.
+has its individual elements returned as arguments to <code>foo</code>.
 Any argument in the <code>args</code> list that is an iterable
 will have its individual elements returned as arguments to
-<code>fn</code>. Other arguments are directly passed as elements
-to <code>fn</code>.<br></p>
+<code>foo</code>. Other arguments are directly passed as elements
+to <code>foo</code>.<br></p>
 <div class="paragraph">
 <p>This allows for<br></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[callFlattened fn [list a b] [list [list c d]]]</pre>
+<pre>[callFlattened foo [list a b] [list [list c d]]]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -566,7 +620,7 @@ equivalent to<br></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[fn a b [list c d]]</pre>
+<pre>[foo a b [list c d]]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -637,6 +691,17 @@ of applying <code>function</code> to those elements. The elements from the argum
 iterator are not mapped using <code>function</code> until they are requested
 from the returned iterator.</p>
 </dd>
+<dt class="hdlist1"><code>[mapFlat &lt;function&gt; &lt;iterator&gt;]</code></dt>
+<dd>
+<p>The function <code>[map]</code> passed the arguments to the function.
+This function flattens the arguments before passing them to the <code>function</code>.
+This is equivalent to<br></p>
+<div class="listingblock">
+<div class="content">
+<pre>    [map [curry callFlattened [curry someFunction]] [arg]]</pre>
+</div>
+</div>
+</dd>
 <dt class="hdlist1"><code>[head &lt;iterator&gt;]</code></dt>
 <dd>
 <p>Return the first element.</p>
@@ -689,17 +754,17 @@ this. It is equivalent to a call to <code>[callFlatten [curry flatten]] &#8230;&
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>[stringJoin joinString string1 string2&#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[string.join joinString string1 string2&#8230;&#8203;]</code></dt>
 <dd>
 <p>Takes 1 or more strings. Returns a string joined by the first string.
 If this encounters an iterator as an argument it will drain the iterator,
 joining each of those elements as a string.</p>
 </dd>
-<dt class="hdlist1"><code>[stringSplit splitPattern string]</code></dt>
+<dt class="hdlist1"><code>[string.split splitPattern string]</code></dt>
 <dd>
 <p>Split the second string using the first string as a regular expression.</p>
 </dd>
-<dt class="hdlist1"><code>[stringConcat string1 string2]</code></dt>
+<dt class="hdlist1"><code>[string.concat string1 string2]</code></dt>
 <dd>
 <p>Concatenate all arguments as strings.</p>
 </dd>
@@ -712,25 +777,29 @@ joining each of those elements as a string.</p>
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>[toString arg]</code></dt>
+<dt class="hdlist1"><code>[string arg]</code></dt>
 <dd>
 <p>Return the result of calling <code>toString()</code> on the argument.</p>
 </dd>
-<dt class="hdlist1"><code>[toInt arg]</code></dt>
+<dt class="hdlist1"><code>[int arg]</code></dt>
 <dd>
 <p>Convert the argument to an integer.</p>
 </dd>
-<dt class="hdlist1"><code>[toFloat arg]</code></dt>
+<dt class="hdlist1"><code>[float arg]</code></dt>
 <dd>
 <p>Convert the argument to a float.</p>
 </dd>
-<dt class="hdlist1"><code>[toLong arg]</code></dt>
+<dt class="hdlist1"><code>[long arg]</code></dt>
 <dd>
 <p>Convert the argument to a long.</p>
 </dd>
-<dt class="hdlist1"><code>[toDouble arg]</code></dt>
+<dt class="hdlist1"><code>[double arg]</code></dt>
 <dd>
 <p>Convert the argument to a double.</p>
+</dd>
+<dt class="hdlist1"><code>[boolean arg]</code></dt>
+<dd>
+<p>Convert the argument to a boolean.</p>
 </dd>
 </dl>
 </div>
@@ -747,13 +816,36 @@ joining each of those elements as a string.</p>
 </dd>
 <dt class="hdlist1"><code>[print &#8230;&#8203;]</code></dt>
 <dd>
-<p>Collect all its arguments into a single iterator and return
-that iterator. When that iterator is called, only the is the
-value printed.</p>
+<p>Collect all its arguments into a list and print them as they
+are collected. That list is then returned as an iterator.<br></p>
+<div class="paragraph">
+<p>The difference between trace and print functions is that
+print marshals all arguments into a list and prints them, and
+so will pay the memory cost to store those arguments. Trace only
+prints arguments as they pass by when called for by the parent
+function.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>[printErr &#8230;&#8203;]</code></dt>
 <dd>
 <p>Like <code>print</code> but uses standard error.</p>
+</dd>
+<dt class="hdlist1"><code>[trace &#8230;&#8203;]</code></dt>
+<dd>
+<p>Collect all its arguments into a single iterator and return
+that iterator. When that iterator is called, only the is the
+value printed.<br></p>
+<div class="paragraph">
+<p>The difference between trace and print functions is that
+print marshals all arguments into a list and prints them, and
+so will pay the memory cost to store those arguments. Trace only
+prints arguments as they pass by when called for by the parent
+function.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>[traceErr &#8230;&#8203;]</code></dt>
+<dd>
+<p>Like <code>trace</code> but uses standard error.</p>
 </dd>
 </dl>
 </div>
@@ -764,19 +856,19 @@ value printed.</p>
 <div class="sectionbody">
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>[logDebug &#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[log.debug &#8230;&#8203;]</code></dt>
 <dd>
 <p>Log all arguments at <code>DEBUG</code>. This is very similar to <code>print</code>.</p>
 </dd>
-<dt class="hdlist1"><code>[logInfo &#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[log.info &#8230;&#8203;]</code></dt>
 <dd>
 <p>Log all arguments at <code>INFO</code>. This is very similar to <code>print</code>.</p>
 </dd>
-<dt class="hdlist1"><code>[logWarn &#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[log.warn &#8230;&#8203;]</code></dt>
 <dd>
 <p>Log all arguments at <code>WARN</code>. This is very similar to <code>print</code>.</p>
 </dd>
-<dt class="hdlist1"><code>[logError &#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[log.error &#8230;&#8203;]</code></dt>
 <dd>
 <p>Log all arguments at <code>ERROR</code>. This is very similar to <code>print</code>.</p>
 </dd>
@@ -849,6 +941,10 @@ then the second argument is evaluated and the list <code>[true, r]</code> is ret
 of the second expression&#8217;s evaluation. If the predicate evaluates to <em>false</em> then the list
 <code>[false, null]</code> is returned.</p>
 </dd>
+<dt class="hdlist1"><code>[defaultCase &lt;success&gt;]</code></dt>
+<dd>
+<p>Equivalent to <code>[case [t] [...]]</code>.</p>
+</dd>
 <dt class="hdlist1"><code>[if &lt;predicate&gt; &lt;true branch&gt; &lt;false branch&gt;]</code></dt>
 <dd>
 <p>If <code>predicate</code> is true, then the <code>true branch</code> is evaluated
@@ -857,6 +953,14 @@ If <code>predicate</code> is false <em>and</em> <code>if</code> has not been cur
 with another function, the <code>true branch</code> is skipped and the <code>false branch</code>
 is evaluated and returned. If your <code>true branch</code> has no side effects
 and is not computationally expensive, this should not make any difference.</p>
+</dd>
+<dt class="hdlist1"><code>[t]</code></dt>
+<dd>
+<p>Return true.</p>
+</dd>
+<dt class="hdlist1"><code>[f]</code></dt>
+<dd>
+<p>Return false.</p>
 </dd>
 <dt class="hdlist1"><code>[and &lt;arg1&gt; &lt;arg2&gt;&#8230;&#8203;]</code></dt>
 <dd>
@@ -923,6 +1027,12 @@ user has injected in the <code>EvaluationContext</code>.</p>
 <dd>
 <p>Set the name to the given value. If there is already a value
 set, it is discarded.</p>
+</dd>
+<dt class="hdlist1"><code>[update &lt;name&gt; &lt;value&gt;]</code></dt>
+<dd>
+<p>Update the name to the given value in the context in which
+is was defined. If there is <em>not</em> already a value
+set, this is an error and an exception is raised.</p>
 </dd>
 </dl>
 </div>
@@ -1008,7 +1118,7 @@ list.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-26 11:31:14 -05:00
+Last updated 2018-01-12 14:37:49 -06:00
 </div>
 </div>
 </body>
