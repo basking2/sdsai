@@ -266,17 +266,17 @@ function.
 
 +[printErr ...]+::
     Like `print` but uses standard error.
-+[trace ...]+::
-    Collect all its arguments into a single iterator and return
-    that iterator. When that iterator is called, only the is the
-    value printed. +
++[trace <function> args...]+::
+    Print the function and each of the arguments.
+    After the arguments are each evaluated and
+    printed, they are then passed to the
+    function. +
 +
-The difference between trace and print functions is that
-print marshals all arguments into a list and prints them, and
-so will pay the memory cost to store those arguments. Trace only
-prints arguments as they pass by when called for by the parent
-function.
-
+This should allow any function call to be prefixed
+with +trace+ and result in helpful output. The
+one drawback is that the lazy evaluation of
+input arguments is lost. For modest lists of arguments
+this is not an issue.
 
 +[traceErr ...]+::
     Like `trace` but uses standard error.
