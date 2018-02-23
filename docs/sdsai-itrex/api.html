@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>ItrEx Api 1.1.5-SNAPSHOT</title>
+<title>ItrEx Api 1.1.7-SNAPSHOT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>ItrEx Api 1.1.5-SNAPSHOT</h1>
+<h1>ItrEx Api 1.1.7-SNAPSHOT</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -830,17 +830,18 @@ function.</p>
 <dd>
 <p>Like <code>print</code> but uses standard error.</p>
 </dd>
-<dt class="hdlist1"><code>[trace &#8230;&#8203;]</code></dt>
+<dt class="hdlist1"><code>[trace &lt;function&gt; args&#8230;&#8203;]</code></dt>
 <dd>
-<p>Collect all its arguments into a single iterator and return
-that iterator. When that iterator is called, only the is the
-value printed.<br></p>
+<p>Print the function and each of the arguments.
+After the arguments are each evaluated and
+printed, they are then passed to the
+function.<br></p>
 <div class="paragraph">
-<p>The difference between trace and print functions is that
-print marshals all arguments into a list and prints them, and
-so will pay the memory cost to store those arguments. Trace only
-prints arguments as they pass by when called for by the parent
-function.</p>
+<p>This should allow any function call to be prefixed
+with <code>trace</code> and result in helpful output. The
+one drawback is that the lazy evaluation of
+input arguments is lost. For modest lists of arguments
+this is not an issue.</p>
 </div>
 </dd>
 <dt class="hdlist1"><code>[traceErr &#8230;&#8203;]</code></dt>
@@ -1118,7 +1119,7 @@ list.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-01-12 14:37:49 -06:00
+Last updated 2018-02-23 01:06:16 -06:00
 </div>
 </div>
 </body>
