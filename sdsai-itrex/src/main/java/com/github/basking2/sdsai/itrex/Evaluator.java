@@ -63,6 +63,7 @@ public class Evaluator {
         register("import", new ImportFunction(this, rootContext));
         register("evalItrml", new EvalItrmlFunction(this));
         register("version", new VersionFunction());
+        register("nop", new NopFunction());
 
         // Import base.
         evaluate(new String[]{"import", BasePackage.class.getCanonicalName()});
