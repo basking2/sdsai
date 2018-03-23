@@ -79,9 +79,13 @@ public abstract class AbstractHeap<T> {
     /**
      * Are t1 and t2 ordered. True if they _not_, false otherwise.
      *
-     * @param t1 T1
-     * @param t2 T2
-     * @return True if they are unordered.
+     * Implementors should extend this class and override this function to determine the order of the elements in
+     * this heap. Of you want a min-heap, a heap where things are sorted least-to-greatest, then this
+     * function would return true only when t1 > t2, meaning they should be re-sorted.
+     *
+     * @param t1 The value that should come first in this order.
+     * @param t2 The value that should come second in this order.
+     * @return True if t1 and t2 are unordered.
      */
     protected abstract boolean unordered(T t1, T t2);
 
