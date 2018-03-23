@@ -13,7 +13,7 @@ public class HeapTest {
             }
         };
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 100; ++i) {
             heap.add((int)(Math.random() * 100));
         }
 

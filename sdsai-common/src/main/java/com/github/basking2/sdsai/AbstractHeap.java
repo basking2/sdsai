@@ -108,11 +108,11 @@ public abstract class AbstractHeap<T> {
         heapUp(last);
     }
 
-    public T remove() {
+    public T remove(final int i) {
         if (last >= 0) {
-            final T t = queue[0];
+            final T t = queue[i];
 
-            swap(0, last);
+            swap(i, last);
 
             queue[last] = null;
 
@@ -122,13 +122,17 @@ public abstract class AbstractHeap<T> {
                 halveQueue();
             }
 
-            heapDown(0);
+            heapDown(i);
 
             return t;
         }
         else {
             return null;
         }
+    }
+
+    public T remove() {
+        return remove(0);
     }
 
     public int size() {
