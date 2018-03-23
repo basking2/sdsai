@@ -81,7 +81,7 @@ public abstract class AbstractHeap<T> {
      *
      * Implementors should extend this class and override this function to determine the order of the elements in
      * this heap. Of you want a min-heap, a heap where things are sorted least-to-greatest, then this
-     * function would return true only when t1 > t2, meaning they should be re-sorted.
+     * function would return true only when t1 &gt; t2, meaning they should be re-sorted.
      *
      * @param t1 The value that should come first in this order.
      * @param t2 The value that should come second in this order.
