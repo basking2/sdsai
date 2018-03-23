@@ -1,8 +1,5 @@
 package com.github.basking2.sdsai;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
  * A heap that allows the compare functions to be specified.
  *
