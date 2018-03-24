@@ -20,11 +20,11 @@ public abstract class AbstractHeap<T> {
         queue = newQueue;
     }
 
-    private void halveQueue() {
+    private void quarterQueue() {
         // ,"Queue should never shrink below 1.";
-        assert queue.length > 1;
+        assert queue.length >= 4;
 
-        final T[] newQueue = (T[]) new Object[queue.length / 2];
+        final T[] newQueue = (T[]) new Object[queue.length / 4];
         for (int i = 0; i < newQueue.length; ++i) {
             newQueue[i] = queue[i];
         }
@@ -118,8 +118,8 @@ public abstract class AbstractHeap<T> {
 
             last -= 1;
 
-            if (queue.length > 1 && last < queue.length/2) {
-                halveQueue();
+            if (queue.length >= 4 && last < queue.length/4) {
+                quarterQueue();
             }
 
             heapDown(i);
