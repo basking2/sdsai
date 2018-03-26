@@ -167,6 +167,13 @@ public abstract class AbstractHeap<T> implements Iterable<T> {
         return queue[i];
     }
 
+    /**
+     * Return an iterator that walks through this heap in index-order.
+     *
+     * This may be used to compute an index to be used with {@link #get(int)}} or {@link #replace(int, Object)}.
+     *
+     * @return an iterator that walks through this heap in index-order.
+     */
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
