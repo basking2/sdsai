@@ -75,4 +75,31 @@ public class HeapTest {
         assertEquals(Integer.valueOf(3), heap.get(1));
         assertEquals(Integer.valueOf(3), heap.get(2));
     }
+
+    @Test
+    public void randomReplaceTest() {
+        final AbstractHeap<Integer> heap = new AbstractHeap<Integer>() {
+            @Override
+            protected boolean unordered(final Integer t1, final Integer t2) {
+                return t1 > t2;
+            }
+        };
+
+        final int N = 100;
+        for (int i = 0; i < N; ++i){
+            heap.add((int)Math.random() * N);
+        }
+
+        for (int i = 0; i < N; ++i){
+            final int v = (int) Math.random() * N;
+            heap.replace(i, v);
+        }
+
+        for (int i = 0; i < N; ++i){
+            final int v = (int) Math.random() * N;
+            final int j = (int) Math.random() * heap.size();
+            heap.replace(j, v);
+        }
+
+    }
 }
