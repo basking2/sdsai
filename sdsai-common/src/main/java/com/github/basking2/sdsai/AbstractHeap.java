@@ -1,11 +1,13 @@
 package com.github.basking2.sdsai;
 
+import java.util.Iterator;
+
 /**
  * A heap that allows the compare functions to be specified.
  *
  * @param <T>
  */
-public abstract class AbstractHeap<T> {
+public abstract class AbstractHeap<T> implements Iterable<T> {
 
     @SuppressWarnings("unchecked")
     private T[] queue = (T[]) new Object[1];
@@ -141,5 +143,23 @@ public abstract class AbstractHeap<T> {
 
     public T get(final int i) {
         return queue[i];
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            private int i = -1;
+
+            @Override
+            public boolean hasNext() {
+                return i < last;
+            }
+
+            @Override
+            public T next() {
+                return queue[++i];
+            }
+        };
     }
 }

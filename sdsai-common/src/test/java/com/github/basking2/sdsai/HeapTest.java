@@ -2,6 +2,7 @@ package com.github.basking2.sdsai;
 
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class HeapTest {
     @Test
@@ -24,5 +25,27 @@ public class HeapTest {
             prev = next;
         }
 
+    }
+
+    @Test
+    public void iteratorTest() {
+        final AbstractHeap<Integer> heap = new AbstractHeap<Integer>() {
+            @Override
+            protected boolean unordered(final Integer t1, final Integer t2) {
+                return t1 > t2;
+            }
+        };
+
+        for (int i = 0; i < 100; ++i) {
+            heap.add((int)(Math.random() * 100));
+        }
+
+        int count = 0;
+
+        for (final int i : heap) {
+            count++;
+        }
+
+        assertEquals(heap.size(), count);
     }
 }
