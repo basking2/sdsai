@@ -137,6 +137,28 @@ public abstract class AbstractHeap<T> implements Iterable<T> {
         return remove(0);
     }
 
+    public T replace(final T newT) {
+        return replace(0, newT);
+    }
+
+    public T replace(final int i, final T newT) {
+        final T oldT = queue[i];
+
+        queue[i] = newT;
+
+        if (unordered(newT, oldT)) {
+            // If newT is unordered from oldT, then newT cannot be oldT's parent, and we must heap-down.
+            heapDown(i);
+        }
+        else {
+            // If newTi is ordered with oldT, then newT can be oldT's parent and we should try to heap-up.
+            heapUp(i);
+        }
+
+
+        return oldT;
+    }
+
     public int size() {
         return last+1;
     }

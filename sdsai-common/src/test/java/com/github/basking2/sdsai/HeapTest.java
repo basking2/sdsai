@@ -48,4 +48,31 @@ public class HeapTest {
 
         assertEquals(heap.size(), count);
     }
+
+    @Test
+    public void replaceTest() {
+        final AbstractHeap<Integer> heap = new AbstractHeap<Integer>() {
+            @Override
+            protected boolean unordered(final Integer t1, final Integer t2) {
+                return t1 > t2;
+            }
+        };
+
+        heap.add(1);
+        heap.add(2);
+        heap.add(3);
+        heap.add(4);
+        heap.add(5);
+        heap.add(6);
+        heap.add(7);
+        heap.add(8);
+
+        heap.replace(0, 10);
+        assertEquals(Integer.valueOf(2), heap.get(0));
+
+        heap.replace(7, 3);
+        assertEquals(Integer.valueOf(2), heap.get(0));
+        assertEquals(Integer.valueOf(3), heap.get(1));
+        assertEquals(Integer.valueOf(3), heap.get(2));
+    }
 }
