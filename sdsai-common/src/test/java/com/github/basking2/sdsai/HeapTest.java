@@ -102,4 +102,26 @@ public class HeapTest {
         }
 
     }
+
+    @Test
+    public void keyDuplicationTest() {
+        final AbstractHeap<Integer> heap = new AbstractHeap<Integer>() {
+            @Override
+            protected boolean unordered(final Integer t1, final Integer t2) {
+                return t1 > t2;
+            }
+        };
+
+        heap.add(2);
+        heap.add(2);
+        heap.add(1);
+        heap.add(1);
+
+        assertEquals(4, heap.size());
+        assertEquals(1, heap.remove().intValue());
+        assertEquals(1, heap.remove().intValue());
+        assertEquals(2, heap.remove().intValue());
+        assertEquals(2, heap.remove().intValue());
+
+    }
 }
