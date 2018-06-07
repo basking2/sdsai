@@ -32,11 +32,11 @@ public class JavaMathPackage implements Package {
             }
 
             if (m.getParameterCount() == 2) {
-                FunctionInterface<? extends Object> f = new MathFunction2(functionName);
+                FunctionInterface<? extends Object> f = new MathFunction2(m.getName());
                 evaluator.register(functionName, f);
             }
             else if (m.getParameterCount() == 1) {
-                FunctionInterface<? extends Object> f = new MathFunction1(functionName);
+                FunctionInterface<? extends Object> f = new MathFunction1(m.getName());
                 evaluator.register(functionName, f);
             }
         }
