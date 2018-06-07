@@ -44,7 +44,7 @@ public class SimpleExpressionParser {
 
     public static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
     public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
-    public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+[dD]?|\\d+[dD])");
+    public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+[dD]?|-?\\d+[dD])");
 
     public static final Pattern WORD = Pattern.compile("^(?:[\\w\\.\\-:|]+)");
 
