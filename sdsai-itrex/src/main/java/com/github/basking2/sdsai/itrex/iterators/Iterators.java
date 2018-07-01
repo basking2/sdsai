@@ -104,6 +104,17 @@ public class Iterators {
     }
 
     /**
+     * Build an {@link IteratorIterator} that will flatten the given iterator of iterators of T.
+     *
+     * @param iterator An iterator of iterators of type T.
+     * @param <T> The type to iterate.
+     * @return An iterator that has flattened the iterator of iterators.
+     */
+    public static <T> IteratorIterator<T> flatten(final Iterator<Iterator<T>> iterator) {
+        return new IteratorIterator<T>(iterator);
+    }
+
+    /**
      * Collect the elements of an iterator into a {@link List}.
      *
      * @param itr The iterator to materialize.
