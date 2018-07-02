@@ -13,15 +13,11 @@ import java.util.NoSuchElementException;
  */
 public class MappingIterator<T, R> implements Iterator<R> {
 
-    private Iterator<T> iterator;
-    private Mapper<T,R> f;
+    private final Iterator<T> iterator;
+    private final Mapper<T,R> f;
 
     public MappingIterator(final Iterator<T> iterator, final Mapper<T, R> f) {
         this.iterator = iterator;
-        this.f = f;
-    }
-
-    public void setMapping(Mapper<T, R> f) {
         this.f = f;
     }
 

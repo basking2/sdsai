@@ -1,15 +1,15 @@
-package com.github.basking2.sdsai.itrex.iterators;
+package com.github.basking2.sdsai.itrex.iterators.splitjoin;
 
 /**
- * This is a type of iterator that has a "maybe" option as a result to calling hasNext().
+ * This is a type of iterator that has a "maybe" state as a result to calling hasNext().
  *
  * The semantic meaning is that, when used in a context of other iterators, that this
  * iterator is not sure if it has more data and other sources should be checked first.
  *
- * If there are no other sources of data, then this iterator should be assumed to have
+ * If there are no other sources with ready data, then this iterator should be assumed to have
  * no more data.
  *
- * This intentionally does not extend {@link java.util.Iterator} because it is semantically unique.
+ * This intentionally does not extend {@link java.util.Iterator} because this is semantically unique.
  */
 public interface UncertainIterator<T> {
 

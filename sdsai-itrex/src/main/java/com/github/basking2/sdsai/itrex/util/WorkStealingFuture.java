@@ -70,10 +70,15 @@ public class WorkStealingFuture<T> implements Future<T> {
         }
         else {
             isStarted = true;
-            try {
-                return callable.call();
-            } catch (Exception e) {
-                throw new ExecutionException("Executing call directly.", e);
+            if (future.isDone()) {
+                return future.get();
+            }
+            else {
+                try {
+                    return callable.call();
+                } catch (Exception e) {
+                    throw new ExecutionException("Executing call directly.", e);
+                }
             }
         }
     }

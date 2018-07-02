@@ -49,6 +49,8 @@ public class ParallelIteratorIteratorTest {
 
         assertFalse(i.hasNext());
 
+        es.shutdown();
+
         i.next();
     }
 
@@ -91,7 +93,7 @@ public class ParallelIteratorIteratorTest {
     @Test
     public void testStealWork2() {
         // Use an executor that does work on this thread.
-        final Executor e = Executors.newSingleThreadExecutor();
+        final ExecutorService e = Executors.newSingleThreadExecutor();
 
         // 2 iterators that sleep.
         final Iterator i1 = Iterators.mapIterator(asList(1,2,3).iterator(), i -> {Thread.sleep(200); return i;} );
@@ -111,5 +113,7 @@ public class ParallelIteratorIteratorTest {
         assertTrue(resultSet.contains(4));
         assertTrue(resultSet.contains(5));
         assertTrue(resultSet.contains(6));
+
+        e.shutdown();
     }
 }
