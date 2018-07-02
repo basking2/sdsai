@@ -18,8 +18,6 @@ apply plugin: 'org.asciidoctor.convert'
 
 // group = defined by parent.
 // archiveBaseName = defined by parent and project name.
-version = '1.1.9-SNAPSHOT'
-
 
 compileJava {
 	options.compilerArgs << '-Xlint:unchecked'
@@ -47,6 +45,10 @@ dependencies {
 repositories {
     mavenCentral()
     jcenter()
+}
+
+release {
+  tagTemplate = '${name}-${version}'
 }
 
 task javadocJar(type: Jar) {
