@@ -15,7 +15,7 @@ import java.util.function.Consumer;
  */
 public class ParallelIteratorIterator<T> implements Iterator<T> {
 
-    final List<Actor> actors;
+    final private List<Actor> actors;
     final private Executor executor;
     final private BlockingQueue<Actor> deferQueue;
     final private Consumer<Throwable> reportError;

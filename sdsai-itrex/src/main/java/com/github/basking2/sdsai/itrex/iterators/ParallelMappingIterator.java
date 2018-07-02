@@ -1,18 +1,22 @@
 package com.github.basking2.sdsai.itrex.iterators;
 
+import com.github.basking2.sdsai.itrex.util.WorkStealingFuture;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 /**
  * A ParallelMappingIterator will map elements in threads, using an executor service.
  */
 public class ParallelMappingIterator<T, R> implements Iterator<R> {
-    private final MappingIterator.Mapper<T, R> mappingFucntion;
+    private final MappingIterator.Mapper<T, R> mappingFunction;
     private final ExecutorService executorService;
     private final LinkedBlockingQueue<Future<R>> queue;
     private final Iterator<T> inputs;
     private final boolean ordered;
+    private final Consumer<Throwable> reportError;
 
     public ParallelMappingIterator(
             final boolean ordered,
@@ -21,11 +25,32 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
             final int breadth,
             final MappingIterator.Mapper<T, R> mappingFunction
     ) {
+        this(
+                ordered,
+                inputs,
+                executorService,
+                breadth,
+                mappingFunction,
+                t->t.printStackTrace()
+        );
+
+        fillQueue();
+    }
+    public ParallelMappingIterator(
+            final boolean ordered,
+            final Iterator<T> inputs,
+            final ExecutorService executorService,
+            final int breadth,
+            final MappingIterator.Mapper<T, R> mappingFunction,
+            final Consumer<Throwable> reportError
+
+    ) {
         this.ordered = ordered;
         this.inputs = inputs;
-        this.mappingFucntion = mappingFunction;
+        this.mappingFunction = mappingFunction;
         this.executorService = executorService;
         this.queue = new LinkedBlockingQueue<>(breadth);
+        this.reportError = reportError;
 
         fillQueue();
     }
@@ -36,7 +61,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
             final T t = inputs.next();
 
             // Now dispatch it to be mapped.
-            final Future<R> f = executorService.submit(() -> mappingFucntion.map(t));
+            final Future<R> f = WorkStealingFuture.run(executorService, () -> mappingFunction.map(t));
 
             // And enqueue.
             try {
@@ -75,7 +100,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
             } catch (final InterruptedException e) {
                 // Nop - go wait again.
             } catch (final ExecutionException e) {
-                throw new NoSuchElementException("Error in mapping function: "+e.getMessage());
+                reportError.accept(e);
             }
         }
     }
