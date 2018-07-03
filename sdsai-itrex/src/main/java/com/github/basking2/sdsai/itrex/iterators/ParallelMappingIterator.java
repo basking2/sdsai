@@ -18,6 +18,17 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
     private final boolean ordered;
     private final Consumer<Throwable> reportError;
 
+    /**
+     * Constructor with a default error handler.
+     *
+     * @param ordered If true, results from this iterator will be emitted in the same order they are read.
+     *                If true, this will cause head-of-line blocking if a slow element is encountered, but
+     *                often this is acceptable.
+     * @param inputs The inputs to map.
+     * @param executorService The executor service to dispatch work into.
+     * @param breadth How many concurrent tasks should be started.
+     * @param mappingFunction A function to map from type T to R.
+     */
     public ParallelMappingIterator(
             final boolean ordered,
             final Iterator<T> inputs,
@@ -36,6 +47,19 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
 
         fillQueue();
     }
+
+    /**
+     * Constructor.
+     *
+     * @param ordered If true, results from this iterator will be emitted in the same order they are read.
+     *                If true, this will cause head-of-line blocking if a slow element is encountered, but
+     *                often this is acceptable.
+     * @param inputs The inputs to map.
+     * @param executorService The executor service to dispatch work into.
+     * @param breadth How many concurrent tasks should be started.
+     * @param mappingFunction A function to map from type T to R.
+     * @param reportError If the mapping function throws an exception, how is it handled?
+     */
     public ParallelMappingIterator(
             final boolean ordered,
             final Iterator<T> inputs,
