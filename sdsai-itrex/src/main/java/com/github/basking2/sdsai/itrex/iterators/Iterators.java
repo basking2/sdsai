@@ -133,6 +133,7 @@ public class Iterators {
         return list;
     }
 
+
     /**
      * Build an iterator that will concurrently process elements split from the source iterator.
      *
@@ -156,5 +157,11 @@ public class Iterators {
                 executorService,
                 new SplitMapUncertainIterator<>(inputs, splitFunction, mapper)
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Iterator<T> emptyIterator() {
+        return (Iterator<T>) EMPTY_ITERATOR;
+
     }
 }
