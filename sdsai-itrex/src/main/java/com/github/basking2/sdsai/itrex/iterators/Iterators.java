@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Iterators {
 
@@ -131,6 +132,10 @@ public class Iterators {
             list.add(itr.next());
         }
         return list;
+    }
+
+    public static <T> FilterIterator<T> filterIterator(final Iterator<T> iterator, final Predicate<T> p) {
+        return new FilterIterator<>(iterator, p);
     }
 
 
