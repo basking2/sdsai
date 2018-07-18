@@ -11,7 +11,7 @@ public class KDTree<K extends Comparable<K>, V> {
     }
 
     public V find(final K[] key) {
-        if (head == null) {
+        if (head != null) {
             final Node n = head.find(key, 0);
 
             if (n == null) {
@@ -26,7 +26,7 @@ public class KDTree<K extends Comparable<K>, V> {
     }
 
     public V findClosest(final K[] key) {
-        if (head == null) {
+        if (head != null) {
             final Node n = head.findClosest(key, 0);
 
             return n.value;
@@ -42,7 +42,7 @@ public class KDTree<K extends Comparable<K>, V> {
             size = 1;
         }
         else {
-            head.insert(key, 0, value);
+            head.add(key, 0, value);
             size++;
         }
     }
@@ -78,7 +78,7 @@ public class KDTree<K extends Comparable<K>, V> {
          * @param axis
          * @param value
          */
-        public void insert(final K[] key, final int axis, final V value) {
+        public void add(final K[] key, final int axis, final V value) {
             final int cmp = this.key[axis].compareTo(key[axis]);
 
             if (cmp <= 0) {
@@ -86,21 +86,41 @@ public class KDTree<K extends Comparable<K>, V> {
                     left = new Node(key, value);
                 }
                 else {
-                    left.insert(key, (axis + 1) % key.length, value);
+                    left.add(key, (axis + 1) % key.length, value);
                 }
             }
             else if (right == null) {
                 right = new Node(key, value);
             } else {
-                right.insert(key, (axis + 1) % key.length, value);
+                right.add(key, (axis + 1) % key.length, value);
             }
+        }
+
+        public boolean keyEquals(final K[] key) {
+            for (int i = 0; i < key.length; i++) {
+                if (this.key[i].compareTo(key[i]) != 0) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public Node find(final K[] key, final int axis) {
             final int cmp = this.key[axis].compareTo(key[axis]);
 
             if (cmp == 0) {
-                return this;
+
+                if (keyEquals(key)) {
+                    // If this is totally equal.
+                    return this;
+                }
+                else if (left == null) {
+                    return null;
+                }
+                else {
+                    return left.find(key, (axis + 1) % key.length);
+                }
             }
             else if (cmp < 0) {
                 if (left == null) {

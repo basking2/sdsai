@@ -44,4 +44,18 @@ public class KDTreeTest {
         }));
 
     }
+
+    @Test
+    public void testKeyPrefixFind() {
+        final KDTree<Integer, String> kdTree = new KDTree<>();
+
+        kdTree.add(new Integer[]{1,2,1}, "one");
+        kdTree.add(new Integer[]{1,2,2}, "two");
+        kdTree.add(new Integer[]{1,2,3}, "three");
+
+        assertEquals("one", kdTree.find(new Integer[]{1,2,1}));
+        assertEquals("two", kdTree.find(new Integer[]{1,2,2}));
+        assertEquals("three", kdTree.find(new Integer[]{1,2,3}));
+
+    }
 }
