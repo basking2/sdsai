@@ -1,5 +1,15 @@
 package com.github.basking2.sdsai;
 
+/**
+ * A k-d tree that operates much like a traditional binary search tree.
+ *
+ * As such, it is possible for this K-D tree to build a linked list of nodes, in a particularly worst case of insertions.
+ *
+ * It is, however, simple, and does not require knowledge of the dimension range.
+ *
+ * @param <K> The key value of each element in the multidimensional key.
+ * @param <V> The value.
+ */
 public class KDTree<K extends Comparable<K>, V> {
 
     private Node head;
