@@ -144,7 +144,16 @@ public class KDTree<K extends Comparable<K>, V> {
             final int cmp = this.key[axis].compareTo(key[axis]);
 
             if (cmp == 0) {
-                return this;
+                if (keyEquals(key)) {
+                    // If this is totally equal.
+                    return this;
+                }
+                else if (left == null) {
+                    return this;
+                }
+                else {
+                    return left.findClosest(key, (axis + 1) % key.length);
+                }
             }
             else if (cmp < 0) {
                 if (left == null) {
