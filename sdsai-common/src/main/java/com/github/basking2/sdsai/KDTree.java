@@ -70,6 +70,22 @@ public class KDTree<K extends Comparable<K>, V> {
         return size;
     }
 
+    public V min() {
+        if (head == null) {
+            return null;
+        }
+
+        return head.min().value;
+    }
+
+    public V max() {
+        if (head == null) {
+            return null;
+        }
+
+        return head.max().value;
+    }
+
     private class Node {
         private K[] key;
         private V value;
@@ -181,6 +197,26 @@ public class KDTree<K extends Comparable<K>, V> {
                     return right.findClosest(key, (axis + 1) % key.length);
                 }
             }
+        }
+
+        public Node min() {
+            Node n = this;
+
+            while (n.left != null) {
+                n = n.left;
+            }
+
+            return n;
+        }
+
+        public Node max() {
+            Node n = this;
+
+            while (n.right != null) {
+                n = n.right;
+            }
+
+            return n;
         }
     }
 
