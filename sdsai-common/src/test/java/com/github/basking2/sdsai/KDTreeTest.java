@@ -43,6 +43,7 @@ public class KDTreeTest {
                 1000*Math.random() +""
         }));
 
+        assertTrue(kdTree.min().compareTo(kdTree.max()) < 0);
     }
 
     @Test

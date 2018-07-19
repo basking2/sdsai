@@ -105,7 +105,7 @@ public class KDTree<K extends Comparable<K>, V> {
          * @param value
          */
         public void add(final K[] key, final int axis, final V value) {
-            final int cmp = this.key[axis].compareTo(key[axis]);
+            final int cmp = key[axis].compareTo(this.key[axis]);
 
             if (cmp <= 0) {
                 if (left == null) {
@@ -133,7 +133,7 @@ public class KDTree<K extends Comparable<K>, V> {
         }
 
         public Node find(final K[] key, final int axis) {
-            final int cmp = this.key[axis].compareTo(key[axis]);
+            final int cmp = key[axis].compareTo(this.key[axis]);
 
             if (cmp == 0) {
 
@@ -167,7 +167,7 @@ public class KDTree<K extends Comparable<K>, V> {
         }
 
         public Node findClosest(final K[] key, final int axis) {
-            final int cmp = this.key[axis].compareTo(key[axis]);
+            final int cmp = key[axis].compareTo(this.key[axis]);
 
             if (cmp == 0) {
                 if (keyEquals(key)) {
@@ -218,6 +218,69 @@ public class KDTree<K extends Comparable<K>, V> {
 
             return n;
         }
-    }
 
+        /**
+         * Remove the right-most node from this tree.
+         *
+         * @return The removed node or null if there are no adequate child nodes.
+         */
+        public Node removeMax() {
+            Node p = this;
+            Node c = this.right;
+            while (c.right != null) {
+                p = c;
+                c = c.right;
+            }
+
+            if (c.left != null) {
+                final Node replacementNode = c.left.removeMax();
+                if (replacementNode != null) {
+                    p.right = replacementNode;
+                    replacementNode.left = c.left;
+                }
+                else {
+                    p.right = c.left;
+                }
+            }
+            else {
+                p.right = null;
+            }
+
+            c.right = null;
+            c.left = null;
+            return c;
+        }
+
+        /**
+         * Remove the right-most node from this tree.
+         *
+         * @return The removed node or null if there are no adequate child nodes.
+         */
+        public Node removeMin() {
+            Node p = this;
+            Node c = this.left;
+            while (c.left != null) {
+                p = c;
+                c = c.left;
+            }
+
+            if (c.right != null) {
+                final Node replacementNode = c.right.removeMin();
+                if (replacementNode != null) {
+                    p.left = replacementNode;
+                    replacementNode.right = c.right;
+                }
+                else {
+                    p.left = c.right;
+                }
+            }
+            else {
+                p.left = null;
+            }
+
+            c.right = null;
+            c.left = null;
+            return c;
+        }
+    }
 }
