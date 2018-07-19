@@ -282,5 +282,56 @@ public class KDTree<K extends Comparable<K>, V> {
             c.left = null;
             return c;
         }
+
+        /**
+         * Remove the right node from this node and return it.
+         *
+         * @return The removed node or null.
+         */
+        public Node removeRight() {
+            if (right == null) {
+                return null;
+            }
+
+            final Node removed = right;
+            final Node replacement = right.removeMin();
+            if (replacement != null) {
+                replacement.right = removed.right;
+                right = replacement;
+            }
+            else {
+                replacement.right = removed.right;
+            }
+
+            removed.left = null;
+            removed.right = null;
+            return removed;
+        }
+
+        /**
+         * Remove the left node from this node and return it.
+         *
+         * @return The removed node or null.
+         */
+        public Node removeLeft() {
+            if (left == null) {
+                return null;
+            }
+
+            final Node removed = left;
+            final Node replacement = left.removeMax();
+            if (replacement != null) {
+                replacement.left = removed.left;
+                left = replacement;
+            }
+            else {
+                replacement.left = removed.left;
+            }
+
+            removed.left = null;
+            removed.right = null;
+            return removed;
+        }
     }
+
 }
