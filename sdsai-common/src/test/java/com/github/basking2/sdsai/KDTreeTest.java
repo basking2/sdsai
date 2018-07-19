@@ -44,6 +44,71 @@ public class KDTreeTest {
         }));
 
         assertTrue(kdTree.min().compareTo(kdTree.max()) < 0);
+
+    }
+
+    @Test
+    public void testMinsMaxes() {
+        final KDTree<String, String> kdTree = new KDTree<>();
+        final int dimensions = 3;
+        final int size = 100;
+
+        final String[][] keys = new String[size][dimensions];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                keys[i][j] = 1000*Math.random() +"";
+            }
+
+            kdTree.add(keys[i], i + "");
+        }
+
+
+        while (kdTree.size() > 0) {
+            final String[] minKey = kdTree.minKey();
+            final String minValue = kdTree.min();
+            final String[] maxKey = kdTree.maxKey();
+            final String maxValue = kdTree.max();
+
+            assertEquals(minValue, kdTree.removeMin());
+            assertEquals(maxValue, kdTree.removeMax());
+            assertNull(kdTree.find(minKey));
+            assertNull(kdTree.find(maxKey));
+        }
+
+        assertNull(kdTree.minKey());
+        assertNull(kdTree.min());
+
+    }
+
+    @Test
+    public void testRandomAddRemoves() {
+        final KDTree<String, String> kdTree = new KDTree<>();
+        final int dimensions = 3;
+        final int size = 100;
+
+        final String[][] keys = new String[size][dimensions];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                keys[i][j] = 1000*Math.random() +"";
+            }
+
+            kdTree.add(keys[i], i + "");
+        }
+
+        for (int i = 0; i < 100; i++) {
+            final int idx = (int) (Math.random() * keys.length);
+            final String[] key = keys[idx];
+
+            if (kdTree.find(key) != null) {
+                final int sz = kdTree.size();
+                final String value = kdTree.find(key);
+                assertEquals(value, kdTree.remove(key));
+                assertEquals(sz-1, kdTree.size());
+                assertNull(kdTree.find(key));
+            }
+        }
     }
 
     @Test
