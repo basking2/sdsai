@@ -59,7 +59,7 @@ public class RollingAverage {
 
         values++;
 
-        average = (((values-1) / values) * average) + ((1 / values) * update);
+        average = (((values-1D) / values) * average) + ((1D / values) * update);
 
         return average;
     }
