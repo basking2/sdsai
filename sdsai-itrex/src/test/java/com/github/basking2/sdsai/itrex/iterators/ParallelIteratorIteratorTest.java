@@ -116,4 +116,24 @@ public class ParallelIteratorIteratorTest {
 
         e.shutdown();
     }
+
+    @Test
+    public void testEmptyIterator() {
+        // Use an executor that does work on this thread.
+        final ExecutorService e = Executors.newSingleThreadExecutor();
+
+        final List<String> nullList = new ArrayList<>();
+        nullList.add(null);
+        nullList.add(null);
+        nullList.add(null);
+
+        final Iterator<String> nullIterator = Iterators.skipNulls(nullList.iterator());
+
+        // 2 iterators that sleep.
+        final Iterator<Integer> i = new ParallelIteratorIterator(e, 1, asList(nullIterator));
+
+        assertFalse(i.hasNext());
+
+        e.shutdown();
+    }
 }

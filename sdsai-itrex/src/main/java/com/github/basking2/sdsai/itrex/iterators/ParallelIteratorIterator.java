@@ -76,7 +76,12 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         this.actors = Collections.unmodifiableList(actorsTmp);
         this.executor = executor;
         this.resultsQueue = new ArrayBlockingQueue<>(queueSize + actors.size());
-        this.deferQueue = new ArrayBlockingQueue<>(actors.size());
+        if (actors.size() > 0) {
+            this.deferQueue = new ArrayBlockingQueue<>(actors.size());
+        }
+        else {
+            this.deferQueue = new ArrayBlockingQueue<>(1);
+        }
 
         // Start all actors.
         for (final Actor a : actors) {
