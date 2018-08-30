@@ -21,6 +21,7 @@ public interface UncertainIterator<T> {
 
     /**
      * Get the next value or throw {@link java.util.NoSuchElementException}.
+     * @return The next element.
      */
     T next();
 

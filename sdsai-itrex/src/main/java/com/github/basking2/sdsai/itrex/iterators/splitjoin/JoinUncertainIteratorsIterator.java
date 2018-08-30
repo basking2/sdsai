@@ -52,15 +52,15 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
     public JoinUncertainIteratorsIterator(final ExecutorService executorService, final UncertainIterator<UncertainIterator<T>> iterators) {
         this.liveIterators = new ArrayList<>();
         this.uncertainIteratorUncertainIterator = iterators;
-        this.workResults = new ArrayList();
-        this.workingIterators = new ArrayList();
+        this.workResults = new ArrayList<>();
+        this.workingIterators = new ArrayList<>();
         this.executorService = executorService;
     }
 
     public JoinUncertainIteratorsIterator(final ExecutorService executorService, final List<UncertainIterator<T>> liveIterators) {
         this.liveIterators = liveIterators;
-        this.workResults = new ArrayList();
-        this.workingIterators = new ArrayList();
+        this.workResults = new ArrayList<>();
+        this.workingIterators = new ArrayList<>();
         this.executorService = executorService;
         this.uncertainIteratorUncertainIterator = new UncertainIterator<UncertainIterator<T>>() {
             @Override

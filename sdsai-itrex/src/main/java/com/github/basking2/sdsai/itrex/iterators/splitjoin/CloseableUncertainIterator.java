@@ -22,7 +22,7 @@ public class CloseableUncertainIterator<T> implements UncertainIterator<T>, Auto
      * When the queue is empty and this object has been {@link #close()}ed, then {@link UncertainIterator.HAS_NEXT#FALSE}
      * is returned.
      *
-     * @param queue
+     * @param queue The queue to read elements from.
      */
     public CloseableUncertainIterator(final Queue<T> queue) {
         this.queue = queue;

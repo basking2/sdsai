@@ -23,6 +23,7 @@ public class PagingIterator<T> implements Iterator<Iterator<T>> {
     private final Iterator<T> iterator;
     private final int pageSize;
 
+    @SuppressWarnings("unchecked")
     public PagingIterator(final int pageSize, final Iterator<T> iterator) {
         this.pageSize = pageSize;
         this.iterator = iterator;

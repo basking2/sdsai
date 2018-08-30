@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  *
  * This is used to implement the {@link PagingIterator}.
  *
- * @param <T>
+ * @param <T> The type.
  */
 public class HeadIterator<T> implements Iterator<T> {
     private int left;
