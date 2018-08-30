@@ -1,9 +1,6 @@
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.hamcrest.Matcher;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -11,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import static com.github.basking2.sdsai.itrex.iterators.Iterators.mapIterator;
 
 public class ParallelMappingIteratorTest {
     @Test

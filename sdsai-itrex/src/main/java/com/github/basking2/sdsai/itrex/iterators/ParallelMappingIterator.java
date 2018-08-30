@@ -158,6 +158,11 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
 
     @Override
     public R next() {
+        // Don't let the user dead-lock themselves by waiting for elements that are never coming.
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+
         if (ordered) {
             return nextOrdered();
         }
