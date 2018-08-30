@@ -251,7 +251,13 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
         public T tryNext() {
             if (lock.tryLock()) {
                 try {
-                    return iterator.next();
+                    // Check in the lock if we have another element. If we do, fetch it. Otherwise return null.
+                    if (iterator.hasNext()) {
+                        return iterator.next();
+                    }
+                    else {
+                        return null;
+                    }
                 }
                 finally {
                     lock.unlock();
