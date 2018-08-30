@@ -145,6 +145,7 @@ public class ParallelIteratorIterator<T> implements Iterator<T> {
             
             // 2. Try to take 1 from any actor.
             //    This only fails if all the actors are currently processing a result in a thread.
+            //    or returned a result.
             for (final Actor a : actors) {
                 try {
                     t = a.tryNext();
