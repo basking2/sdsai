@@ -17,6 +17,11 @@ import java.util.concurrent.Future;
  * Every iterator with available data will be scheduled to fetch its in the given ExecutorService.
  * Thus this job processes, roughly, as widely as the distribution of iterator data.
  *
+ * If every {@link UncertainIterator} returns {@link com.github.basking2.sdsai.itrex.iterators.splitjoin.UncertainIterator.HAS_NEXT#MAYBE}
+ * then this iterator will report false from {@link #hasNext()}. The processing model is that of the set of input
+ * iterators, at least 1 will have some work to do at all times. This is suitable for distributing work in which
+ * we always know that some work is available, but we do not know where it comes from.
+ *
  * @param <T> The types being joined.
  */
 public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
@@ -37,7 +42,7 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
     private final List<UncertainIterator<T>> workingIterators;
 
     /**
-     * The results returned by an iterator in the workingItertors list.
+     * The results returned by an iterator in the workingIterators list.
      */
     private final List<Future<T>> workResults;
 
