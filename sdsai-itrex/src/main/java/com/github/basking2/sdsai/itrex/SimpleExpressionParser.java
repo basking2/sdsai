@@ -42,8 +42,10 @@ public class SimpleExpressionParser {
 
     public static final Pattern QUOTED_STRING = Pattern.compile("^\"((?:\\\\\\\\|\\\\\"|[^\"])*)\"");
 
+    public static final Pattern BOOLEAN = Pattern.compile("^(true|false|t|f|T|F)");
     public static final Pattern INTEGER = Pattern.compile("^(?:-?\\d+)");
     public static final Pattern LONG = Pattern.compile("^(?:-?\\d+)[lL]");
+    public static final Pattern FLOAT = Pattern.compile("^(?:-?\\d+\\.\\d+[fF]?|-?\\d+[fF])");
     public static final Pattern DOUBLE = Pattern.compile("^(?:-?\\d+\\.\\d+[dD]?|-?\\d+[dD])");
 
     public static final Pattern WORD = Pattern.compile("^(?:[\\w\\.\\-:|]+)");
@@ -183,6 +185,17 @@ public class SimpleExpressionParser {
             else {
                 throw new SExprRuntimeException("Unmatched \" starting at position "+position+".");
             }
+        }
+
+        final Matcher floatMatcher = FLOAT.matcher(expression).region(position, expression.length());
+        if (floatMatcher.find()) {
+            String token = floatMatcher.group();
+            position += token.length();
+            if (token.endsWith("F") || token.endsWith("f")) {
+                token = token.substring(0, token.length()-1);
+            }
+
+            return Float.valueOf(token);
         }
 
         final Matcher doubleMatcher = DOUBLE.matcher(expression).region(position, expression.length());
