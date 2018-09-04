@@ -187,17 +187,6 @@ public class SimpleExpressionParser {
             }
         }
 
-        final Matcher floatMatcher = FLOAT.matcher(expression).region(position, expression.length());
-        if (floatMatcher.find()) {
-            String token = floatMatcher.group();
-            position += token.length();
-            if (token.endsWith("F") || token.endsWith("f")) {
-                token = token.substring(0, token.length()-1);
-            }
-
-            return Float.valueOf(token);
-        }
-
         final Matcher doubleMatcher = DOUBLE.matcher(expression).region(position, expression.length());
         if (doubleMatcher.find()) {
             String token = doubleMatcher.group();
@@ -207,6 +196,17 @@ public class SimpleExpressionParser {
             }
 
             return Double.valueOf(token);
+        }
+
+        final Matcher floatMatcher = FLOAT.matcher(expression).region(position, expression.length());
+        if (floatMatcher.find()) {
+            String token = floatMatcher.group();
+            position += token.length();
+            if (token.endsWith("F") || token.endsWith("f")) {
+                token = token.substring(0, token.length()-1);
+            }
+
+            return Float.valueOf(token);
         }
 
         final Matcher longMatcher = LONG.matcher(expression).region(position, expression.length());
