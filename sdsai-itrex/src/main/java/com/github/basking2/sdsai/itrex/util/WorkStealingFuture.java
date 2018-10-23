@@ -48,6 +48,27 @@ public class WorkStealingFuture<T> implements Future<T> {
         return workStealingFuture;
     }
 
+    public static <T> WorkStealingFuture<T> execute(final Executor executor, final Callable<T> callable) {
+        final WorkStealingFuture<T> workStealingFuture = new WorkStealingFuture<>(callable);
+
+        final CompletableFuture<T> promise = new CompletableFuture<>();
+
+        workStealingFuture.future = promise;
+
+        executor.execute(() -> {
+            if (!workStealingFuture.isStarted) {
+                workStealingFuture.isStarted = true;
+                try {
+                    promise.complete(callable.call());
+                } catch (final Throwable t) {
+                    promise.completeExceptionally(t);
+                }
+            }
+        });
+
+        return workStealingFuture;
+    }
+
     @Override
     public boolean cancel(boolean b) {
         return future.cancel(b);
