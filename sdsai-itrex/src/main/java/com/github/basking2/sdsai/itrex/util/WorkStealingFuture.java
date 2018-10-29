@@ -51,20 +51,17 @@ public class WorkStealingFuture<T> implements Future<T> {
     public static <T> WorkStealingFuture<T> execute(final Executor executor, final Callable<T> callable) {
         final WorkStealingFuture<T> workStealingFuture = new WorkStealingFuture<>(callable);
 
-        final CompletableFuture<T> promise = new CompletableFuture<>();
+        final FutureTask<T> promise = new FutureTask<>(() -> {
+            if (!workStealingFuture.isStarted) {
+                workStealingFuture.isStarted = true;
+                return callable.call();
+            }
+            return null;
+        });
 
         workStealingFuture.future = promise;
 
-        executor.execute(() -> {
-            if (!workStealingFuture.isStarted) {
-                workStealingFuture.isStarted = true;
-                try {
-                    promise.complete(callable.call());
-                } catch (final Throwable t) {
-                    promise.completeExceptionally(t);
-                }
-            }
-        });
+        executor.execute(promise);
 
         return workStealingFuture;
     }
@@ -97,7 +94,7 @@ public class WorkStealingFuture<T> implements Future<T> {
             else {
                 try {
                     return callable.call();
-                } catch (Exception e) {
+                } catch (final Throwable e) {
                     throw new ExecutionException("Executing call directly.", e);
                 }
             }
