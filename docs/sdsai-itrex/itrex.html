@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>SDSAI ItrEx 1.1.15-SNAPSHOT</title>
+<title>SDSAI ItrEx 1.1.18-SNAPSHOT</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>SDSAI ItrEx 1.1.15-SNAPSHOT</h1>
+<h1>SDSAI ItrEx 1.1.18-SNAPSHOT</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -503,8 +503,13 @@ ItrEx does provide a few basic functions, but mostly to support evaluation.</p>
 If the argument is a string, the class it points to is
 loaded. If the class is a <code>Package</code> class, then its
 <code>importTo</code> function is called. If the class is
-another type, then all static memebers that are
+another type, then all static members that are
 <code>FunctionInterface</code> types are registered as functions.</p>
+<div class="paragraph">
+<p>If you include <code>as &lt;package_name&gt;</code> the package will be imported
+under the given package_name. So <code>[import my.long.package.name as mypackage]</code>
+puts the functions such as <code>foo</code> under <code>mypackage.foo</code>.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>[evalItrml &lt;file&gt;]</code></dt>
 <dd>
@@ -758,6 +763,14 @@ This is equivalent to<br></p>
 If a non-list item is encountered it is directly added to the list.
 This is more tolerant than the flatten function.</p>
 </dd>
+<dt class="hdlist1"><code>[filter &lt;function&gt; &lt;iterator&gt;]</code></dt>
+<dd>
+<p>Filter the input iterator using the given function as a predicate.
+Filtering is done by pre-fetching elements from the input iterator
+until the predicate returns true for that element. When another element
+is called for, the current element is returned and the next one is
+fetched.</p>
+</dd>
 <dt class="hdlist1"><code>[flatten &lt;iterator 1&gt; &lt;iterator 2&gt;&#8230;&#8203;]</code></dt>
 <dd>
 <p>Takes a list of iterators. Returns an iterator that will walk through
@@ -976,6 +989,13 @@ If <code>predicate</code> is false <em>and</em> <code>if</code> has not been cur
 with another function, the <code>true branch</code> is skipped and the <code>false branch</code>
 is evaluated and returned. If your <code>true branch</code> has no side effects
 and is not computationally expensive, this should not make any difference.</p>
+</dd>
+<dt class="hdlist1"><code>[isitr &lt;argument&gt;]</code></dt>
+<dd>
+<p>Check if the given argument is iterable or not.
+This also includes types such as iterators which, while they are not
+"Iterable" in a Java language sense, they are things we may iterate
+over and something Itrex will iterate over.</p>
 </dd>
 <dt class="hdlist1"><code>[t]</code></dt>
 <dd>
@@ -1248,6 +1268,11 @@ in the <code>arguments</code> iterator by calling <code>[hasArgs]</code>, <code>
 <div class="sect1">
 <h2 id="_itrex_math_evaluator">ItrEx Math Evaluator</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>[import com.github.basking2.sdsai.itrex.packages.JavaMathPackage]</pre>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_itrex_math_evaluator_2">ItrEx Math Evaluator</h3>
 <div class="paragraph">
@@ -1325,7 +1350,7 @@ rounded.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-08-30 10:04:29 -05:00
+Last updated 2018-10-23 10:03:26 -05:00
 </div>
 </div>
 </body>
