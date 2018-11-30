@@ -36,6 +36,7 @@ public class BasePackage implements Package {
         doRegister(evaluator, packageName, "list", new ListFunction());
         doRegister(evaluator, packageName, "listFlatten", new ListFlattenFunction());
         doRegister(evaluator, packageName, "if", new IfFunction());
+        doRegister(evaluator, packageName, "filter", new FilterFunction());
         doRegister(evaluator, packageName, "let", new LetFunction());
         doRegister(evaluator, packageName, "get", new GetFunction());
         doRegister(evaluator, packageName, "set", new SetFunction());

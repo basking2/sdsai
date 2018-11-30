@@ -210,6 +210,12 @@ function calls.
     Take a list of iterators and flatten all elements into a list.
     If a non-list item is encountered it is directly added to the list.
     This is more tolerant than the flatten function.
++[filter <function> <iterator>]+::
+    Filter the input iterator using the given function as a predicate.
+    Filtering is done by pre-fetching elements from the input iterator
+    until the predicate returns true for that element. When another element
+    is called for, the current element is returned and the next one is
+    fetched.
 +[flatten <iterator 1> <iterator 2>...]+::
     Takes a list of iterators. Returns an iterator that will walk through
     elements of each of those argument iterators.

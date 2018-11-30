@@ -341,6 +341,19 @@ public class EvaluatorTest {
         assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr hi]")));
         assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr [fn if]]")));
         assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr 1]")));
+    }
 
+    @Test
+    public void testFilter() {
+        final Evaluator e = new Evaluator();
+        final EvaluationContext ctx = e.getChildEvaluationContext();
+        final Iterator<Object> i1 = (Iterator<Object>) e.evaluate(parseExpression("[filter [curry eq a] [list b c d a q a] ]"));
+        assertTrue(i1.hasNext());
+        assertEquals("a", (String)i1.next());
+
+        assertTrue(i1.hasNext());
+        assertEquals("a", (String)i1.next());
+
+        assertFalse(i1.hasNext());
     }
 }
