@@ -24,11 +24,12 @@ endif::[]
     If the argument is a string, the class it points to is
     loaded. If the class is a +Package+ class, then its
     +importTo+ function is called. If the class is
-    another type, then all static memebers that are
+    another type, then all static members that are
     +FunctionInterface+ types are registered as functions.
-    If you include `as <package_name>` the package will be imported
-    under the given package_name. So `[import a as b]` puts the functions
-    such as `a.foo` under `b.foo`.
++
+If you include `as <package_name>` the package will be imported
+under the given package_name. So `[import my.long.package.name as mypackage]`
+puts the functions such as `foo` under `mypackage.foo`.
 
 `[evalItrml <file>]`::
     Load the given file into memory, parse it as an
@@ -354,6 +355,12 @@ evaluating it. This works, but is less elegant.
     with another function, the +true branch+ is skipped and the +false branch+
     is evaluated and returned. If your +true branch+ has no side effects
     and is not computationally expensive, this should not make any difference.
+
++[isitr <argument>]+::
+    Check if the given argument is iterable or not.
+    This also includes types such as iterators which, while they are not
+    "Iterable" in a Java language sense, they are things we may iterate
+    over and something Itrex will iterate over.
 
 +[t]+:: Return true.
 
