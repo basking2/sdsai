@@ -26,6 +26,9 @@ endif::[]
     +importTo+ function is called. If the class is
     another type, then all static memebers that are
     +FunctionInterface+ types are registered as functions.
+    If you include `as <package_name>` the package will be imported
+    under the given package_name. So `[import a as b]` puts the functions
+    such as `a.foo` under `b.foo`.
 
 `[evalItrml <file>]`::
     Load the given file into memory, parse it as an

@@ -14,6 +14,9 @@ endif::[]
 
 :imagesdir: imgs
 
+----
+[import com.github.basking2.sdsai.itrex.packages.JavaMathPackage]
+----
 
 ## ItrEx Math Evaluator
 

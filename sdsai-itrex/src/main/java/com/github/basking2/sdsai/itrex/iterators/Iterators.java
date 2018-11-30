@@ -56,6 +56,18 @@ public class Iterators {
     }
 
     /**
+     * Return true if the object is an iterator or can be made into an iterator via {@link #toIterator(Object)}.
+     * @param o The object to check.
+     * @return true if the object is an iterator or can be made into an iterator via {@link #toIterator(Object)}.
+     */
+    public static boolean isIter(final Object o) {
+        return
+                (o instanceof Iterator) ||
+                (o instanceof Iterable) ||
+                (o instanceof Object[]);
+    }
+
+    /**
      * Wrap one or more values into an iterator.
      *
      * @param ts  The t values to wrap into an interator.

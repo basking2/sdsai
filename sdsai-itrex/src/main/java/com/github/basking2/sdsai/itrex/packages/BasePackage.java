@@ -8,6 +8,7 @@ import com.github.basking2.sdsai.itrex.util.TypeConversion;
 import java.util.Iterator;
 
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.toIterator;
+import static com.github.basking2.sdsai.itrex.iterators.Iterators.isIter;
 
 public class BasePackage implements Package {
 
@@ -39,6 +40,7 @@ public class BasePackage implements Package {
         doRegister(evaluator, packageName, "get", new GetFunction());
         doRegister(evaluator, packageName, "set", new SetFunction());
         doRegister(evaluator, packageName, "update", new UpdateFunction());
+        doRegister(evaluator, packageName, "isitr", (iterator, ctx) -> isIter(iterator.next()));
         doRegister(evaluator, packageName, "head", (iterator, ctx) -> toIterator(iterator.next()).next());
         doRegister(evaluator, packageName, "for", new ForFunction(evaluator));
         doRegister(evaluator, packageName, "range", new RangeFunction());

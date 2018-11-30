@@ -330,4 +330,17 @@ public class EvaluatorTest {
         assertNull(ctx.get("e"));
 
     }
+
+    @Test
+    public void testIsItr() {
+        final Evaluator e = new Evaluator();
+        final EvaluationContext ctx = e.getChildEvaluationContext();
+        assertEquals(Boolean.TRUE, e.evaluate(parseExpression("[isitr []]")));
+        assertEquals(Boolean.TRUE, e.evaluate(parseExpression("[isitr [map [function [arg]] []]]")));
+        assertEquals(Boolean.TRUE, e.evaluate(parseExpression("[isitr [map [function [arg]] [list 1,2,3]]]")));
+        assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr hi]")));
+        assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr [fn if]]")));
+        assertEquals(Boolean.FALSE, e.evaluate(parseExpression("[isitr 1]")));
+
+    }
 }
