@@ -5,8 +5,6 @@ import java.util.concurrent.*;
 /**
  * A future that will, on calls to {@link #get()}, let the calling thread do the work.
  *
- * This does not prevent double-computation in all situations, but makes the risk of that very small.
- *
  * @param <T> The type returned.
  */
 public class WorkStealingFuture<T> implements Future<T> {
@@ -32,12 +30,28 @@ public class WorkStealingFuture<T> implements Future<T> {
         this.future = null;
     }
 
+    /**
+     * Lock this object and try to set isStarted to true.
+     *
+     * @return True if isStarted was not previously set to true and this function call set it to true, false otherwise.
+     */
+    private boolean tryStart() {
+        synchronized (this) {
+            if (isStarted) {
+                return false;
+            }
+            else {
+                isStarted = true;
+                return true;
+            }
+        }
+    }
+
     public static <T> WorkStealingFuture<T> run(final ExecutorService executorService, final Callable<T> callable) {
         final WorkStealingFuture<T> workStealingFuture = new WorkStealingFuture<>(callable);
 
         workStealingFuture.future = executorService.submit(() -> {
-            if (!workStealingFuture.isStarted) {
-                workStealingFuture.isStarted = true;
+            if (workStealingFuture.tryStart()) {
                 return callable.call();
             }
             else {
@@ -52,11 +66,12 @@ public class WorkStealingFuture<T> implements Future<T> {
         final WorkStealingFuture<T> workStealingFuture = new WorkStealingFuture<>(callable);
 
         final FutureTask<T> promise = new FutureTask<>(() -> {
-            if (!workStealingFuture.isStarted) {
-                workStealingFuture.isStarted = true;
+            if (workStealingFuture.tryStart()) {
                 return callable.call();
             }
-            return null;
+            else {
+                return null;
+            }
         });
 
         workStealingFuture.future = promise;
@@ -83,21 +98,15 @@ public class WorkStealingFuture<T> implements Future<T> {
 
     @Override
     public T get() throws InterruptedException, ExecutionException {
-        if (isStarted) {
-            return future.get();
+        if (tryStart()) {
+            try {
+                return callable.call();
+            } catch (final Throwable e) {
+                throw new ExecutionException("Executing call directly.", e);
+            }
         }
         else {
-            isStarted = true;
-            if (future.isDone()) {
-                return future.get();
-            }
-            else {
-                try {
-                    return callable.call();
-                } catch (final Throwable e) {
-                    throw new ExecutionException("Executing call directly.", e);
-                }
-            }
+            return future.get();
         }
     }
 
