@@ -26,6 +26,7 @@ public class FilterFunction implements FunctionInterface<Iterator<?>> {
             throw new SExprRuntimeException("Filter function requires its first argument be a predicate.");
         }
 
+        @SuppressWarnings("unchecked")
         final FunctionInterface<Boolean> predicate = (FunctionInterface<Boolean>)predicateObject;
 
         if (!iterator.hasNext()) {
