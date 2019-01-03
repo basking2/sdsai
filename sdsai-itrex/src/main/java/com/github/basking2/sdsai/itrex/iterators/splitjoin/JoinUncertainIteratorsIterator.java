@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
 /**
@@ -46,22 +46,22 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
      */
     private final List<Future<T>> workResults;
 
-    private final ExecutorService executorService;
+    private final Executor executor;
 
 
-    public JoinUncertainIteratorsIterator(final ExecutorService executorService, final UncertainIterator<UncertainIterator<T>> iterators) {
+    public JoinUncertainIteratorsIterator(final Executor executor, final UncertainIterator<UncertainIterator<T>> iterators) {
         this.liveIterators = new ArrayList<>();
         this.uncertainIteratorUncertainIterator = iterators;
         this.workResults = new ArrayList<>();
         this.workingIterators = new ArrayList<>();
-        this.executorService = executorService;
+        this.executor = executor;
     }
 
-    public JoinUncertainIteratorsIterator(final ExecutorService executorService, final List<UncertainIterator<T>> liveIterators) {
+    public JoinUncertainIteratorsIterator(final Executor executor, final List<UncertainIterator<T>> liveIterators) {
         this.liveIterators = liveIterators;
         this.workResults = new ArrayList<>();
         this.workingIterators = new ArrayList<>();
-        this.executorService = executorService;
+        this.executor = executor;
         this.uncertainIteratorUncertainIterator = new UncertainIterator<UncertainIterator<T>>() {
             @Override
             public UncertainIterator<T> next() {
@@ -75,18 +75,18 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
         };
     }
 
-    public static <T> JoinUncertainIteratorsIterator<T> join(final ExecutorService executorService, final UncertainIterator<UncertainIterator<T>> uncertainIteratorUncertainIterator) {
-        return new JoinUncertainIteratorsIterator<>(executorService, uncertainIteratorUncertainIterator);
+    public static <T> JoinUncertainIteratorsIterator<T> join(final Executor executor, final UncertainIterator<UncertainIterator<T>> uncertainIteratorUncertainIterator) {
+        return new JoinUncertainIteratorsIterator<>(executor, uncertainIteratorUncertainIterator);
     }
 
-    public static <T> JoinUncertainIteratorsIterator<T> joinList(final ExecutorService executorService, final List<UncertainIterator<T>> list) {
-        return new JoinUncertainIteratorsIterator<>(executorService, list);
+    public static <T> JoinUncertainIteratorsIterator<T> joinList(final Executor executor, final List<UncertainIterator<T>> list) {
+        return new JoinUncertainIteratorsIterator<>(executor, list);
     }
 
-    public static <T> JoinUncertainIteratorsIterator<T> joinSingle(final ExecutorService executorService, final UncertainIterator<T> uncertainIterator) {
+    public static <T> JoinUncertainIteratorsIterator<T> joinSingle(final Executor executor, final UncertainIterator<T> uncertainIterator) {
         final List<UncertainIterator<T>> list = new ArrayList<>();
         list.add(uncertainIterator);
-        return new JoinUncertainIteratorsIterator<>(executorService, list);
+        return new JoinUncertainIteratorsIterator<>(executor, list);
     }
 
     /**
@@ -100,7 +100,7 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
             switch (ui.hasNext()) {
                 case TRUE:
                     // It has data! Remove from the live list AND start it working.
-                    final Future<T> future = WorkStealingFuture.run(executorService, () -> ui.next());
+                    final Future<T> future = WorkStealingFuture.execute(executor, () -> ui.next());
                     workingIterators.add(ui);
                     workResults.add(future);
                     break;
@@ -123,7 +123,7 @@ public class JoinUncertainIteratorsIterator<T> implements Iterator<T> {
                 case TRUE:
                     // It has data! Remove from the live list AND start it working.
 
-                    final Future<T> future = WorkStealingFuture.run(executorService, () -> ui.next());
+                    final Future<T> future = WorkStealingFuture.execute(executor, () -> ui.next());
                     workingIterators.add(ui);
                     workResults.add(future);
                     toRemove.add(ui);

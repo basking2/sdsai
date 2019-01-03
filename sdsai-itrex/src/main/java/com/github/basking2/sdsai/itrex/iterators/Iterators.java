@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -154,7 +154,7 @@ public class Iterators {
     /**
      * Build an iterator that will concurrently process elements split from the source iterator.
      *
-     * @param executorService The executor service.
+     * @param executor The executor service.
      * @param inputs Inputs to be split into many sub-iterations based on the split function.
      * @param splitFunction Map input types to keys that will group like items together for mapping in separate threads.
      * @param mapper The mapper that maps sub-iterations in individual tasks in the executor.
@@ -165,13 +165,13 @@ public class Iterators {
      * @return An iterator that will manage all the complexities of splitting, mapping, and joining.
      */
     public static <R, T, K> Iterator<R> splitMapJoinIterator(
-            final ExecutorService executorService,
+            final Executor executor,
             final Iterator<T> inputs,
             final Function<T, K> splitFunction,
             final MappingIterator.Mapper<T, R> mapper
     ) {
         return JoinUncertainIteratorsIterator.join(
-                executorService,
+                executor,
                 new SplitMapUncertainIterator<>(inputs, splitFunction, mapper)
         );
     }
