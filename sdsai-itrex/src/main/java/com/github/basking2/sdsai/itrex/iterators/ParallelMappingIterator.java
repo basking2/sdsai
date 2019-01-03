@@ -12,7 +12,7 @@ import java.util.function.Consumer;
  */
 public class ParallelMappingIterator<T, R> implements Iterator<R> {
     private final MappingIterator.Mapper<T, R> mappingFunction;
-    private final ExecutorService executorService;
+    private final Executor executor;
     private final LinkedBlockingQueue<Future<R>> queue;
     private final Iterator<T> inputs;
     private final boolean ordered;
@@ -25,21 +25,21 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
      *                If true, this will cause head-of-line blocking if a slow element is encountered, but
      *                often this is acceptable.
      * @param inputs The inputs to map.
-     * @param executorService The executor service to dispatch work into.
+     * @param executor The executor service to dispatch work into.
      * @param breadth How many concurrent tasks should be started.
      * @param mappingFunction A function to map from type T to R.
      */
     public ParallelMappingIterator(
             final boolean ordered,
             final Iterator<T> inputs,
-            final ExecutorService executorService,
+            final Executor executor,
             final int breadth,
             final MappingIterator.Mapper<T, R> mappingFunction
     ) {
         this(
                 ordered,
                 inputs,
-                executorService,
+                executor,
                 breadth,
                 mappingFunction,
                 t->t.printStackTrace()
@@ -55,7 +55,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
      *                If true, this will cause head-of-line blocking if a slow element is encountered, but
      *                often this is acceptable.
      * @param inputs The inputs to map.
-     * @param executorService The executor service to dispatch work into.
+     * @param executor The executor service to dispatch work into.
      * @param breadth How many concurrent tasks should be started.
      * @param mappingFunction A function to map from type T to R.
      * @param reportError If the mapping function throws an exception, how is it handled?
@@ -63,7 +63,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
     public ParallelMappingIterator(
             final boolean ordered,
             final Iterator<T> inputs,
-            final ExecutorService executorService,
+            final Executor executor,
             final int breadth,
             final MappingIterator.Mapper<T, R> mappingFunction,
             final Consumer<Throwable> reportError
@@ -72,7 +72,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
         this.ordered = ordered;
         this.inputs = inputs;
         this.mappingFunction = mappingFunction;
-        this.executorService = executorService;
+        this.executor = executor;
         this.queue = new LinkedBlockingQueue<>(breadth);
         this.reportError = reportError;
 
@@ -85,7 +85,7 @@ public class ParallelMappingIterator<T, R> implements Iterator<R> {
             final T t = inputs.next();
 
             // Now dispatch it to be mapped.
-            final Future<R> f = WorkStealingFuture.run(executorService, () -> mappingFunction.map(t));
+            final Future<R> f = WorkStealingFuture.execute(executor, () -> mappingFunction.map(t));
 
             // And enqueue.
             try {
