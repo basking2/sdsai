@@ -2,6 +2,8 @@ package com.github.basking2.sdsai.itrex.iterators;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static java.util.Arrays.asList;
@@ -32,5 +34,24 @@ public class BufferIteratorTest {
         assertTrue(bi.hasNext());
         assertEquals("c", bi.next());
         assertFalse(bi.hasNext());
+    }
+
+    @Test
+    public void testIterationLargerThanBufferSize() {
+
+        final List<Integer> source = new ArrayList<>();
+
+        for (int i = 0; i < 132; i++) {
+            source.add((int)(Math.random() * Integer.MAX_VALUE));
+        }
+
+        assertTrue(source.size() > 0);
+
+        final BufferIterator bi = new BufferIterator(10, source.iterator());
+
+        for (int i = 0; i < source.size(); i++) {
+            assertTrue(bi.hasNext());
+            assertEquals(source.get(i), bi.next());
+        }
     }
 }
