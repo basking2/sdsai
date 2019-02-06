@@ -62,7 +62,15 @@ public class Trie<V> {
         }
 
         if (child != null) {
-            return find_helper(key.subSequence(prefixlen, key.length()), child);
+            if (child.key.length() != prefixlen) {
+                // Our only match is for a node that should exist between this and the child.
+                // We cannot find the key.
+
+                return null;
+            }
+            else {
+                return find_helper(key.subSequence(prefixlen, key.length()), child);
+            }
         }
         else {
             return null;

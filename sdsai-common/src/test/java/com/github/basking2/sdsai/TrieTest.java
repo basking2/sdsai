@@ -69,4 +69,17 @@ public class TrieTest {
         }
         assertEquals("canary", trie.find("canary"));
     }
+
+    @Test
+    public void failToFindMissingIntermediateNodes() {
+        final Trie<String> trie = new Trie<>();
+
+        trie.add("abcd", "value1");
+        trie.add("a", "value2");
+
+        assertEquals("value1", trie.find("abcd"));
+        assertEquals("value2", trie.find("a"));
+        assertNull(trie.find("ab"));
+        assertNull(trie.find("abc"));
+    }
 }
