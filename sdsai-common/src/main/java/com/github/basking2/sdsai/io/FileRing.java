@@ -118,14 +118,12 @@ public class FileRing {
     }
 
     public void deleteAll() {
-        for (int i = 0; i < num; ++i) {
-            final File f = getFile(i);
+        for (final File f : list()) {
             try {
                 if (f.exists()) {
                     f.delete();
                 }
-            }
-            catch (final Throwable t) {
+            } catch (final Throwable t) {
                 LOG.error(String.format("Failed to delete file %s.", f.getAbsoluteFile()), t);
             }
         }
