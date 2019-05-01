@@ -127,7 +127,7 @@ public class FileRing {
 
             @Override
             public boolean hasNext() {
-                return i < files.length;
+                return i < files.length && files[i+1].exists();
             }
 
             @Override
