@@ -25,6 +25,9 @@ public class FileRing {
     private int num;
     private OutputStream out;
 
+    private final String prefix;
+    private final String suffix;
+
     private final Predicate<FileRing> doRotation;
 
     /**
@@ -40,11 +43,13 @@ public class FileRing {
             final int ringSize,
             final Predicate<FileRing> doRotation
     ) throws FileNotFoundException {
-        this(dir, 0, ringSize, doRotation);
+        this(dir, "", "", 0, ringSize, doRotation);
     }
 
     public FileRing(
             final File dir,
+            final String prefix,
+            final String suffix,
             final int start,
             final int ringSize,
             final Predicate<FileRing> doRotation
@@ -62,6 +67,8 @@ public class FileRing {
         this.ringSize = ringSize;
         this.num = start;
         this.doRotation = doRotation;
+        this.prefix = prefix;
+        this.suffix = suffix;
 
         final File f = getFile(this.num);
         this.out = new FileOutputStream(f, true);
@@ -69,6 +76,11 @@ public class FileRing {
 
     /**
      * List the current files, starting with oldest one in the ring.
+     *
+     * This means that the last file in the list is always defined because it is the most recently written to one.
+     * The file may be empty, but is guaranteed to have been opened. This fact is necessary for some algorithms
+     * to work property.
+     *
      * @return the current files, starting with oldest one in the ring.
      */
     public File[] list() {
@@ -127,13 +139,24 @@ public class FileRing {
 
             @Override
             public boolean hasNext() {
-                return i < files.length && files[i+1].exists();
+                // We know the last file exists because it is the newest.
+                // Intermediate files may not exist, but the last one should.
+                return i < files.length;
             }
 
             @Override
             public FileInputStream next() {
                 try {
-                    return new FileInputStream(files[i++]);
+                    while (i < files.length) {
+                        final File f = files[i++];
+                        if (f.exists()) {
+                            return new FileInputStream(f);
+                        }
+                    }
+
+                    // The last file _should_ always exist, but if not, throw an exception.
+                    throw new NoSuchElementException("Last file was not found: "+files[i-1].getAbsolutePath());
+
                 } catch (final FileNotFoundException e) {
                     throw new NoSuchElementException(e.getMessage());
                 }

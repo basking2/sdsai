@@ -8,7 +8,7 @@ apply plugin: 'maven'
 
 // group = defined by parent.
 // archiveBaseName = defined by parent and project name.
-version = '2.0.3-SNAPSHOT'
+version = '2.0.3'
 
 compileJava {
 	options.compilerArgs << '-Xlint:unchecked'
