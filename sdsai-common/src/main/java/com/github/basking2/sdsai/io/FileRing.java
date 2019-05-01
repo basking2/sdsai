@@ -93,6 +93,14 @@ public class FileRing {
         return files;
     }
 
+    public int getCurrentFileNumber() {
+        return num;
+    }
+
+    public int getRingSize() {
+        return ringSize;
+    }
+
     public void write(final byte[] data, final int offset, final int length) throws IOException {
         out.write(data, offset, length);
 
