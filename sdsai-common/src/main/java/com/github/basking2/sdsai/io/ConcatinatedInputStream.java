@@ -37,35 +37,39 @@ public class ConcatinatedInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException
-    {
+    public int read(byte[] b, int off, int len) throws IOException {
+        int totalRead = 0;
+
         while (inputStream != null) {
-            final int i = inputStream.read(b, off, len);
+            final int i = inputStream.read(b, off + totalRead, len - totalRead);
 
-            if (i != -1) {
-                return i;
+            // The read is at the end of the stream. Cycle it.
+            if (i == -1) {
+                nextStream();
             }
-
-            nextStream();
+            // If we read some bytes, record that we did and check if we should return.
+            else {
+                totalRead += i;
+                if (totalRead == len) {
+                    return totalRead;
+                }
+            }
         }
 
-        return -1;
+        // We've run out of input streams and not returned yet.
+        if (totalRead == 0) {
+            // If we've read nothing, return -1.
+            return -1;
+        } else {
+            // If we've read anything, then return the total bytes read.
+            return totalRead;
+        }
     }
 
     @Override
     public int read(byte[] b) throws IOException
     {
-        while (inputStream != null) {
-            final int i = inputStream.read(b);
-
-            if (i != -1) {
-                return i;
-            }
-
-            nextStream();
-        }
-
-        return -1;
+        return read(b, 0, b.length);
     }
 
     private void nextStream() throws IOException {
