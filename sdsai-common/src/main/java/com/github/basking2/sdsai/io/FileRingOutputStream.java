@@ -4,13 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.function.Predicate;
 
 
 import static com.github.basking2.sdsai.io.FileRing.getCurrentFileNumberAndSize;
 import static com.github.basking2.sdsai.io.FileRing.getFile;
 import static com.github.basking2.sdsai.io.FileRing.list;
+import static com.github.basking2.sdsai.io.FileRing.writeMeta;
 import static com.github.basking2.sdsai.io.FileRing.getMetaFile;
 
 /**
@@ -34,8 +34,6 @@ public class FileRingOutputStream extends OutputStream {
     private final String suffix;
 
     private final Predicate<FileRingOutputStream> doRotation;
-
-    private final Charset CHARSET = Charset.forName("UTF-8");
 
     /**
      * Create a new file ring with a start file of 0.
@@ -93,9 +91,7 @@ public class FileRingOutputStream extends OutputStream {
         final File f = getFile(dir, prefix, suffix, num);
         this.out = new FileOutputStream(f, true);
 
-        try (final FileOutputStream s = new FileOutputStream(getMetaFile(dir, prefix, suffix), false)) {
-            s.write(String.format("%d\n", num).getBytes(CHARSET));
-        }
+        writeMeta(dir, prefix, suffix, num, ringSize);
     }
 
 
@@ -141,10 +137,7 @@ public class FileRingOutputStream extends OutputStream {
         final File f = getFile(dir, prefix, suffix, num);
         out = new FileOutputStream(f, false);
 
-        // Write meta.
-        try (final FileOutputStream s = new FileOutputStream(getMetaFile(dir, prefix, suffix), false)) {
-            s.write(String.format("%d\n%d\n", num, ringSize).getBytes(CHARSET));
-        }
+        writeMeta(dir, prefix, suffix, num, ringSize);
     }
 
     public void deleteAll() {

@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.io;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -8,6 +9,9 @@ import java.util.NoSuchElementException;
  * A collection of static methods to help {@link FileRingInputStream} and {@link FileRingOutputStream} operate.
  */
 public class FileRing {
+
+    private static final Charset CHARSET = Charset.forName("UTF-8");
+
     /**
      * Build an iterator that produces {@link FileInputStream}. The built iterator is suitable for
      * passing to {@link ConcatinatedInputStream}.
@@ -83,6 +87,24 @@ public class FileRing {
         }
         else {
             return new int[]{0, 0};
+        }
+    }
+
+    /**
+     * Write the meta data file, those values returned by {@link #getCurrentFileNumberAndSize(File, String, String)}.
+     *
+     * @param dir The directory that holds data.
+     * @param prefix The file prefix.
+     * @param suffix The file suffix.
+     * @param num The current file.
+     * @param ringSize The ring size.
+     *
+     * @throws IOException On a writing error.
+     */
+    public static void writeMeta(final File dir, final String prefix, final String suffix, final int num, final int ringSize) throws IOException {
+        // Write meta.
+        try (final FileOutputStream s = new FileOutputStream(getMetaFile(dir, prefix, suffix), false)) {
+            s.write(String.format("%d\n%d\n", num, ringSize).getBytes(CHARSET));
         }
     }
 
