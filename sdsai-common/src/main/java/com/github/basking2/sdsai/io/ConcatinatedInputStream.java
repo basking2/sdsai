@@ -14,6 +14,11 @@ public class ConcatinatedInputStream extends InputStream {
 
     private InputStream inputStream;
 
+    /**
+     * Try to fill a buffer, even if that means blocking.
+     */
+    private final boolean tryFullRead = true;
+
     public ConcatinatedInputStream(final Iterator<? extends InputStream> inputStreams) {
         this.inputStreams = inputStreams;
         if (this.inputStreams.hasNext()) {
@@ -50,7 +55,14 @@ public class ConcatinatedInputStream extends InputStream {
             // If we read some bytes, record that we did and check if we should return.
             else {
                 totalRead += i;
-                if (totalRead == len) {
+
+                // This could be totalRead==len to force a full read of the buffer.
+                if (tryFullRead) {
+                    if (totalRead == len) {
+                        return totalRead;
+                    }
+                }
+                else {
                     return totalRead;
                 }
             }

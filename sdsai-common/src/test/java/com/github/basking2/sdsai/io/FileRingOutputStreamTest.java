@@ -7,23 +7,23 @@ import java.io.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class FileRingTest {
+public class FileRingOutputStreamTest {
     @Test
-    public void testDelete() throws FileNotFoundException {
-        final FileRing fileRing = new FileRing(new File("target"), 10, new FileRing.RotateAfterWrites(1));
+    public void testDelete() throws IOException {
+        final FileRingOutputStream fileRing = new FileRingOutputStream(new File("target"), 10, new FileRingOutputStream.RotateAfterWrites(1));
         fileRing.deleteAll();
     }
 
     @Test
     public void testWrites() throws IOException {
-        final FileRing fileRing = new FileRing(new File("target"), 10, new FileRing.RotateAfterWrites(1));
+        final FileRingOutputStream fileRing = new FileRingOutputStream(new File("target"), 10, new FileRingOutputStream.RotateAfterWrites(1));
         try {
             for (int i = 0; i < 11; i++) {
                 final byte[] data = ("" + i + "\n").getBytes();
                 fileRing.write(data, 0, data.length);
             }
 
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileRing.inputStream()));
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileRingInputStream(fileRing)));
 
             // 1 is overwritten and truncated. There are only 9 items in a 1-record 10-file ring.
             assertEquals(bufferedReader.readLine(), "2");
