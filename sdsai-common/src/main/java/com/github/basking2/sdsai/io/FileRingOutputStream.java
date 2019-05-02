@@ -5,9 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Predicate;
+
+
+import static com.github.basking2.sdsai.io.FileRing.getCurrentFileNumberAndSize;
+import static com.github.basking2.sdsai.io.FileRing.getFile;
+import static com.github.basking2.sdsai.io.FileRing.list;
+import static com.github.basking2.sdsai.io.FileRing.getMetaFile;
 
 /**
  * A class that reads and writes over a ring of files.
@@ -74,21 +78,6 @@ public class FileRingOutputStream extends OutputStream {
         this.out = new FileOutputStream(f, true);
     }
 
-    public static int[] getCurrentFileNumberAndSize(final File dir, final String prefix, final String suffix) throws IOException {
-        final File metaFile = getMetaFile(dir, prefix, suffix);
-        if (metaFile.exists() && metaFile.isFile()) {
-            try (final FileReader s = new FileReader(metaFile)) {
-                final BufferedReader reader = new BufferedReader(s);
-                final int currentNum = Integer.parseInt(reader.readLine());
-                final int size = Integer.parseInt(reader.readLine());
-                return new int[]{currentNum, size};
-            }
-        }
-        else {
-            return new int[]{0, 0};
-        }
-    }
-
     /**
      * Set the file to start appending to in the ring.
      *
@@ -109,25 +98,6 @@ public class FileRingOutputStream extends OutputStream {
         }
     }
 
-    /**
-     * List the current files, starting with listened one.
-     *
-     * @param dir Directory.
-     * @param prefix Prefix.
-     * @param suffix Suffix.
-     * @param number Number.
-     * @param ringSize Ring size.
-     * @return The list of file objects. Not all of these may exist.
-     */
-    public static File[] list(final File dir, final String prefix, final String suffix, final int number, final int ringSize) {
-        final File[] files = new File[ringSize];
-
-        for (int i = 0; i < ringSize; i++) {
-            files[i] = getFile(dir, prefix, suffix, (i + number) % ringSize);
-        }
-
-        return files;
-    }
 
     public int getCurrentFileNumber() {
         return num;
@@ -175,14 +145,6 @@ public class FileRingOutputStream extends OutputStream {
         try (final FileOutputStream s = new FileOutputStream(getMetaFile(dir, prefix, suffix), false)) {
             s.write(String.format("%d\n%d\n", num, ringSize).getBytes(CHARSET));
         }
-    }
-
-    public static File getFile(final File dir, final String prefix, final String suffix, final int num) {
-        return new File(dir, String.format("%s%08d%s", prefix, num, suffix));
-    }
-
-    public static File getMetaFile(final File dir, final String prefix, final String suffix) {
-        return new File(dir, String.format("%smeta%s", prefix, suffix));
     }
 
     public void deleteAll() {

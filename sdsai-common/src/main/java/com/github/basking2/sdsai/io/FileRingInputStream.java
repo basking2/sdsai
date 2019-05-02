@@ -1,13 +1,23 @@
 package com.github.basking2.sdsai.io;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import static com.github.basking2.sdsai.io.FileRing.buildInputStreamIterator;
+import static com.github.basking2.sdsai.io.FileRing.getCurrentFileNumberAndSize;
 
 public class FileRingInputStream extends InputStream {
 
     private final ConcatinatedInputStream inputStream;
 
+    /**
+     * Constructor.
+     *
+     * @param dir The directory that holds the files.
+     * @param prefix File prefix.
+     * @param suffix File suffix.
+     * @param startingFile The first file in the ring. This must be less than ringSize.
+     * @param ringSize The ring size.
+     */
     public FileRingInputStream(
             final File dir,
             final String prefix,
@@ -18,16 +28,33 @@ public class FileRingInputStream extends InputStream {
         this.inputStream = new ConcatinatedInputStream(buildInputStreamIterator(dir, prefix, suffix, startingFile, ringSize));
     }
 
+    /**
+     * Constructor.
+     *
+     * @param dir The directory that holds the files.
+     * @param prefix The prefix.
+     * @param suffix The suffix.
+     * @throws IOException On errors extracting the current file and ring size from the meta file, if one exists.
+     */
     public FileRingInputStream(
             final File dir,
             final String prefix,
             final String suffix
     ) throws IOException {
-        final int[] meta = FileRingOutputStream.getCurrentFileNumberAndSize(dir, prefix, suffix);
+        final int[] meta = getCurrentFileNumberAndSize(dir, prefix, suffix);
 
         this.inputStream = new ConcatinatedInputStream(buildInputStreamIterator(dir, prefix, suffix, meta[0]+1, meta[1]));
     }
 
+    /**
+     * Use the output stream's parameters to construct an input stream.
+     *
+     * Reading is done from one past the current file number. Because the topology of the data is a ring,
+     * this functionally starts reading at the start of the oldest file.
+     *
+     * @param fileRingOutputStream The output stream we are writing to and want to read from.
+     * @throws IOException On errors.
+     */
     public FileRingInputStream(final FileRingOutputStream fileRingOutputStream) throws IOException {
         this(
                 fileRingOutputStream.getDir(),
@@ -36,60 +63,28 @@ public class FileRingInputStream extends InputStream {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int read() throws IOException {
         return inputStream.read();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int read(final byte[] data, final int off, final int len) throws IOException {
         return inputStream.read(data, off, len);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int read(final byte[] data) throws IOException {
         return inputStream.read(data);
     }
 
-    public static Iterator<FileInputStream> buildInputStreamIterator(
-            final File dir,
-            final String prefix,
-            final String suffix,
-            final int number,
-            final int ringSize
-    )
-    {
-        final Iterator<FileInputStream> inputStreams = new Iterator<FileInputStream>() {
-
-            private int i = 0;
-            private File[] files = FileRingOutputStream.list(dir, prefix, suffix, number, ringSize);
-
-            @Override
-            public boolean hasNext() {
-                // We know the last file exists because it is the newest.
-                // Intermediate files may not exist, but the last one should.
-                return i < files.length;
-            }
-
-            @Override
-            public FileInputStream next() {
-                try {
-                    while (i < files.length) {
-                        final File f = files[i++];
-                        if (f.exists()) {
-                            return new FileInputStream(f);
-                        }
-                    }
-
-                    // The last file _should_ always exist, but if not, throw an exception.
-                    throw new NoSuchElementException("Last file was not found: "+files[i-1].getAbsolutePath());
-
-                } catch (final FileNotFoundException e) {
-                    throw new NoSuchElementException(e.getMessage());
-                }
-            }
-        };
-
-        return inputStreams;
-    }
 }
