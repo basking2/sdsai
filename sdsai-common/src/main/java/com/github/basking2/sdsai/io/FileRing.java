@@ -7,6 +7,15 @@ import java.util.NoSuchElementException;
 
 /**
  * A collection of static methods to help {@link FileRingInputStream} and {@link FileRingOutputStream} operate.
+ *
+ * A File Ring is a collection of N data files and one meta data file. The meta data file stores the value of N
+ * and the last written to file number, from zero to N-1. When data is written to a File Ring, on each write
+ * some predicate is evaluated to see if the next file should be written to. If true, then the current file value
+ * is incremented and moduloed by N to produce the next file number. That file is truncated, the metadata file
+ * is updated, and the new data file is written to.
+ *
+ * In this way a set of files in which N-1 are complete is maintained. This allows for fast append and scanning
+ * read operations. The intended use is for an archive of limited size in which reads are rare and may take some time.
  */
 public class FileRing {
 
