@@ -1,7 +1,10 @@
 package com.github.basking2.sdsai.io;
 
-import java.io.*;
-import java.util.Arrays;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * A lazy file output stream delays opening a file to write until its internal buffer is filled.
@@ -9,33 +12,16 @@ import java.util.Arrays;
  * This is a form of buffered output stream in which not only are writes delayed, but
  * also the file opening.
  */
-public class LazyFileOutputStream extends OutputStream {
+public class LazyFileOutputStream extends LazyOutputStream {
     private File file;
-    private byte[] buffer;
-    private int count;
 
     public LazyFileOutputStream(final File file, final int count) {
+        super(count);
         this.file = file;
-        this.buffer = new byte[count];
-        this.count = 0;
     }
 
     public LazyFileOutputStream(final File file) {
         this(file, 1000);
-    }
-
-    private void writeImpl(final byte[] data, int off, int len) throws IOException {
-        try(final OutputStream outputStream = openOutputStream()) {
-
-            if (count > 0) {
-                outputStream.write(buffer, 0, count);
-                count = 0;
-            }
-
-            if (len > 0) {
-                outputStream.write(data, off, len);
-            }
-        }
     }
 
     /**
@@ -47,52 +33,8 @@ public class LazyFileOutputStream extends OutputStream {
      * @return An opened OutputStream.
      * @throws IOException On any exception.
      */
+    @Override
     protected OutputStream openOutputStream() throws IOException {
         return new FileOutputStream(file, true);
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        if (count + 1 < buffer.length) {
-            buffer[count++] = (byte)b;
-        }
-        else {
-            writeImpl(new byte[]{(byte)b}, 0, 1);
-        }
-    }
-
-    @Override
-    public void write(byte[] data, int off, int len) throws IOException {
-        if (count + len < buffer.length) {
-            for (int i = 0; i < len; i++) {
-                buffer[count++] = data[off + len];
-            }
-        }
-        else {
-            writeImpl(data, off, len);
-        }
-    }
-
-    @Override
-    public void write(byte[] data) throws IOException {
-        write(data, 0, data.length);
-    }
-
-    @Override
-    public void close() throws IOException {
-        if (count > 0) {
-            writeImpl(null, 0, 0);
-        }
-    }
-
-    @Override
-    public void flush() throws IOException {
-        if (count > 0) {
-            writeImpl(null, 0, 0);
-        }
-    }
-
-    public void resizeBuffer(final int newSize) {
-        this.buffer = Arrays.copyOf(buffer, newSize);
     }
 }
