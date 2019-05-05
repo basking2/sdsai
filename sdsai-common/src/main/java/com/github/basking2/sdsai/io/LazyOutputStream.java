@@ -55,7 +55,7 @@ public abstract class LazyOutputStream extends OutputStream {
     public void write(byte[] data, int off, int len) throws IOException {
         if (count + len < buffer.length) {
             for (int i = 0; i < len; i++) {
-                buffer[count++] = data[off + len];
+                buffer[count++] = data[off + i];
             }
         }
         else {
