@@ -69,7 +69,19 @@ public class FileRingOutputStream extends OutputStream {
         this.prefix = prefix;
         this.suffix = suffix;
 
-        this.num = getCurrentFileNumberAndSize(dir, prefix, suffix)[0];
+        int[] numAndSize = getCurrentFileNumberAndSize(dir, prefix, suffix);
+
+        if (numAndSize[1] == 0) {
+            this.num = 0;
+            writeMeta(dir, prefix, suffix, num, ringSize);
+        }
+        else if (numAndSize[1] != ringSize) {
+            this.num = numAndSize[0];
+            writeMeta(dir, prefix, suffix, num, ringSize);
+        }
+        else {
+            this.num = numAndSize[0];
+        }
 
         final File f = getFile(this.dir, this.prefix, this.suffix, this.num);
 
