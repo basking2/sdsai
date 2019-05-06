@@ -11,7 +11,7 @@ public class FileRingOutputStreamTest {
     @Test
     public void testDelete() throws IOException {
         final FileRingOutputStream fileRing = new FileRingOutputStream(new File("target"), 10, new FileRingOutputStream.RotateAfterWrites(1));
-        fileRing.deleteAll();
+        fileRing.delete();
     }
 
     @Test
@@ -38,7 +38,7 @@ public class FileRingOutputStreamTest {
             assertNull(bufferedReader.readLine());
         }
         finally {
-            fileRing.deleteAll();
+            fileRing.delete();
         }
     }
 }

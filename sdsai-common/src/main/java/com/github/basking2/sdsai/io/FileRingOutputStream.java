@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import static com.github.basking2.sdsai.io.FileRing.getCurrentFileNumberAndSize;
 import static com.github.basking2.sdsai.io.FileRing.getFile;
 import static com.github.basking2.sdsai.io.FileRing.list;
+import static com.github.basking2.sdsai.io.FileRing.delete;
 import static com.github.basking2.sdsai.io.FileRing.writeMeta;
 import static com.github.basking2.sdsai.io.FileRing.getMetaFile;
 
@@ -74,12 +75,10 @@ public class FileRingOutputStream extends OutputStream {
         if (numAndSize[1] == 0) {
             this.num = 0;
             writeMeta(dir, prefix, suffix, num, ringSize);
-        }
-        else if (numAndSize[1] != ringSize) {
+        } else if (numAndSize[1] != ringSize) {
             this.num = numAndSize[0];
             writeMeta(dir, prefix, suffix, num, ringSize);
-        }
-        else {
+        } else {
             this.num = numAndSize[0];
         }
 
@@ -152,21 +151,8 @@ public class FileRingOutputStream extends OutputStream {
         writeMeta(dir, prefix, suffix, num, ringSize);
     }
 
-    public void deleteAll() {
-        for (final File f : list(dir, prefix, suffix, num, ringSize)) {
-            try {
-                if (f.exists()) {
-                    f.delete();
-                }
-            } catch (final Throwable t) {
-                LOG.error(String.format("Failed to delete file %s.", f.getAbsoluteFile()), t);
-            }
-        }
-
-        final File meta = getMetaFile(dir, prefix, suffix);
-        if (meta.exists()) {
-            meta.delete();
-        }
+    public void delete() {
+        FileRing.delete(dir, prefix, suffix, num, ringSize);
     }
 
     @Override

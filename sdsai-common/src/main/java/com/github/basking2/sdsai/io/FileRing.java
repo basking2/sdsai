@@ -1,5 +1,8 @@
 package com.github.basking2.sdsai.io;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -20,6 +23,7 @@ import java.util.NoSuchElementException;
 public class FileRing {
 
     private static final Charset CHARSET = Charset.forName("UTF-8");
+    private static Logger LOG = LoggerFactory.getLogger(FileRing.class);
 
     /**
      * Build an iterator that produces {@link FileInputStream}. The built iterator is suitable for
@@ -158,6 +162,28 @@ public class FileRing {
      */
     public static File getMetaFile(final File dir, final String prefix, final String suffix) {
         return new File(dir, String.format("%smeta%s", prefix, suffix));
+    }
+
+    public static void delete(final File dir, final String prefix, final String suffix) throws IOException {
+        final int[] nums = getCurrentFileNumberAndSize(dir, prefix, suffix);
+        delete(dir, prefix, suffix, nums[0], nums[1]);
+    }
+
+    public static void delete(final File dir, final String prefix, final String suffix, final int num, final int ringSize) {
+        for (final File f : list(dir, prefix, suffix, num, ringSize)) {
+            try {
+                if (f.exists()) {
+                    f.delete();
+                }
+            } catch (final Throwable t) {
+                LOG.error(String.format("Failed to delete file %s.", f.getAbsoluteFile()), t);
+            }
+        }
+
+        final File meta = getMetaFile(dir, prefix, suffix);
+        if (meta.exists()) {
+            meta.delete();
+        }
     }
 
 }
