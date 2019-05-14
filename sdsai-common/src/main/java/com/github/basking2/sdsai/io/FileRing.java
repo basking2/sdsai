@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 /**
  * A collection of static methods to help {@link FileRingInputStream} and {@link FileRingOutputStream} operate.
  *
+ * This also acts as a parameter wrapper.
+ *
  * A File Ring is a collection of N data files and one meta data file. The meta data file stores the value of N
  * and the last written to file number, from zero to N-1. When data is written to a File Ring, on each write
  * some predicate is evaluated to see if the next file should be written to. If true, then the current file value
@@ -24,6 +26,38 @@ public class FileRing {
 
     private static final Charset CHARSET = Charset.forName("UTF-8");
     private static Logger LOG = LoggerFactory.getLogger(FileRing.class);
+
+    private final File dir;
+    private String prefix;
+    private String suffix;
+
+    public FileRing(final File dir, final String prefix, final String suffix) {
+        this.dir = dir;
+        this.prefix = prefix;
+        this.suffix = suffix;
+    }
+
+    public FileRingOutputStream openForWriting(final int ringSize, final FileRingOutputStream.RotationPredicate doRotation) throws IOException {
+        return new FileRingOutputStream(dir, prefix, suffix, ringSize, doRotation);
+    }
+
+    public FileRingOutputStream openForWriting(final FileRingOutputStream.RotationPredicate doRotation) throws IOException {
+        int[] meta = getCurrentFileNumberAndSize(dir, prefix, suffix);
+
+        if (meta[1] == 0) {
+            throw new IOException("A ring size is required for creating a new file ring.");
+        }
+
+        return new FileRingOutputStream(dir, prefix, suffix, meta[1], doRotation);
+    }
+
+    public FileRingInputStream openForReading() throws IOException {
+        return new FileRingInputStream(dir, prefix, suffix);
+    }
+
+    public FileRingInputStream openForReading(final int start, final int ringSize) throws IOException {
+        return new FileRingInputStream(dir, prefix, suffix, start, ringSize);
+    }
 
     /**
      * Build an iterator that produces {@link FileInputStream}. The built iterator is suitable for
@@ -101,6 +135,28 @@ public class FileRing {
         else {
             return new int[]{0, 0};
         }
+    }
+
+    /**
+     * Return file in the ring that is currently being written to, according to the meta file.
+     * @param dir The directory.
+     * @param prefix The prefix.
+     * @param suffix The suffix.
+     * @return The file that is currently being written to.
+     * @throws IOException On errors.
+     */
+    public static File getCurrentFile(final File dir, final String prefix, final String suffix) throws IOException {
+        final int[] numAndSize = getCurrentFileNumberAndSize(dir, prefix, suffix);
+
+        final int num;
+
+        if (numAndSize[1] == 0) {
+            num = 0;
+        } else {
+            num = numAndSize[0];
+        }
+
+        return getFile(dir, prefix, suffix, num);
     }
 
     /**

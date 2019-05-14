@@ -66,7 +66,7 @@ public class FileRingOutputStream extends OutputStream {
         this.prefix = prefix;
         this.suffix = suffix;
 
-        int[] numAndSize = getCurrentFileNumberAndSize(dir, prefix, suffix);
+        final int[] numAndSize = getCurrentFileNumberAndSize(dir, prefix, suffix);
 
         if (numAndSize[1] == 0) {
             this.num = 0;
@@ -207,11 +207,41 @@ public class FileRingOutputStream extends OutputStream {
             this.rotate = rotate;
         }
 
+        /**
+         * Construct using a file length as the starting point.
+         *
+         * If {@code currentFile} is a directory, it is assumed that the input file is a {@link FileRing}
+         * and the {@link FileRing#getCurrentFile(File, String, String)} is used to pull the length.
+         *
+         * @param rotate At what size to rotate.
+         * @param currentFile The current file to start the length at.
+         * @throws IOException On error.
+         */
         public RotateBySize(final long rotate, final File currentFile) throws IOException {
             this.rotate = rotate;
-            this.size = currentFile.length();
+
+            if (currentFile.isDirectory()) {
+                this.size = FileRing.getCurrentFile(currentFile, "", "").length();
+            }
+
+            if (currentFile.isFile()) {
+                this.size = currentFile.length();
+            }
         }
 
+        /**
+         * Construct assuming the current file ring.
+         *
+         * @param rotate At what size to rotate.
+         * @param dir The directory that holds the file ring.
+         * @param prefix The prefix.
+         * @param suffix The suffix.
+         * @throws IOException On errors.
+         */
+        public RotateBySize(final long rotate, final File dir, final String prefix, final String suffix) throws IOException {
+            this.rotate = rotate;
+            this.size = FileRing.getCurrentFile(dir, prefix, suffix).length();
+        }
 
         @Override
         public boolean test(final FileRingOutputStream fileRing, final byte[] data, final int offset, final int length) {
