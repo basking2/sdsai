@@ -28,35 +28,23 @@ public class FileRing {
     private static Logger LOG = LoggerFactory.getLogger(FileRing.class);
 
     private final File dir;
-    private String prefix;
-    private String suffix;
+    private final String prefix;
+    private final String suffix;
+    private final int ringSize;
 
-    public FileRing(final File dir, final String prefix, final String suffix) {
+    public FileRing(final File dir, final String prefix, final String suffix, final int ringSize) {
         this.dir = dir;
         this.prefix = prefix;
         this.suffix = suffix;
-    }
-
-    public FileRingOutputStream openForWriting(final int ringSize, final FileRingOutputStream.RotationPredicate doRotation) throws IOException {
-        return new FileRingOutputStream(dir, prefix, suffix, ringSize, doRotation);
+        this.ringSize = ringSize;
     }
 
     public FileRingOutputStream openForWriting(final FileRingOutputStream.RotationPredicate doRotation) throws IOException {
-        int[] meta = getCurrentFileNumberAndSize(dir, prefix, suffix);
-
-        if (meta[1] == 0) {
-            throw new IOException("A ring size is required for creating a new file ring.");
-        }
-
-        return new FileRingOutputStream(dir, prefix, suffix, meta[1], doRotation);
+        return new FileRingOutputStream(dir, prefix, suffix, ringSize, doRotation);
     }
 
     public FileRingInputStream openForReading() throws IOException {
         return new FileRingInputStream(dir, prefix, suffix);
-    }
-
-    public FileRingInputStream openForReading(final int start, final int ringSize) throws IOException {
-        return new FileRingInputStream(dir, prefix, suffix, start, ringSize);
     }
 
     /**
