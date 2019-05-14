@@ -4,15 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.function.Predicate;
 
 
 import static com.github.basking2.sdsai.io.FileRing.getCurrentFileNumberAndSize;
 import static com.github.basking2.sdsai.io.FileRing.getFile;
-import static com.github.basking2.sdsai.io.FileRing.list;
-import static com.github.basking2.sdsai.io.FileRing.delete;
 import static com.github.basking2.sdsai.io.FileRing.writeMeta;
-import static com.github.basking2.sdsai.io.FileRing.getMetaFile;
 
 /**
  * A class that reads and writes over a ring of files.
@@ -34,20 +30,20 @@ public class FileRingOutputStream extends OutputStream {
     private final String prefix;
     private final String suffix;
 
-    private final Predicate<FileRingOutputStream> doRotation;
+    private final RotationPredicate doRotation;
 
     /**
      * Create a new file ring with a start file of 0.
      *
-     * @param dir Parent directory.
-     * @param ringSize How big is the ring.
+     * @param dir        Parent directory.
+     * @param ringSize   How big is the ring.
      * @param doRotation How do we determine we should rotate the file size.
      * @throws FileNotFoundException On errors.
      */
     public FileRingOutputStream(
             final File dir,
             final int ringSize,
-            final Predicate<FileRingOutputStream> doRotation
+            final RotationPredicate doRotation
     ) throws IOException {
         this(dir, "", "", ringSize, doRotation);
     }
@@ -57,8 +53,8 @@ public class FileRingOutputStream extends OutputStream {
             final String prefix,
             final String suffix,
             final int ringSize,
-            final Predicate<FileRingOutputStream> doRotation
-            ) throws IOException {
+            final RotationPredicate doRotation
+    ) throws IOException {
 
         if (!dir.exists()) {
             dir.mkdirs();
@@ -118,7 +114,9 @@ public class FileRingOutputStream extends OutputStream {
     public void write(int b) throws IOException {
         out.write(b);
 
-        if (doRotation.test(this)) {
+        final byte[] data = new byte[]{(byte) b};
+
+        if (doRotation.test(this, data, 0, 1)) {
             rotateFile();
         }
     }
@@ -132,7 +130,7 @@ public class FileRingOutputStream extends OutputStream {
     public void write(final byte[] data, final int offset, final int length) throws IOException {
         out.write(data, offset, length);
 
-        if (doRotation.test(this)) {
+        if (doRotation.test(this, data, offset, length)) {
             rotateFile();
         }
     }
@@ -172,7 +170,12 @@ public class FileRingOutputStream extends OutputStream {
         return suffix;
     }
 
-    public static class RotateAfterWrites implements Predicate<FileRingOutputStream>  {
+    @FunctionalInterface
+    public interface RotationPredicate {
+        boolean test(final FileRingOutputStream fileRing, final byte[] data, int offset, int length);
+    }
+
+    public static class RotateAfterWrites implements RotationPredicate {
 
         private int count = 0;
         private final int rotate;
@@ -182,13 +185,41 @@ public class FileRingOutputStream extends OutputStream {
         }
 
         @Override
-        public boolean test(FileRingOutputStream fileRing) {
+        public boolean test(final FileRingOutputStream fileRing, final byte[] data, final int offset, final int length) {
             count++;
             if (count >= rotate) {
                 count = 0;
                 return true;
+            } else {
+                return false;
             }
-            else {
+        }
+    }
+
+    /**
+     * Return true when a file size is exceeded.
+     */
+    public static class RotateBySize implements RotationPredicate {
+        private long size = 0;
+        private final long rotate;
+
+        public RotateBySize(final long rotate) {
+            this.rotate = rotate;
+        }
+
+        public RotateBySize(final long rotate, final File currentFile) throws IOException {
+            this.rotate = rotate;
+            this.size = currentFile.length();
+        }
+
+
+        @Override
+        public boolean test(final FileRingOutputStream fileRing, final byte[] data, final int offset, final int length) {
+            size += length;
+            if (size >= rotate) {
+                size = 0;
+                return true;
+            } else {
                 return false;
             }
         }
