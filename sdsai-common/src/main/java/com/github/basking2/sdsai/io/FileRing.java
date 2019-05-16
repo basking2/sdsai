@@ -47,6 +47,10 @@ public class FileRing {
         return new FileRingInputStream(dir, prefix, suffix);
     }
 
+    public void delete() {
+        delete(dir, prefix, suffix, 0, ringSize);
+    }
+
     /**
      * Build an iterator that produces {@link FileInputStream}. The built iterator is suitable for
      * passing to {@link ConcatinatedInputStream}.
@@ -226,7 +230,15 @@ public class FileRing {
 
         final File meta = getMetaFile(dir, prefix, suffix);
         if (meta.exists()) {
-            meta.delete();
+            try {
+                meta.delete();
+            } catch (final Throwable t) {
+                LOG.error(String.format("Failed to delete file %s.", meta.getAbsoluteFile()), t);
+            }
+        }
+
+        if (dir.list().length == 0) {
+            dir.delete();
         }
     }
 
