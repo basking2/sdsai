@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
 <meta name="author" content="Sam Baskinger">
-<title>SDSAI ItrEx 1.1.18-SNAPSHOT</title>
+<title>SDSAI ItrEx 1.1.22</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -420,7 +420,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>SDSAI ItrEx 1.1.18-SNAPSHOT</h1>
+<h1>SDSAI ItrEx 1.1.22</h1>
 <div class="details">
 <span id="author" class="author">Sam Baskinger</span><br>
 <span id="email" class="email"><a href="mailto:sam.baskinger@yahoo.com">sam.baskinger@yahoo.com</a></span><br>
@@ -580,6 +580,23 @@ functions.<br></p>
 <p>Returns true if the evaluation context has an
 argument remaining. Function calls receive a new
 argument list.</p>
+</dd>
+<dt class="hdlist1"><code>[hashArgs]</code></dt>
+<dd>
+<p>All arguments that are strings of the pattern <em>name:value</em>
+will be converted into environment values in the following way.
+The string is split on the ":" into two strings. The first string is used
+as the variable name and the second string is used as the value.<br></p>
+<div class="paragraph">
+<p>So the argument "a:hello" will cause <code>[get a]</code> to return the string "hello".<br></p>
+</div>
+<div class="paragraph">
+<p>Any <code>null</code> argument is discarded.<br></p>
+</div>
+<div class="paragraph">
+<p>Any argument that is not mapped to an environment value is retained as an argument.
+The new iterator of argument values is also returned by <code>[hashArgs]</code>.</p>
+</div>
 </dd>
 <dt class="hdlist1"><code>[nameArgs name1 name2...nameN]</code></dt>
 <dd>
@@ -1350,7 +1367,7 @@ rounded.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-23 10:03:26 -05:00
+Last updated 2019-07-09 20:15:13 -05:00
 </div>
 </div>
 </body>
