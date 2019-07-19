@@ -82,6 +82,19 @@ still be returned. This usage is equivalent to `[register foo [function [...]]]`
     argument remaining. Function calls receive a new
     argument list.
 
+`[hashArgs]`:: All arguments that are strings of the pattern _name:value_
+    will be converted into environment values in the following way.
+    The string is split on the ":" into two strings. The first string is used
+    as the variable name and the second string is used as the value. +
++
+So the argument "a:hello" will cause +[get a]+ to return the string "hello". +
++
+Any +null+ argument is discarded. +
++
+Any argument that is not mapped to an environment value is retained as an argument.
+The new iterator of argument values is also returned by +[hashArgs]+.
+
+
 `[nameArgs name1 name2...nameN]`:: Name each argument to the
     function with the given names. Naming is done by
     fetching the value from the argument iterator list

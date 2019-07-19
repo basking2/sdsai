@@ -25,6 +25,7 @@ public class BasePackage implements Package {
         doRegister(evaluator, packageName, "arg", new ArgFunction());
         doRegister(evaluator, packageName, "args", new ArgsFunction());
         doRegister(evaluator, packageName, "nameArgs", new NameArgsFunction());
+        doRegister(evaluator, packageName, "hashArgs", new HashArgsFunction());
         doRegister(evaluator, packageName, "hasArg", new HasArgFunction());
 
         doRegister(evaluator, packageName, "print", new PrintArgsFunction(System.out));
