@@ -12,6 +12,7 @@
 .tile {
     h1, h2, h3, h4, h5, h6 {
         background-color: $brand-color;
+	box-shadow: 7px 7px 15px 2px darken($brand-color, 8%) ;
     }
 
     a:link, a:hover, a:visited, a:active {
