@@ -1,0 +1,20 @@
+- name: sdsai-common
+  link: sdsai-common
+  description:
+- name: sdsai-itrex
+  link: sdsai-itrex
+  description: |
+    <div><a href="https://github.com/basking2/sdsai">GitHub</a></div>
+    <div><a href="docs/sdsai-itrex/itrex.html">Manual</a></div>
+
+    An intentionally simply expression language that connects
+    various iterators together to achieve computation.
+- name: sdsai-itrex-shell
+  link: sdsai-itrex-shell
+  description:
+- name: sdsai-net
+  link: sdsai-net
+  description:
+- name: sdsai-sandbox
+  link: sdsai-sandbox
+  description:

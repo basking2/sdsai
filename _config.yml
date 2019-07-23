@@ -22,11 +22,13 @@ url: "http://basking2.github.io" # the base hostname & protocol for your site, e
 twitter_username: samcpp
 github_username:  basking2
 
+#plugins:
+#- jekyll-asciidoc
+#- jekyll-feed
+
 # Build settings
 markdown: kramdown
-theme: minima
-gems:
-  - jekyll-feed
+# theme: minima
 exclude:
   - Gemfile
   - Gemfile.lock

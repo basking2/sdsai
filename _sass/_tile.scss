@@ -1,0 +1,20 @@
+
+.tiles {
+    text-align: center;
+}
+
+.tile {
+    display: inline-block;
+    width: 18em;
+    vertical-align: top;
+}
+
+.tile {
+    h1, h2, h3, h4, h5, h6 {
+        background-color: $brand-color;
+    }
+
+    a:link, a:hover, a:visited, a:active {
+        color: black;
+    }
+}

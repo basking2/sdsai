@@ -3,26 +3,17 @@ layout: default
 ---
 
 <div class="home">
-
-  <h1 class="page-heading">Posts</h1>
-
-  {{ content }}
-
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        {% assign date_format = site.minima.date_format | default: "%b %-d, %Y" %}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-        </h2>
-
-        {{ post.excerpt }}
-      </li>
+  <div class="tiles">
+    
+    {% for p in site.data.projects %}
+    <div class="tile">
+      <h2><a href="{{site.baseurl}}/{{p.link}}">{{p.name}}</a></h2>
+      <div><a href="{{site.baseurl}}/javadocs/{{p.name}}/">Javadocs</a></div>
+      {{p.description}}
+    </div>
     {% endfor %}
-  </ul>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | relative_url }}">via RSS</a></p>
+
+  </div>
 
 </div>
