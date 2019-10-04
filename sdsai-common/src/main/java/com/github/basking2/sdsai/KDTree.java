@@ -236,7 +236,9 @@ public class KDTree<K extends Comparable<K>, V> {
 
     public Iterator<K[]> breadthFirstKeys() {
         if (head == null) {
-            return Collections.EMPTY_LIST.iterator();
+            @SuppressWarnings("unchecked")
+            final Iterator<K[]> i = (Iterator<K[]>) Collections.EMPTY_LIST.iterator();
+            return i;
         }
 
         final Iterator<Node> itr = head.iterator();
@@ -256,7 +258,9 @@ public class KDTree<K extends Comparable<K>, V> {
 
     public Iterator<V> breadthFirstValues() {
         if (head == null) {
-            return Collections.EMPTY_LIST.iterator();
+            @SuppressWarnings("unchecked")
+            final Iterator<V> i = (Iterator<V>) Collections.EMPTY_LIST.iterator();
+            return i;
         }
 
         final Iterator<Node> itr = head.iterator();

@@ -15,6 +15,7 @@ public abstract class AbstractHeap<T> implements Iterable<T> {
     private int last = -1;
 
     private void doubleQueue() {
+        @SuppressWarnings("unchecked")
         final T[] newQueue = (T[]) new Object[queue.length * 2];
         for (int i = 0; i < queue.length; ++i) {
             newQueue[i] = queue[i];
@@ -26,6 +27,7 @@ public abstract class AbstractHeap<T> implements Iterable<T> {
         // ,"Queue should never shrink below 1.";
         assert queue.length >= 4;
 
+        @SuppressWarnings("unchecked")
         final T[] newQueue = (T[]) new Object[queue.length / 4];
         for (int i = 0; i < newQueue.length; ++i) {
             newQueue[i] = queue[i];
