@@ -2,6 +2,7 @@
 
 package com.github.basking2.sdsai.netobj;
 
+@Deprecated()
 public class ObjectNotFoundException extends java.lang.Exception
 {
   protected String objectName;

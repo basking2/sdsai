@@ -4,6 +4,7 @@ package com.github.basking2.sdsai.netobj;
 
 import java.io.*;
 
+@Deprecated()
 public class NetObjectReader<DATATYPE extends DataObject, LISTTYPE extends ListObject>
 {
   public static final int SIZELIMIT = 102400000;

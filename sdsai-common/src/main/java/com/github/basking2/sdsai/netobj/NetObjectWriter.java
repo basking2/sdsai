@@ -16,7 +16,8 @@ import java.io.*;
  * <p>Senders for smaller, primitive data types are not written.
  * a copy into an array is needed for them. 
  */
-public class NetObjectWriter 
+@Deprecated()
+public class NetObjectWriter
 {
 
   protected static void write(OutputStream o, String name, int type, 

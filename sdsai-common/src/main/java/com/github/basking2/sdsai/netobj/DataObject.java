@@ -4,6 +4,7 @@ package com.github.basking2.sdsai.netobj;
 
 import java.io.*;
 
+@Deprecated()
 public class DataObject extends NetObject
 {
   protected byte[] data;

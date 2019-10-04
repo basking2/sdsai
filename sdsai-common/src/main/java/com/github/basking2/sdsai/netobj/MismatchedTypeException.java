@@ -2,6 +2,7 @@
 
 package com.github.basking2.sdsai.netobj;
 
+@Deprecated()
 public class MismatchedTypeException extends java.lang.Exception
 {
 

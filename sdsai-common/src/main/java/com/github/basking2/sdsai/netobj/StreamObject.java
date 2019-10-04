@@ -13,6 +13,7 @@ import java.io.*;
  * object is changed from NetObject.STREAM_SEG to NetObject.LAST_STREAM_SEG
  * and the wasLastSegment() call will return true.
  */
+@Deprecated()
 public class StreamObject extends NetObject
 {
   protected InputStream ins;

@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.util.List;
 
+@Deprecated()
 public class NetObjMgr
 {
 

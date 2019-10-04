@@ -2,7 +2,8 @@
 
 package com.github.basking2.sdsai.netobj;
 
-public interface NetObjectTransferListener 
+@Deprecated()
+public interface NetObjectTransferListener
 {
  
   public void transferEvent(int data);

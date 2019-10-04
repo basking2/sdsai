@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.netobj;
 
-public abstract class 
+@Deprecated()
+public abstract class
 NetObjectFactory<DATATYPE extends DataObject, LISTTYPE extends ListObject>
 {
   private static NetObjectFactory<DataObject, ListObject> 

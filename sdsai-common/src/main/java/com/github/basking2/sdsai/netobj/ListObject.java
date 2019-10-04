@@ -16,6 +16,7 @@ import com.github.basking2.sdsai.RedBlackTree;
  * A simple list. While this implementation sorts the list the receiver
  * should never assume any particular order to the list.
  */
+@Deprecated()
 public class ListObject extends NetObject implements Iterable<NetObject> {
 
     /**

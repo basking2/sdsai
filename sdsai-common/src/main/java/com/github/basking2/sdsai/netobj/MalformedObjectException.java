@@ -2,6 +2,7 @@ package com.github.basking2.sdsai.netobj;
 
 import java.io.IOException;
 
+@Deprecated()
 public class MalformedObjectException extends IOException
 {
 

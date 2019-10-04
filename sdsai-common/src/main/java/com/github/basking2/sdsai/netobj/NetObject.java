@@ -12,6 +12,7 @@ import java.io.*;
  * an undefined class while types 1-9 are used for LIST, STREAM_SEG, 
  * LAST_STREAM_SEG, INT8, INT16, INT32, INT64, STRING and DATA.
  */
+@Deprecated()
 public abstract class NetObject
 {
 
