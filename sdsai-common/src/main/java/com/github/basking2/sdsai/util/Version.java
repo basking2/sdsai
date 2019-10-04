@@ -20,31 +20,28 @@ public class Version
      */
     public static final Version MIN = new Version("MIN");
 
-    private String version;
-    private String[] versionStrings;
-    private Integer[] versionDigits;
+    private final String version;
+    private final String[] versionStrings;
+    private final Integer[] versionDigits;
 
     public Version(final String version)
     {
         this.version = version;
-        parse(version);
+        this.versionStrings = version.split("\\.");
+        this.versionDigits = parse(versionStrings);
     }
 
     /**
-     * Parse the given String into a Version.
+     * Parse the given String into an array of Digits.
      *
-     * The given String is split on "." and the resultant 
-     * Strings are stored internally in the member field {@code versionStrings}.
-     *
-     * Each of those Strings is then converted into an Integer, if possible,
+     * Each of those Strings is converted into an Integer, if possible,
      * and stored in the corresponding index in the member {@code versionDigits}.
      * If {@code versionStrings[x]} cannot be converted then {@code versionDigits[x]} is set to null.
      *
      * When comparing two Versions, if any of the digits are null the string representation is used.
      */
-    public void parse(final String version) {
-        this.versionStrings = version.split("\\.");
-        this.versionDigits = new Integer[versionStrings.length];
+    public static Integer[] parse(final String[] versionStrings) {
+        final Integer[] versionDigits = new Integer[versionStrings.length];
 
         for (int i = 0; i < versionStrings.length; ++i)
         {
@@ -57,6 +54,8 @@ public class Version
                 versionDigits[i] = null;
             }
         }
+
+        return versionDigits;
     }
 
     /**
