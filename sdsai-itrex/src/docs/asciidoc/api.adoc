@@ -342,6 +342,27 @@ this is not an issue.
 +
 This throws an exception if the range would result in an infinite loop.
 
++[zip [padLeft <expr>] [padRight <expr>] <leftIterator> <rightIterator>]+::
+    Return an iterator that produces TwoTuple objects that contain
+    the +leftIterator+ and the +rightIterator+.
+    The +padLeft+ and +padRight+ options and their associated +<expr>+
+    are optional and may be emitted. If both options are omitted
+    then the iterator returned by +zip+ terminates when the _shorter_
+    of the two iterators ends. +
++
+If +padLeft+ is given then the value returned by the given +<expr>+
+is used to pad results for the +leftIterator+ when it is finished but the
++rightIterator+ is not yet exhausted. +
++
+If the +padRight+ is given then the converse is true. +
++
+Specifying a +padLeft+ and a +padRight+ value will _not_ cause an infinite loop.
+When both of the input iterators are exhausted, then the zip iteration is done. +
++
+The order of the options may be moved around. The last +padLeft+ and +<expr>+
+(or +padRight+ and +<expr>+) is the one that will be used. If a third
+input iterator is given, it is ignored.
+
 ## Conditional
 
 +[caseList [case ...], [case ...] ...]+::

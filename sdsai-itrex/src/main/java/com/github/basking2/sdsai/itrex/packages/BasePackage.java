@@ -43,6 +43,7 @@ public class BasePackage implements Package {
         doRegister(evaluator, packageName, "set", new SetFunction());
         doRegister(evaluator, packageName, "update", new UpdateFunction());
         doRegister(evaluator, packageName, "isitr", (iterator, ctx) -> isIter(iterator.next()));
+        doRegister(evaluator, packageName, "zip", new ZipFunction());
         doRegister(evaluator, packageName, "head", (iterator, ctx) -> toIterator(iterator.next()).next());
         doRegister(evaluator, packageName, "for", new ForFunction(evaluator));
         doRegister(evaluator, packageName, "range", new RangeFunction());

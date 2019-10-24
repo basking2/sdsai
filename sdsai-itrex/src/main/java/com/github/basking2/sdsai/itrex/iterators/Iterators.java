@@ -2,6 +2,7 @@ package com.github.basking2.sdsai.itrex.iterators;
 
 import com.github.basking2.sdsai.itrex.iterators.splitjoin.JoinUncertainIteratorsIterator;
 import com.github.basking2.sdsai.itrex.iterators.splitjoin.SplitMapUncertainIterator;
+import com.github.basking2.sdsai.itrex.util.TwoTuple;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -179,6 +180,19 @@ public class Iterators {
     @SuppressWarnings("unchecked")
     public static <T> Iterator<T> emptyIterator() {
         return (Iterator<T>) EMPTY_ITERATOR;
+    }
 
+    public static <T1, T2> Iterator<TwoTuple<T1, T2>> zip(
+            final Iterator<T1> i1,
+            final Iterator<T2> i2
+    ) {
+        return new ZipIterator<>(i1, i2);
+    }
+
+    public static <T1, T2> Iterator<TwoTuple<T1, T2>> zip(
+            final Iterator<T1> i1, final boolean pad1, final T1 pad1Value,
+            final Iterator<T2> i2, final boolean pad2, final T2 pad2Value
+    ) {
+        return new ZipIterator<>(i1, pad1, pad1Value, i2, pad2, pad2Value);
     }
 }
