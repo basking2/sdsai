@@ -1,14 +1,26 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'eclipse'
+plugins {
+  id 'java-library'
+  id 'eclipse'
+}
 
 description """Simple datastructures and algorithms."""
 
 allprojects {
-    group = 'com.github.basking2'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-}
+  group = 'com.github.basking2'
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+  ext.releaseRepository = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  ext.snapshotRepository = "https://oss.sonatype.org/content/repositories/snapshots/"
 
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  java {
+    withJavadocJar()
+    withSourcesJar()
+  }
+
+}
 
