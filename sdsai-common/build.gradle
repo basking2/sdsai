@@ -40,6 +40,8 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
         groupId = group
         artifactId = 'sdsai-common'
 
+	from components.java
+
         pom {
 	  name = "SDSAI Common"
           description = 'Simple datastructures and algorithms.'

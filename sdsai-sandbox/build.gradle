@@ -45,6 +45,8 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
         groupId = group
         artifactId = 'sdsai-sandbox'
 
+	from components.java
+
         pom {
 	  name = "SDSAI Sandbox"
           description = 'Simple datastructures and algorithms.'
