@@ -1,11 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'application'
-
-// group = defined by parent.
-// archiveBaseName = defined by parent and project name.
-version = '1.0.2-SNAPSHOT'
+plugins {
+  id 'java'
+  id 'maven-publish'
+  id 'signing'
+  id 'application'
+}
 
 mainClassName = 'com.github.basking2.sdsai.itrex.Shell'
 applicationDefaultJvmArgs = []
@@ -13,12 +11,6 @@ applicationName = 'itrex'
 
 run {
     standardInput = System.in
-}
-
-buildscript {
-    repositories {
-        jcenter()
-    }
 }
 
 compileJava {
@@ -34,11 +26,11 @@ processResources {
 }
 
 dependencies {
-    compile project(':sdsai-itrex')
-    compile 'commons-cli:commons-cli:1.4'
-    compile 'org.jline:jline:3.4.0'
-    compile 'org.slf4j:slf4j-simple:1.7.21'
-    testCompile group: 'junit', name: 'junit', version:'4.12'
+    implementation project(':sdsai-itrex')
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'org.jline:jline:3.4.0'
+    implementation 'org.slf4j:slf4j-simple:1.7.21'
+    testImplementation 'junit:junit:4.12'
 }
 
 
@@ -47,70 +39,57 @@ repositories {
     jcenter()
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
 if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-    signing {
-        sign configurations.archives
-    }
-
-    uploadArchives {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                pom.project {
-                    name 'SDSAI'
-                    packaging 'jar'
-                    // optionally artifactId can be defined here
-                    description 'An S-Expression inspiried library focused on iterators.'
-                    url 'https://github.com/basking2/sdsai'
-
-                    scm {
-                        connection 'scm:git:git@github.com:basking2/sdsai.git'
-                        developerConnection 'git@github.com:basking2/sdsai.git'
-                        url 'https://github.com/basking2/sdsai.git'
-                    }
-
-                    licenses {
-                        license {
-                            name 'MIT'
-                            url 'https://opensource.org/licenses/MIT'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id 'basking2'
-                            name 'Sam'
-                            email 'basking2@yahoo.com'
-                        }
-                    }
-                }
-            }
+  publishing {
+    repositories {
+      maven {
+        url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
+        credentials {
+          username ossrhUsername
+          password ossrhPassword
         }
+      }
     }
+
+    publications {
+
+      mavenJava(MavenPublication) {
+        groupId = group
+        artifactId = 'sdsai-itrex-shell'
+
+        pom {
+	  name = "SDSAI Itrex Shell"
+          description = 'Simple datastructures and algorithms.'
+          url = 'https://github.com/basking2/sdsai'
+          scm {
+            connection = 'scm:git:git@github.com:basking2/sdsai.git'
+            developerConnection = 'git@github.com:basking2/sdsai.git'
+            url = 'https://github.com/basking2/sdsai.git'
+          }
+          licenses {
+            license {
+              name = "MIT"
+              url = 'https://opensource.org/licenses/MIT'
+            }
+          }
+
+          developers {
+            developer {
+              id = 'basking2'
+              name = 'Sam'
+              email = 'basking2@yahoo.com'
+            }
+          }
+        }
+      }
+    }
+  }
+
+  signing {
+    sign publishing.publications.mavenJava
+  }
 }
+
 
 task runShell(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
