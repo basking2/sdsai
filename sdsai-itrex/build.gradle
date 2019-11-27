@@ -1,7 +1,9 @@
 
 plugins {
   id 'java-library'
-  id 'maven-publish'
+  // Sonatype's Nexus doensn't support the stronger cryptographic hashes.
+  // id 'maven-publish'
+  id 'maven'
   id 'signing'
   id "org.asciidoctor.convert" version "2.3.0"
   id 'net.researchgate.release' version '2.6.0'
@@ -26,65 +28,72 @@ dependencies {
     testImplementation 'org.slf4j:slf4j-simple:1.7.21'
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-
 release {
   tagTemplate = '${name}-${version}'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
 if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-  publishing {
-    repositories {
-      maven {
-        url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
-        credentials {
-          username ossrhUsername
-          password ossrhPassword
-        }
-      }
+    signing {
+        sign configurations.archives
     }
 
-    publications {
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-      mavenJava(MavenPublication) {
-        groupId = group
-        artifactId = 'sdsai-itrex'
+                repository(url: releaseRepository) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
 
-	from components.java
+                snapshotRepository(url: snapshotRepository) {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
 
-        pom {
-	  name = "SDSAI Itrex"
-          description = 'Simple datastructures and algorithms.'
-          url = 'https://github.com/basking2/sdsai'
-          scm {
-            connection = 'scm:git:git@github.com:basking2/sdsai.git'
-            developerConnection = 'git@github.com:basking2/sdsai.git'
-            url = 'https://github.com/basking2/sdsai.git'
-          }
-          licenses {
-            license {
-              name = "MIT"
-              url = 'https://opensource.org/licenses/MIT'
+                pom.project {
+                    name 'SDSAI Itrex'
+                    // optionally artifactId can be defined here
+                    description 'Simple datastructures and algorithms.'
+                    packaging 'jar'
+                    url 'https://github.com/basking2/sdsai'
+
+                    scm {
+                        connection 'scm:git:git@github.com:basking2/sdsai.git'
+                        developerConnection 'git@github.com:basking2/sdsai.git'
+                        url 'https://github.com/basking2/sdsai.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'MIT'
+                            url 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'basking2'
+                            name 'Sam'
+                            email 'basking2@yahoo.com'
+                        }
+                    }
+                }
             }
-          }
-
-          developers {
-            developer {
-              id = 'basking2'
-              name = 'Sam'
-              email = 'basking2@yahoo.com'
-            }
-          }
         }
-      }
     }
-  }
-
-  signing {
-    sign publishing.publications.mavenJava
-  }
 }
 
