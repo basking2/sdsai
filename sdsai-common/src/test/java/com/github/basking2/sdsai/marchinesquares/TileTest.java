@@ -34,6 +34,7 @@ public class TileTest {
                 final int i = h*width+w;
                 Assert.assertNotNull(t.contours[i]);
                 Assert.assertEquals(t.contours[i].lineCount, t.contours[i].lines.length/2);
+                System.out.println(t.contours[i]);
             }
         }
     }

@@ -768,4 +768,16 @@ public class IsobandContours {
         }
 
     }
+
+    @Override
+    public String toString() {
+        if (lines.length == 0){
+            return "{0}";
+        }
+        String s = "";
+        for (int i = 0; i < lines.length; i+=2) {
+            s += "("+lines[i]+"->"+lines[i+1]+")";
+        }
+        return s;
+    }
 }
