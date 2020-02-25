@@ -30,6 +30,8 @@ public class Tile {
     public void isoband() {
         final int W = width - 1;
         final int H = tile.length / width - 1;
+
+        // Populate the contours array.
         for (int h = 0; h < H; h++) {
             for (int w = 0; w < W; w++) {
                 this.contours[h * width + w] = new IsobandContours(new byte[]{
