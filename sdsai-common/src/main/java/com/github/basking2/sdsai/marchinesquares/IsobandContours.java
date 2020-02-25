@@ -3,7 +3,7 @@ package com.github.basking2.sdsai.marchinesquares;
 /**
  * Contours are lines in a square.
  */
-public class Contours {
+public class IsobandContours {
     /**
      * An array of integers values that represent lines in a square.
      *
@@ -21,9 +21,10 @@ public class Contours {
      * A value of 2 means the line starts or ends in the center of the bottom-side of the square.
      * A value of 3 means the line starts or ends in the center of the left-side of the square.
      */
-    private final short[] lines;
+    protected final byte[] lines;
 
-    private final int lineCount;
+    protected final int lineCount;
+
     /**
      * Create a contour given the 4-element array of point values.
      *
@@ -36,7 +37,7 @@ public class Contours {
      *
      * @param pointValues A 4-element array of values -1, 0, or 1.
      */
-    public Contours(final int[] pointValues) {
+    public IsobandContours(final byte[] pointValues) {
         if (pointValues.length != 4) {
             throw new IllegalArgumentException("The pointValues array must be 4 elements long.");
         }
@@ -51,19 +52,19 @@ public class Contours {
                                     case -1:
                                         // -1 -1 All below. No contours.
                                         // -1 -1
-                                        lines = new short[0];
+                                        lines = new byte[0];
                                         lineCount = 0;
                                         break;
                                     case 0:
                                         // -1 -1
                                         //  0 -1
-                                        lines = new short[]{ 2, 3 };
+                                        lines = new byte[]{ 2, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         // -1 -1
                                         //  1 -1
-                                        lines = new short[]{ 2, 3, 3, 2 };
+                                        lines = new byte[]{ 2, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -75,19 +76,19 @@ public class Contours {
                                     case -1:
                                         // -1 -1
                                         // -1  0
-                                        lines = new short[]{ 1, 2 };
+                                        lines = new byte[]{ 1, 2 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         // -1 -1
                                         //  0  0
-                                        lines = new short[]{ 1, 3 };
+                                        lines = new byte[]{ 1, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         // -1 -1
                                         //  1  0
-                                        lines = new short[]{ 1, 3, 3, 2 };
+                                        lines = new byte[]{ 1, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -99,19 +100,19 @@ public class Contours {
                                     case -1:
                                         // -1 -1
                                         // -1  1
-                                        lines = new short[]{ 1, 2, 2, 1 };
+                                        lines = new byte[]{ 1, 2, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         // -1 -1
                                         //  0  1
-                                        lines = new short[]{ 3, 1, 1, 2 };
+                                        lines = new byte[]{ 3, 1, 1, 2 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         // -1 -1
                                         //  1  1
-                                        lines = new short[]{ 1, 3, 3, 1 };
+                                        lines = new byte[]{ 1, 3, 3, 1 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -129,19 +130,19 @@ public class Contours {
                                     case -1:
                                         // -1  0
                                         // -1 -1
-                                        lines = new short[]{ 0, 1 };
+                                        lines = new byte[]{ 0, 1 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         // -1  0
                                         //  0 -1
-                                        lines = new short[]{ 0, 3, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         // -1  0
                                         //  1 -1
-                                        lines = new short[]{ 0, 3, 3, 2, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 3, 2, 2, 1 };
                                         lineCount = 3;
                                         break;
                                     default:
@@ -153,19 +154,19 @@ public class Contours {
                                     case -1:
                                         // -1  0
                                         // -1  0
-                                        lines = new short[]{ 0, 2 };
+                                        lines = new byte[]{ 0, 2 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         // -1  0
                                         //  0  0
-                                        lines = new short[]{ 0, 3 };
+                                        lines = new byte[]{ 0, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         // -1  0
                                         //  1  0
-                                        lines = new short[]{ 0, 3, 3, 2 };
+                                        lines = new byte[]{ 0, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -177,19 +178,19 @@ public class Contours {
                                     case -1:
                                         // -1  0
                                         // -1  1
-                                        lines = new short[]{ 0, 2, 2, 1 };
+                                        lines = new byte[]{ 0, 2, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         // -1  0
                                         //  0  1
-                                        lines = new short[]{ 0, 3, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         // -1  0
                                         //  1  1
-                                        lines = new short[]{ 0, 3, 3, 1 };
+                                        lines = new byte[]{ 0, 3, 3, 1 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -207,19 +208,19 @@ public class Contours {
                                     case -1:
                                         // -1  1
                                         // -1 -1
-                                        lines = new short[]{ 0, 1, 1, 0 };
+                                        lines = new byte[]{ 0, 1, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         // -1  1
                                         //  0 -1
-                                        lines = new short[]{ 2, 1, 1, 0, 0, 3 };
+                                        lines = new byte[]{ 2, 1, 1, 0, 0, 3 };
                                         lineCount = 3;
                                         break;
                                     case 1:
                                         // -1  1
                                         //  1 -1
-                                        lines = new short[]{ 2, 1, 1, 0, 0, 3, 3, 2 };
+                                        lines = new byte[]{ 2, 1, 1, 0, 0, 3, 3, 2 };
                                         lineCount = 4;
                                         break;
                                     default:
@@ -231,19 +232,19 @@ public class Contours {
                                     case -1:
                                         // -1  1
                                         // -1  0
-                                        lines = new short[]{ 1, 0, 0, 2 };
+                                        lines = new byte[]{ 1, 0, 0, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         // -1  1
                                         //  0  0
-                                        lines = new short[]{ 1, 0, 0, 3};
+                                        lines = new byte[]{ 1, 0, 0, 3};
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         // -1  1
                                         //  1  0
-                                        lines = new short[]{ 1, 0, 0, 3, 3, 2 };
+                                        lines = new byte[]{ 1, 0, 0, 3, 3, 2 };
                                         lineCount = 3;
                                         break;
                                     default:
@@ -255,19 +256,19 @@ public class Contours {
                                     case -1:
                                         // -1  1
                                         // -1  1
-                                        lines = new short[]{ 2, 0, 0, 2 };
+                                        lines = new byte[]{ 2, 0, 0, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         // -1  1
                                         //  0  1
-                                        lines = new short[]{ 2, 0, 0, 3 };
+                                        lines = new byte[]{ 2, 0, 0, 3 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         // -1  1
                                         //  1  1
-                                        lines = new short[]{ 0, 3, 3, 0 };
+                                        lines = new byte[]{ 0, 3, 3, 0 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -291,19 +292,19 @@ public class Contours {
                                     case -1:
                                         //  0 -1
                                         // -1 -1
-                                        lines = new short[]{ 3, 0 };
+                                        lines = new byte[]{ 3, 0 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         //  0 -1
                                         //  0 -1
-                                        lines = new short[]{ 2, 0 };
+                                        lines = new byte[]{ 2, 0 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0 -1
                                         //  1 -1
-                                        lines = new short[]{ 3, 2, 2, 0 };
+                                        lines = new byte[]{ 3, 2, 2, 0 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -315,19 +316,19 @@ public class Contours {
                                     case -1:
                                         //  0 -1
                                         // -1  0
-                                        lines = new short[]{ 1, 0, 3, 2 };
+                                        lines = new byte[]{ 1, 0, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  0 -1
                                         //  0  0
-                                        lines = new short[]{ 1, 0 };
+                                        lines = new byte[]{ 1, 0 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0 -1
                                         //  1  0
-                                        lines = new short[]{ 1, 0, 3, 2 };
+                                        lines = new byte[]{ 1, 0, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -339,19 +340,19 @@ public class Contours {
                                     case -1:
                                         //  0 -1
                                         // -1  1
-                                        lines = new short[]{ 3, 2, 2, 1, 1, 0 };
+                                        lines = new byte[]{ 3, 2, 2, 1, 1, 0 };
                                         lineCount = 3;
                                         break;
                                     case 0:
                                         //  0 -1
                                         //  0  1
-                                        lines = new short[]{ 2, 1, 1, 0 };
+                                        lines = new byte[]{ 2, 1, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  0 -1
                                         //  1  1
-                                        lines = new short[]{ 3, 1, 1, 0 };
+                                        lines = new byte[]{ 3, 1, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -369,19 +370,19 @@ public class Contours {
                                     case -1:
                                         //  0  0
                                         // -1 -1
-                                        lines = new short[]{ 1, 3 };
+                                        lines = new byte[]{ 1, 3 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         //  0  0
                                         //  0 -1
-                                        lines = new short[]{ 1, 2 };
+                                        lines = new byte[]{ 1, 2 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0  0
                                         //  1 -1
-                                        lines = new short[]{ 3, 2, 2, 1 };
+                                        lines = new byte[]{ 3, 2, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -393,19 +394,19 @@ public class Contours {
                                     case -1:
                                         //  0  0
                                         // -1  0
-                                        lines = new short[]{ 3, 2 };
+                                        lines = new byte[]{ 3, 2 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         //  0  0
                                         //  0  0
-                                        lines = new short[0];
+                                        lines = new byte[0];
                                         lineCount = 0;
                                         break;
                                     case 1:
                                         //  0  0
                                         //  1  0
-                                        lines = new short[]{ 3, 2 };
+                                        lines = new byte[]{ 3, 2 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -417,19 +418,19 @@ public class Contours {
                                     case -1:
                                         //  0  0
                                         // -1  1
-                                        lines = new short[]{ 3, 2, 2, 1, };
+                                        lines = new byte[]{ 3, 2, 2, 1, };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  0  0
                                         //  0  1
-                                        lines = new short[]{ 2, 1 };
+                                        lines = new byte[]{ 2, 1 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0  0
                                         //  1  1
-                                        lines = new short[]{ 3, 1 };
+                                        lines = new byte[]{ 3, 1 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -447,19 +448,19 @@ public class Contours {
                                     case -1:
                                         //  0  1
                                         // -1 -1
-                                        lines = new short[]{ 3, 1, 1, 0 };
+                                        lines = new byte[]{ 3, 1, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  0  1
                                         //  0 -1
-                                        lines = new short[]{ 2, 1, 1, 0 };
+                                        lines = new byte[]{ 2, 1, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  0  1
                                         //  1 -1
-                                        lines = new short[]{ 3, 2, 2, 1, 1, 0 };
+                                        lines = new byte[]{ 3, 2, 2, 1, 1, 0 };
                                         lineCount = 3;
                                         break;
                                     default:
@@ -471,19 +472,19 @@ public class Contours {
                                     case -1:
                                         //  0  1
                                         // -1  0
-                                        lines = new short[]{3, 2, 1, 0 };
+                                        lines = new byte[]{3, 2, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  0  1
                                         //  0  0
-                                        lines = new short[]{ 1, 0 };
+                                        lines = new byte[]{ 1, 0 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0  1
                                         //  1  0
-                                        lines = new short[]{ 3, 2, 1, 0 };
+                                        lines = new byte[]{ 3, 2, 1, 0 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -495,19 +496,19 @@ public class Contours {
                                     case -1:
                                         //  0  1
                                         // -1  1
-                                        lines = new short[]{ 3, 2, 2, 0 };
+                                        lines = new byte[]{ 3, 2, 2, 0 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  0  1
                                         //  0  1
-                                        lines = new short[]{ 2, 0 };
+                                        lines = new byte[]{ 2, 0 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  0  1
                                         //  1  1
-                                        lines = new short[]{ 3, 0 };
+                                        lines = new byte[]{ 3, 0 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -531,19 +532,19 @@ public class Contours {
                                     case -1:
                                         //  1 -1
                                         // -1 -1
-                                        lines = new short[]{ 3, 0, 0, 3 };
+                                        lines = new byte[]{ 3, 0, 0, 3 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1 -1
                                         //  0 -1
-                                        lines = new short[]{ 2, 0, 0, 3 };
+                                        lines = new byte[]{ 2, 0, 0, 3 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  1 -1
                                         //  1 -1
-                                        lines = new short[]{ 2, 0, 0, 2 };
+                                        lines = new byte[]{ 2, 0, 0, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -555,19 +556,19 @@ public class Contours {
                                     case -1:
                                         //  1 -1
                                         // -1  0
-                                        lines = new short[]{ 1, 0, 0, 3, 3, 2 };
+                                        lines = new byte[]{ 1, 0, 0, 3, 3, 2 };
                                         lineCount = 3;
                                         break;
                                     case 0:
                                         //  1 -1
                                         //  0  0
-                                        lines = new short[]{ 1, 0, 0, 3 };
+                                        lines = new byte[]{ 1, 0, 0, 3 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  1 -1
                                         //  1  0
-                                        lines = new short[]{ 1, 0, 0, 2 };
+                                        lines = new byte[]{ 1, 0, 0, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -579,19 +580,19 @@ public class Contours {
                                     case -1:
                                         //  1 -1
                                         // -1  1
-                                        lines = new short[]{ 2, 1, 1, 0, 0, 3, 3, 2 };
+                                        lines = new byte[]{ 2, 1, 1, 0, 0, 3, 3, 2 };
                                         lineCount = 4;
                                         break;
                                     case 0:
                                         //  1 -1
                                         //  0  1
-                                        lines = new short[]{ 2, 1, 1, 0, 0, 3 };
+                                        lines = new byte[]{ 2, 1, 1, 0, 0, 3 };
                                         lineCount = 3;
                                         break;
                                     case 1:
                                         //  1 -1
                                         //  1  1
-                                        lines = new short[]{ 1, 0, 0, 1 };
+                                        lines = new byte[]{ 1, 0, 0, 1 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -609,19 +610,19 @@ public class Contours {
                                     case -1:
                                         //  1  0
                                         // -1 -1
-                                        lines = new short[]{ 0, 3, 3, 1 };
+                                        lines = new byte[]{ 0, 3, 3, 1 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1  0
                                         //  0 -1
-                                        lines = new short[]{ 0, 3, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  1  0
                                         //  1 -1
-                                        lines = new short[]{ 0, 2, 2, 1 };
+                                        lines = new byte[]{ 0, 2, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -633,19 +634,19 @@ public class Contours {
                                     case -1:
                                         //  1  0
                                         // -1  0
-                                        lines = new short[]{ 0, 3, 3, 2 };
+                                        lines = new byte[]{ 0, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1  0
                                         //  0  0
-                                        lines = new short[]{ 0, 3 };
+                                        lines = new byte[]{ 0, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  1  0
                                         //  1  0
-                                        lines = new short[]{ 0, 2 };
+                                        lines = new byte[]{ 0, 2 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -657,19 +658,19 @@ public class Contours {
                                     case -1:
                                         //  1  0
                                         // -1  1
-                                        lines = new short[]{ 0, 3, 3, 2, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 3, 2, 2, 1 };
                                         lineCount = 3;
                                         break;
                                     case 0:
                                         //  1  0
                                         //  0  1
-                                        lines = new short[]{ 0, 3, 2, 1 };
+                                        lines = new byte[]{ 0, 3, 2, 1 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  1  0
                                         //  1  1
-                                        lines = new short[]{ 0, 1 };
+                                        lines = new byte[]{ 0, 1 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -687,19 +688,19 @@ public class Contours {
                                     case -1:
                                         //  1  1
                                         // -1 -1
-                                        lines = new short[]{ 1, 3, 3, 1 };
+                                        lines = new byte[]{ 1, 3, 3, 1 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1  1
                                         //  0 -1
-                                        lines = new short[]{ 2, 1, 1, 3 };
+                                        lines = new byte[]{ 2, 1, 1, 3 };
                                         lineCount = 2;
                                         break;
                                     case 1:
                                         //  1  1
                                         //  1 -1
-                                        lines = new short[]{ 2, 1, 1, 2 };
+                                        lines = new byte[]{ 2, 1, 1, 2 };
                                         lineCount = 2;
                                         break;
                                     default:
@@ -711,19 +712,19 @@ public class Contours {
                                     case -1:
                                         //  1  1
                                         // -1  0
-                                        lines = new short[]{ 1, 3, 3, 2 };
+                                        lines = new byte[]{ 1, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1  1
                                         //  0  0
-                                        lines = new short[]{ 1, 3 };
+                                        lines = new byte[]{ 1, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  1  1
                                         //  1  0
-                                        lines = new short[]{ 1, 2 };
+                                        lines = new byte[]{ 1, 2 };
                                         lineCount = 1;
                                         break;
                                     default:
@@ -735,19 +736,19 @@ public class Contours {
                                     case -1:
                                         //  1  1
                                         // -1  1
-                                        lines = new short[]{ 2, 3, 3, 2 };
+                                        lines = new byte[]{ 2, 3, 3, 2 };
                                         lineCount = 2;
                                         break;
                                     case 0:
                                         //  1  1
                                         //  0  1
-                                        lines = new short[]{ 2, 3 };
+                                        lines = new byte[]{ 2, 3 };
                                         lineCount = 1;
                                         break;
                                     case 1:
                                         //  1  1
                                         //  1  1
-                                        lines = new short[0];
+                                        lines = new byte[0];
                                         lineCount = 0;
                                         break;
                                     default:

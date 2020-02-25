@@ -8,7 +8,7 @@ public class Tile {
      */
     public byte[] tile;
 
-    public Contours[] contours;
+    public IsobandContours[] contours;
 
     /**
      * How wide is each row in the tile.
@@ -18,15 +18,25 @@ public class Tile {
     public Tile(final byte[] tile, final int width) {
         this.tile = tile;
         this.width = width;
-        this.contours = new Contours[tile.length];
+        this.contours = new IsobandContours[tile.length];
     }
 
     /**
-     * Build and attach {@link Contours} not on borders.
+     * Build and attach {@link IsobandContours} for all cells.
+     *
+     * Note this does not define contours for the left and bottom edge as that is
+     * left for tile joining.
      */
-    public void apply() {
-        for (int i = 0; i < tile.length; i++) {
-
+    public void isoband() {
+        final int W = width - 1;
+        final int H = tile.length / width - 1;
+        for (int h = 0; h < H; h++) {
+            for (int w = 0; w < W; w++) {
+                this.contours[h * width + w] = new IsobandContours(new byte[]{
+                        tile[h * width + w], tile[h * width + w + 1],
+                        tile[h * width + width + w], tile[h * width + width + w + 1],
+                });
+            }
         }
     }
 }
