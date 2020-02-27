@@ -21,7 +21,7 @@ public class TileTest {
         // Everything else is not-null.
         for (int h = 0; h < height-1; h++) {
             for ( int w = 0; w < width-1; w++) {
-                final int i = h*width+w;
+                final int i = h*(width-1)+w;
                 Assert.assertNotNull(t.contours[i]);
                 Assert.assertEquals(t.contours[i].lineCount, t.contours[i].lines.length/2);
                 System.out.println(t.contours[i]);
