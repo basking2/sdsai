@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.util.Iterator;
+
 /**
  */
 public class VectorTile {
@@ -14,29 +16,29 @@ public class VectorTile {
     /**
      * These are lines that exited the polygon from the bottom.
      *
-     * This list is ordered from left-to-right.
+     * This list is ordered from left-to-right with out-bound edges preceding inbound edges.
      */
-    public LinkedList<PointAndCells> unfinishedLinesBottom;
+    public LinkedList<LinkedList.Node<Point>> unfinishedLinesBottom;
 
     /**
      * These are lines that exited the polygon from the right;
      *
-     * This list is ordered from top-to-bottom.
+     * This list is ordered from top-to-bottom with out-bound edges preceding inbound edges.
      */
-    public LinkedList<PointAndCells> unfinishedLinesRight;
+    public LinkedList<LinkedList.Node<Point>> unfinishedLinesRight;
     /**
      * These are lines that exited the polygon from the left;
      *
-     * This list is ordered from top-to-bottom.
+     * This list is ordered from top-to-bottom with out-bound edges preceding inbound edges.
      */
-    public LinkedList<PointAndCells> unfinishedLinesLeft;
+    public LinkedList<LinkedList.Node<Point>> unfinishedLinesLeft;
 
     /**
      * These are lines that exited the polygon from the top;
      *
-     * This list is ordered from left-to-right.
+     * This list is ordered from left-to-right with out-bound edges preceding inbound edges.
      */
-    public LinkedList<PointAndCells> unfinishedLinesTop;
+    public LinkedList<LinkedList.Node<Point>> unfinishedLinesTop;
 
     protected VectorTile() {
         this.features = new LinkedList<>();
@@ -45,6 +47,4 @@ public class VectorTile {
         this.unfinishedLinesLeft = new LinkedList<>();
         this.unfinishedLinesBottom = new LinkedList<>();
     }
-
-
 }

@@ -63,17 +63,17 @@ public class VectorTileBuilder {
                     final byte lineBegin = tile.contours[i].lines[j * 2];
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
 
-                    final Point p = new Point(x, y, lineEnd);
-                    featureField[i][j] = new LinkedList.Node(p, null);
+                    final LinkedList.Node<Point> p = new LinkedList.Node(new Point(x, y, lineEnd), null);
+                    featureField[i][j] = p;
 
                     // Handle where lines end in this square.
                     // We check the above and left squares for in-bound lines to us.
                     if (lineEnd == 3) {
                         if (x == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width + tile.width];
+                            final byte c1 = tile.tile[x + y * tile.width + tile.width];
+                            final byte c2 = tile.tile[x + y * tile.width];
                             assert c1 != c2;
-                            vectorTile.unfinishedLinesLeft.add(new PointAndCells(p, c1, c2));
+                            vectorTile.unfinishedLinesLeft.add(p);
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2] == 1) {
@@ -87,13 +87,13 @@ public class VectorTileBuilder {
                         final byte c1 = tile.tile[x + y * tile.width + 1];
                         final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
                         assert c1 != c2;
-                        vectorTile.unfinishedLinesRight.add(new PointAndCells(p, c1, c2));
+                        vectorTile.unfinishedLinesRight.add(p);
                     } else if (lineEnd == 0) {
                         if (y == 0) {
                             final byte c1 = tile.tile[x + y * tile.width];
                             final byte c2 = tile.tile[x + y * tile.width + 1];
                             assert c1 != c2;
-                            vectorTile.unfinishedLinesTop.add(new PointAndCells(p, c1, c2));
+                            vectorTile.unfinishedLinesTop.add(p);
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2] == 2) {
@@ -104,20 +104,20 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (y == HEIGHT - 1 && lineEnd == 2) {
-                        final byte c1 = tile.tile[x + y * tile.width + tile.width];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
+                        final byte c1 = tile.tile[x + y * tile.width + tile.width + 1];
+                        final byte c2 = tile.tile[x + y * tile.width + tile.width];
                         assert c1 != c2;
-                        vectorTile.unfinishedLinesBottom.add(new PointAndCells(p, c1, c2));
+                        vectorTile.unfinishedLinesBottom.add(p);
                     }
 
                     // Handle where lines begin in this square.
                     // We check the above and left squares for out-bound lines to us.
                     if (lineBegin == 3) {
                         if (x == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width + tile.width];
+                            final byte c1 = tile.tile[x + y * tile.width + tile.width];
+                            final byte c2 = tile.tile[x + y * tile.width];
                             assert c1 != c2;
-                            vectorTile.unfinishedLinesLeft.add(new PointAndCells(p, c1, c2));
+                            vectorTile.unfinishedLinesLeft.add(p);
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2 + 1] == 1) {
@@ -131,13 +131,13 @@ public class VectorTileBuilder {
                         final byte c1 = tile.tile[x + y * tile.width + 1];
                         final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
                         assert c1 != c2;
-                        vectorTile.unfinishedLinesRight.add(new PointAndCells(p, c1, c2));
+                        vectorTile.unfinishedLinesRight.add(p);
                     } else if (lineBegin == 0) {
                         if (y == 0) {
                             final byte c1 = tile.tile[x + y * tile.width];
                             final byte c2 = tile.tile[x + y * tile.width + 1];
                             assert c1 != c2;
-                            vectorTile.unfinishedLinesTop.add(new PointAndCells(p, c1, c2));
+                            vectorTile.unfinishedLinesTop.add(p);
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2 + 1] == 2) {
@@ -148,10 +148,10 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (y == HEIGHT - 1 && lineBegin == 2) {
-                        final byte c1 = tile.tile[x + y * tile.width + tile.width];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
+                        final byte c1 = tile.tile[x + y * tile.width + tile.width + 1];
+                        final byte c2 = tile.tile[x + y * tile.width + tile.width];
                         assert c1 != c2;
-                        vectorTile.unfinishedLinesBottom.add(new PointAndCells(p, c1, c2));
+                        vectorTile.unfinishedLinesBottom.add(p);
                     }
                 }
             }
