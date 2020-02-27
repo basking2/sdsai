@@ -16,4 +16,9 @@ public class Point {
         this.y = y;
         this.side = side;
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d)-%d", x, y, side);
+    }
 }

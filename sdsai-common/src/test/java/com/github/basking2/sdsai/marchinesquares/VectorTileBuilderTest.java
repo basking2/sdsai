@@ -48,4 +48,46 @@ public class VectorTileBuilderTest {
         //final VectorTileBuilder vtb = new VectorTileBuilder(t);
         //final VectorTile vectorTile = vtb.build();
     }
+
+    @Test
+    public void basicLoopBuild2(){
+        final byte[] array = new byte[]{
+                1, 1, 1,
+                1, 0, 1,
+                1, 1, 1
+        };
+
+        final Tile t = new Tile(array, 3);
+
+        t.isoband();
+
+        Assert.assertEquals("(1->2)", t.contours[0].toString());
+        Assert.assertEquals("(2->3)", t.contours[1].toString());
+        Assert.assertEquals("(0->1)", t.contours[2].toString());
+        Assert.assertEquals("(3->0)", t.contours[3].toString());
+
+        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        //final VectorTile vectorTile = vtb.build();
+    }
+
+    @Test
+    public void basicLoopBuild3(){
+        final byte[] array = new byte[]{
+                0,  0,  0,
+                0, -1,  0,
+                0,  0,  0
+        };
+
+        final Tile t = new Tile(array, 3);
+
+        t.isoband();
+
+        Assert.assertEquals("(2->1)", t.contours[0].toString());
+        Assert.assertEquals("(3->2)", t.contours[1].toString());
+        Assert.assertEquals("(1->0)", t.contours[2].toString());
+        Assert.assertEquals("(0->3)", t.contours[3].toString());
+
+        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        //final VectorTile vectorTile = vtb.build();
+    }
 }

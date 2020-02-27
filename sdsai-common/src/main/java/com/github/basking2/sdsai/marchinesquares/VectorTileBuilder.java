@@ -142,6 +142,38 @@ public class VectorTileBuilder {
                     final LinkedList.Node<Point> start = featureField[i][j];
                     LinkedList.Node<Point> stop = start.next;
                     while (start != stop && stop != null) {
+
+                        //
+                        // Validation code.
+                        //
+                        // This code checks that all paths that terminate (not loop) are on border nodes.
+                        //
+                        // It is expensive to keep on, so it remains here commented out.
+                        //
+
+                        /*
+                        if (stop.next == null && stop.value.x != 0 && stop.value.y != 0 && stop.value.y != HEIGHT-1 && stop.value.x != WIDTH-1 ) {
+                            System.out.println("An internal node has a null pointer??? How?");
+                            LinkedList.Node<Point> last = start;
+                            while (last != null) {
+                                System.out.println("\tPoint "+last.value);
+                                last = last.next;
+                            }
+
+                            System.out.println("Values around the last good end point.");
+                            for (int y2 = stop.value.y; y2 < stop.value.y+3; y2++) {
+                                for (int x2 = stop.value.x; x2 < stop.value.x+3; x2++) {
+                                    System.out.print(tile.tile[y2*tile.width+x2]);
+                                    System.out.print(" ");
+                                }
+                                System.out.println("");
+                            }
+
+                            assert false;
+                        }
+                         */
+
+
                         stop = stop.next;
                     }
 

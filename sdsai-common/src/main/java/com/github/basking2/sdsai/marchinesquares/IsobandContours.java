@@ -370,13 +370,13 @@ public class IsobandContours {
                                     case -1:
                                         //  0  0
                                         // -1 -1
-                                        lines = new byte[]{ 1, 3 };
+                                        lines = new byte[]{ 3, 1 };
                                         lineCount = 1;
                                         break;
                                     case 0:
                                         //  0  0
                                         //  0 -1
-                                        lines = new byte[]{ 1, 2 };
+                                        lines = new byte[]{ 2, 1 };
                                         lineCount = 1;
                                         break;
                                     case 1:
