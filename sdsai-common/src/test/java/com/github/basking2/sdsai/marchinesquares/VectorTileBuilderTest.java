@@ -27,4 +27,25 @@ public class VectorTileBuilderTest {
         Assert.assertTrue(vectorTile.unfinishedLinesLeft.size() < height);
 
     }
+
+    @Test
+    public void basicLoopBuild(){
+        final byte[] array = new byte[]{
+                1,  1,  1,
+                1, -1,  1,
+                1,  1,  1
+        };
+
+        final Tile t = new Tile(array, 3);
+
+        t.isoband();
+
+        Assert.assertEquals("(2->1)(1->2)", t.contours[0].toString());
+        Assert.assertEquals("(2->3)(3->2)", t.contours[1].toString());
+        Assert.assertEquals("(1->0)(0->1)", t.contours[2].toString());
+        Assert.assertEquals("(0->3)(3->0)", t.contours[3].toString());
+
+        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        //final VectorTile vectorTile = vtb.build();
+    }
 }
