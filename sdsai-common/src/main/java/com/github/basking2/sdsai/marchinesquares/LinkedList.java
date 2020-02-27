@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Java's linked list library is excellent, but we need a specific {@link Node#join(Node, Object, Node)} operation.
+ * Java's linked list library is excellent, but we need direct access to manipulate the next reference.
  *
  * A user of this class may use either the nodes or the list depending on if they need
  * the flexibility of nodes or the global state of a list wrapper.
@@ -68,23 +68,25 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
         public VALUE value;
         public Node<VALUE> next;
 
+        /**
+         * When traversing a recursive structure it is helpful to mark nodes in some way.
+         *
+         * We call this the color of a node. By default a node's color is 0x0.
+         *
+         * The color of the node has no impact how how functions of this class operate.
+         */
+        public byte color;
+
         public Node(final VALUE value, final Node<VALUE> next) {
             this.value = value;
             this.next = next;
+            this.color = 0;
         }
 
-        /**
-         * @param head    The head of the list. The next value must be null to avoid list leaking.
-         * @param body    The element to put in a new list node. This new list node is set to the {@link #next} value of head.
-         * @param tail    The {@link #next} value of the node holding body is set to tail.
-         * @param <VALUE> The value stored.
-         */
-        public static <VALUE> void join(final Node<VALUE> head, final VALUE body, final Node<VALUE> tail) {
-            if (head.next != null) {
-                throw new IllegalStateException("Head node may not have next set to non-null.");
-            }
-
-            head.next = new Node<>(body, tail);
+        public Node(final VALUE value, final Node<VALUE> next, final byte color) {
+            this.value = value;
+            this.next = next;
+            this.color = color;
         }
 
         @Override

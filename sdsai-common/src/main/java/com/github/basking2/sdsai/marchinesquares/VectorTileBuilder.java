@@ -2,6 +2,14 @@ package com.github.basking2.sdsai.marchinesquares;
 
 public class VectorTileBuilder {
 
+    /**
+     * Whe the tile is built point colors are initially 0.
+     * When we detect loops to build polygons we set those values to COLLECT_COLOR.
+     * When tiles are zipped together, another color should be used to detect when connecting a tile completes a
+     * loop and reset otherwise..
+     */
+    public static final byte COLLECT_COLOR = 1;
+
     private final Tile tile;
     private final int HEIGHT;
     private final int WIDTH;
@@ -141,46 +149,63 @@ public class VectorTileBuilder {
 
                     final LinkedList.Node<Point> start = featureField[i][j];
                     LinkedList.Node<Point> stop = start.next;
+                    start.color = COLLECT_COLOR;
                     while (start != stop && stop != null) {
-
-                        //
-                        // Validation code.
-                        //
-                        // This code checks that all paths that terminate (not loop) are on border nodes.
-                        //
-                        // It is expensive to keep on, so it remains here commented out.
-                        //
-
-                        /*
-                        if (stop.next == null && stop.value.x != 0 && stop.value.y != 0 && stop.value.y != HEIGHT-1 && stop.value.x != WIDTH-1 ) {
-                            System.out.println("An internal node has a null pointer??? How?");
-                            LinkedList.Node<Point> last = start;
-                            while (last != null) {
-                                System.out.println("\tPoint "+last.value);
-                                last = last.next;
-                            }
-
-                            System.out.println("Values around the last good end point.");
-                            for (int y2 = stop.value.y; y2 < stop.value.y+3; y2++) {
-                                for (int x2 = stop.value.x; x2 < stop.value.x+3; x2++) {
-                                    System.out.print(tile.tile[y2*tile.width+x2]);
-                                    System.out.print(" ");
-                                }
-                                System.out.println("");
-                            }
-
-                            assert false;
+                        if (stop.color == COLLECT_COLOR) {
+                            stop = null;
                         }
-                         */
+                        else {
 
+                            //
+                            // Validation code.
+                            //
+                            // This code checks that all paths that terminate (not loop) are on border nodes.
+                            //
+                            // It is expensive to keep on, so it remains here commented out.
+                            //
 
-                        stop = stop.next;
+                            /*
+                            if (stop.next == null && stop.value.x != 0 && stop.value.y != 0 && stop.value.y != HEIGHT-1 && stop.value.x != WIDTH-1 ) {
+                                System.out.println("An internal node has a null pointer??? How?");
+                                LinkedList.Node<Point> last = start;
+                                while (last != null) {
+                                    System.out.println("\tPoint "+last.value);
+                                    last = last.next;
+                                }
+
+                                System.out.println("Values around the last good end point.");
+                                for (int y2 = stop.value.y; y2 < stop.value.y+3; y2++) {
+                                    for (int x2 = stop.value.x; x2 < stop.value.x+3; x2++) {
+                                        System.out.print(tile.tile[y2*tile.width+x2]);
+                                        System.out.print(" ");
+                                    }
+                                    System.out.println("");
+                                }
+
+                                assert false;
+                            }
+                             */
+
+                            stop.color = COLLECT_COLOR;
+                            stop = stop.next;
+                        }
                     }
 
+                    // If stop != null, then stop == start!
                     if (stop != null) {
-                        System.out.println("LOOP  "+start.value+ " and "+stop.value);
-                    }
 
+                        // Make sure we are 3 segments long for a proper polygon.
+                        if (start.next.next != start) {
+                            final LinkedList.Node<Point> newStartNode = new LinkedList.Node<>(start.value, start.next, start.color);
+
+                            // The start node is now the end node.
+                            start.next = null;
+
+                            final Feature feature = new Feature(newStartNode);
+
+                            vectorTile.features.add(feature);
+                        }
+                    }
                 }
             }
         }
