@@ -18,7 +18,7 @@ public class Tile {
     public Tile(final byte[] tile, final int width) {
         this.tile = tile;
         this.width = width;
-        this.contours = new IsobandContours[tile.length];
+        this.contours = new IsobandContours[tile.length - width - 1];
     }
 
     /**
@@ -34,9 +34,9 @@ public class Tile {
         // Populate the contours array.
         for (int h = 0; h < H; h++) {
             for (int w = 0; w < W; w++) {
-                this.contours[h * width + w] = new IsobandContours(new byte[]{
-                        tile[h * width + w], tile[h * width + w + 1],
-                        tile[h * width + width + w], tile[h * width + width + w + 1],
+                this.contours[h * W + w] = new IsobandContours(new byte[]{
+                        tile[h * W + w], tile[h * W + w + 1],
+                        tile[h * W + W + w], tile[h * W + W + w + 1],
                 });
             }
         }

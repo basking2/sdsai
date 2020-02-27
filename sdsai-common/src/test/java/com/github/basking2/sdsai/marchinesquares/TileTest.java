@@ -18,16 +18,6 @@ public class TileTest {
 
         t.isoband();
 
-        // Bottom line is null.
-        for (int w = 0; w < width; w++) {
-            Assert.assertNull(t.contours[t.contours.length - width]);
-        }
-
-        // Right line is null.
-        for (int h = 0; h < height; h++) {
-            Assert.assertNull(t.contours[width*h+width-1]);
-        }
-
         // Everything else is not-null.
         for (int h = 0; h < height-1; h++) {
             for ( int w = 0; w < width-1; w++) {
