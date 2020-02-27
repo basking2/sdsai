@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class VectorTileBuilderTest {
@@ -18,6 +19,12 @@ public class VectorTileBuilderTest {
 
         final VectorTileBuilder vtb = new VectorTileBuilder(t);
 
-        vtb.build();
+        final VectorTile vectorTile = vtb.build();
+
+        Assert.assertTrue(vectorTile.unfinishedLinesBottom.size() < width);
+        Assert.assertTrue(vectorTile.unfinishedLinesTop.size() < width);
+        Assert.assertTrue(vectorTile.unfinishedLinesRight.size() < height);
+        Assert.assertTrue(vectorTile.unfinishedLinesLeft.size() < height);
+
     }
 }
