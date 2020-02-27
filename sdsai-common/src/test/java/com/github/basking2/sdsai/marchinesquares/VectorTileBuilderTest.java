@@ -26,6 +26,38 @@ public class VectorTileBuilderTest {
         Assert.assertTrue(vectorTile.unfinishedLinesRight.size() < height);
         Assert.assertTrue(vectorTile.unfinishedLinesLeft.size() < height);
 
+        int prev = 0;
+        for (final PointAndCells p : vectorTile.unfinishedLinesLeft) {
+            Assert.assertNotEquals(p.cell1, p.cell2);
+            Assert.assertTrue(p.point.y >= prev);
+            Assert.assertEquals(0, p.point.x);
+            prev = p.point.y;
+
+        }
+
+        prev = 0;
+        for (final PointAndCells p : vectorTile.unfinishedLinesRight) {
+            Assert.assertNotEquals(p.cell1, p.cell2);
+            Assert.assertTrue(p.point.y >= prev);
+            Assert.assertEquals(width-2, p.point.x);
+            prev = p.point.y;
+        }
+
+        prev = 0;
+        for (final PointAndCells p : vectorTile.unfinishedLinesTop) {
+            Assert.assertNotEquals(p.cell1, p.cell2);
+            Assert.assertTrue(p.point.x >= prev);
+            Assert.assertEquals(0, p.point.y);
+            prev = p.point.x;
+        }
+
+        prev = 0;
+        for (final PointAndCells p : vectorTile.unfinishedLinesBottom) {
+            Assert.assertNotEquals(p.cell1, p.cell2);
+            Assert.assertTrue(p.point.x >= prev);
+            Assert.assertEquals(width-2, p.point.y);
+            prev = p.point.x;
+        }
     }
 
     @Test
@@ -87,7 +119,8 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(1->0)", t.contours[2].toString());
         Assert.assertEquals("(0->3)", t.contours[3].toString());
 
-        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
-        //final VectorTile vectorTile = vtb.build();
+        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTile vectorTile = vtb.build();
+
     }
 }
