@@ -18,33 +18,33 @@ public class VectorTile {
      *
      * This list is ordered from left-to-right with out-bound edges preceding inbound edges.
      */
-    public LinkedList<LinkedList.Node<Point>> unfinishedLinesBottom;
+    public LinkedList<Side> bottom;
 
     /**
      * These are lines that exited the polygon from the right;
      *
      * This list is ordered from top-to-bottom with out-bound edges preceding inbound edges.
      */
-    public LinkedList<LinkedList.Node<Point>> unfinishedLinesRight;
+    public LinkedList<Side> right;
     /**
      * These are lines that exited the polygon from the left;
      *
      * This list is ordered from top-to-bottom with out-bound edges preceding inbound edges.
      */
-    public LinkedList<LinkedList.Node<Point>> unfinishedLinesLeft;
+    public LinkedList<Side> left;
 
     /**
      * These are lines that exited the polygon from the top;
      *
      * This list is ordered from left-to-right with out-bound edges preceding inbound edges.
      */
-    public LinkedList<LinkedList.Node<Point>> unfinishedLinesTop;
+    public LinkedList<Side> top;
 
     protected VectorTile() {
         this.features = new LinkedList<>();
-        this.unfinishedLinesTop = new LinkedList<>();
-        this.unfinishedLinesRight = new LinkedList<>();
-        this.unfinishedLinesLeft = new LinkedList<>();
-        this.unfinishedLinesBottom = new LinkedList<>();
+        this.top = new LinkedList<>();
+        this.right = new LinkedList<>();
+        this.left = new LinkedList<>();
+        this.bottom = new LinkedList<>();
     }
 }

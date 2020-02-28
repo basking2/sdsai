@@ -44,6 +44,14 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
         }
     }
 
+    public VALUE getHead() {
+        return head.value;
+    }
+
+    public VALUE getTail() {
+        return tail.value;
+    }
+
     @Override
     public Iterator<VALUE> iterator() {
         if (head != null) {

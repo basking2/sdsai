@@ -51,6 +51,25 @@ public class VectorTileBuilder {
                 assert featureField[i] == null;
                 featureField[i] = new LinkedList.Node[tile.contours[i].lineCount];
 
+                // A holder incase we have a side.
+                if (x == 0) {
+                    vectorTile.left.add(new Side(tile.tile[x + y * tile.width]));
+                }
+
+                if (y == 0) {
+                    vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
+                }
+
+                if (x == WIDTH-1) {
+                    // +1 because, recall, there are -1 contours than squares.
+                    vectorTile.right.add(new Side(tile.tile[x+y * tile.width + 1]));
+                }
+
+                if (y == HEIGHT-1) {
+                    // +1 because, recall, there are -1 contours than squares.
+                    vectorTile.bottom.add(new Side(tile.tile[x+y * tile.width + 1]));
+                }
+
                 // Walk all the contours we have. Each contour is 0 - 4 lines.
                 for (int j = 0; j < tile.contours[i].lineCount; j++) {
                     assert featureField[i][j] == null;
@@ -70,10 +89,7 @@ public class VectorTileBuilder {
                     // We check the above and left squares for in-bound lines to us.
                     if (lineEnd == 3) {
                         if (x == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width + tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width];
-                            assert c1 != c2;
-                            vectorTile.unfinishedLinesLeft.add(p);
+                            vectorTile.left.getTail().point1 = p;
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2] == 1) {
@@ -84,16 +100,10 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (x == WIDTH - 1 && lineEnd == 1) {
-                        final byte c1 = tile.tile[x + y * tile.width + 1];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
-                        assert c1 != c2;
-                        vectorTile.unfinishedLinesRight.add(p);
+                        vectorTile.right.getTail().point1 = p;
                     } else if (lineEnd == 0) {
                         if (y == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width + 1];
-                            assert c1 != c2;
-                            vectorTile.unfinishedLinesTop.add(p);
+                            vectorTile.top.getTail().point1 = p;
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2] == 2) {
@@ -104,20 +114,20 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (y == HEIGHT - 1 && lineEnd == 2) {
-                        final byte c1 = tile.tile[x + y * tile.width + tile.width + 1];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width];
-                        assert c1 != c2;
-                        vectorTile.unfinishedLinesBottom.add(p);
+                        vectorTile.bottom.getTail().point1 = p;
                     }
 
                     // Handle where lines begin in this square.
                     // We check the above and left squares for out-bound lines to us.
                     if (lineBegin == 3) {
                         if (x == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width + tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width];
-                            assert c1 != c2;
-                            vectorTile.unfinishedLinesLeft.add(p);
+                            final Side s = vectorTile.left.getTail();
+                            if (s.point1 == null) {
+                                s.point1 = p;
+                            }
+                            else {
+                                s.point2 = p;
+                            }
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2 + 1] == 1) {
@@ -128,16 +138,22 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (x == WIDTH - 1 && lineBegin == 1) {
-                        final byte c1 = tile.tile[x + y * tile.width + 1];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width + 1];
-                        assert c1 != c2;
-                        vectorTile.unfinishedLinesRight.add(p);
+                        final Side s = vectorTile.right.getTail();
+                        if (s.point1 == null) {
+                            s.point1 = p;
+                        }
+                        else {
+                            s.point2 = p;
+                        }
                     } else if (lineBegin == 0) {
                         if (y == 0) {
-                            final byte c1 = tile.tile[x + y * tile.width];
-                            final byte c2 = tile.tile[x + y * tile.width + 1];
-                            assert c1 != c2;
-                            vectorTile.unfinishedLinesTop.add(p);
+                            final Side s = vectorTile.top.getTail();
+                            if (s.point1 == null) {
+                                s.point1 = p;
+                            }
+                            else {
+                                s.point2 = p;
+                            }
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2 + 1] == 2) {
@@ -148,14 +164,23 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (y == HEIGHT - 1 && lineBegin == 2) {
-                        final byte c1 = tile.tile[x + y * tile.width + tile.width + 1];
-                        final byte c2 = tile.tile[x + y * tile.width + tile.width];
-                        assert c1 != c2;
-                        vectorTile.unfinishedLinesBottom.add(p);
+                        final Side s = vectorTile.bottom.getTail();
+                        if (s.point1 == null) {
+                            s.point1 = p;
+                        }
+                        else {
+                            s.point2 = p;
+                        }
                     }
                 }
             }
         }
+
+        // Put the last side values in place.
+        vectorTile.top.add(new Side(tile.tile[tile.width-1]));
+        vectorTile.bottom.add(new Side(tile.tile[tile.tile.length - 1]));
+        vectorTile.left.add(new Side(tile.tile[tile.tile.length - tile.width]));
+        vectorTile.right.add(new Side(tile.tile[tile.tile.length - 1]));
 
         collectPolygons();
 

@@ -21,10 +21,11 @@ public class VectorTileBuilderTest {
 
         final VectorTile vectorTile = vtb.build();
 
-        Assert.assertTrue(vectorTile.unfinishedLinesBottom.size() < width);
-        Assert.assertTrue(vectorTile.unfinishedLinesTop.size() < width);
-        Assert.assertTrue(vectorTile.unfinishedLinesRight.size() < height);
-        Assert.assertTrue(vectorTile.unfinishedLinesLeft.size() < height);
+        Assert.assertTrue(vectorTile.bottom.size() == width);
+        Assert.assertTrue(vectorTile.top.size() == width);
+        Assert.assertTrue(vectorTile.right.size() == height);
+        Assert.assertTrue(vectorTile.left.size() == height);
+
     }
 
     @Test
