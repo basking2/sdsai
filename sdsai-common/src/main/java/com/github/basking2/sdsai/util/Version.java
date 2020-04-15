@@ -26,8 +26,13 @@ public class Version
 
     public Version(final String version)
     {
+        this(version, "\\.");
+    }
+
+    public Version(final String version, final String splitOn)
+    {
         this.version = version;
-        this.versionStrings = version.split("\\.");
+        this.versionStrings = version.split(splitOn);
         this.versionDigits = parse(versionStrings);
     }
 
