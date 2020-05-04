@@ -48,6 +48,9 @@ public class VectorTileGroup {
                 final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
 
                 // FIXME - what do we do with the ISOBAND?!
+
+                nw = ne;
+                sw = se;
             }
         }
 
@@ -66,6 +69,9 @@ public class VectorTileGroup {
                 final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
 
                 // FIXME - what do we do with the ISOBAND?!
+
+                nw = sw;
+                ne = se;
             }
         }
 
