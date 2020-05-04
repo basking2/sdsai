@@ -24,7 +24,7 @@ public class Tile {
     /**
      * Build and attach {@link IsobandContours} for all cells.
      *
-     * Note this does not define contours for the left and bottom edge as that is
+     * Note this does not define contours for the right and bottom edge as that is
      * left for tile joining.
      */
     public void isoband() {
