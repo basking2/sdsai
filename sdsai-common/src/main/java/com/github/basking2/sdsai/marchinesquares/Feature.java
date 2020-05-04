@@ -28,4 +28,11 @@ public class Feature {
         this.points = points;
         this.properties = new HashMap<>();
     }
+
+    public void translate(final int xOffset, final int yOffset) {
+        for (final Point point: points) {
+            point.x += xOffset;
+            point.y += yOffset;
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 /**
- * A side is two cell values and optionally one or two points.
+ * A side is one cell value and optionally one or two points.
  */
 public class Side {
     public byte cell;

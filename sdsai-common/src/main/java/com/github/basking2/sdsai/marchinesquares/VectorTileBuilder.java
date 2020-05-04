@@ -51,7 +51,7 @@ public class VectorTileBuilder {
                 assert featureField[i] == null;
                 featureField[i] = new LinkedList.Node[tile.contours[i].lineCount];
 
-                // A holder incase we have a side.
+                // A holder in case we have a side.
                 if (x == 0) {
                     vectorTile.left.add(new Side(tile.tile[x + y * tile.width]));
                 }

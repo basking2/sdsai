@@ -1,7 +1,5 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-import java.util.Iterator;
-
 /**
  */
 public class VectorTile {

@@ -21,6 +21,10 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
         return size;
     }
 
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     public void add(final VALUE value) {
         if (head == null) {
             tail = head = new Node(value, null);
@@ -50,6 +54,12 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
 
     public VALUE getTail() {
         return tail.value;
+    }
+
+    public VALUE removeHead() {
+        final VALUE v = head.value;
+        head = head.next;
+        return v;
     }
 
     @Override

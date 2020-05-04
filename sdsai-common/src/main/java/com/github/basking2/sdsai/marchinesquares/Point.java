@@ -1,8 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 public class Point {
-    public final int x;
-    public final int y;
+    public int x;
+    public int y;
     public final byte side;
 
     /**
