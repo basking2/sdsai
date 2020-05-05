@@ -15,7 +15,7 @@ public class Side {
      * @param point1 A point of a line.
      * @param point2 A point of a line.
      */
-    public Side(final byte cell, final byte cell2, final LinkedList.Node<Point> point1, final LinkedList.Node<Point> point2) {
+    public Side(final byte cell, final LinkedList.Node<Point> point1, final LinkedList.Node<Point> point2) {
         this.cell = cell;
         this.point1 = point1;
         this.point2 = point2;
@@ -42,5 +42,17 @@ public class Side {
         this.cell = cell;
         this.point1 = null;
         this.point2 = null;
+    }
+
+    public void addPoint(final LinkedList.Node<Point> p) {
+        if (point1 == null) {
+            point1 = p;
+        }
+        else if (point2 == null) {
+            point2 = p;
+        }
+        else {
+            throw new IllegalArgumentException("Both point slots are filled in this side.");
+        }
     }
 }
