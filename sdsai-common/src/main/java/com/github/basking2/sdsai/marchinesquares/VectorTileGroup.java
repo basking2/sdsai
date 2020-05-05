@@ -34,51 +34,62 @@ public class VectorTileGroup {
         }
 
         if (northTile != null && northTile.hasNext()) {
-            final Iterator<Side> bottomSide = northTile.next().bottom.iterator();
-            Side nw = bottomSide.next();
-
-            final Iterator<Side> topSide = eastTile.top.iterator();
-            Side sw = topSide.next();
-
-            while (bottomSide.hasNext() && topSide.hasNext()) {
-                final Side ne = bottomSide.next();
-                final Side se = topSide.next();
-
-                // Zip with the northern tile.
-                final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
-
-                // FIXME - what do we do with the ISOBAND?!
-
-                nw = ne;
-                sw = se;
-            }
+            stitchNorthSouth(northTile.next(), eastTile);
         }
 
         if (westTile != null) {
-            final Iterator<Side> rightSide = westTile.right.iterator();
-            Side nw = rightSide.next();
-
-            final Iterator<Side> leftSide = eastTile.left.iterator();
-            Side ne = leftSide.next();
-
-            while (leftSide.hasNext() && rightSide.hasNext()) {
-                final Side sw = rightSide.next();
-                final Side se = leftSide.next();
-
-                // Zip with the northern tile.
-                final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
-
-                // FIXME - what do we do with the ISOBAND?!
-
-                nw = sw;
-                ne = se;
-            }
+            stitcheWestEast(westTile, eastTile);
         }
 
         // The last thing we do is add the east tile to the current row list and make it the western tile.
         currentRow.add(eastTile);
         this.xOffset += eastTile.top.size();
         this.westTile = eastTile;
+    }
+
+    void stitcheWestEast(final VectorTile westTile, final VectorTile eastTile) {
+        final Iterator<Side> rightSide = westTile.right.iterator();
+        Side nw = rightSide.next();
+
+        final Iterator<Side> leftSide = eastTile.left.iterator();
+        Side ne = leftSide.next();
+
+        while (leftSide.hasNext() && rightSide.hasNext()) {
+            final Side sw = rightSide.next();
+            final Side se = leftSide.next();
+
+            // Zip with the northern tile.
+            final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
+
+            // FIXME - what do we do with the ISOBAND?!
+
+            nw = sw;
+            ne = se;
+        }
+    }
+
+    void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
+        final Iterator<Side> bottomSide = northTile.bottom.iterator();
+        Side nw = bottomSide.next();
+
+        final Iterator<Side> topSide = southTile.top.iterator();
+        Side sw = topSide.next();
+
+        while (bottomSide.hasNext() && topSide.hasNext()) {
+            final Side ne = bottomSide.next();
+            final Side se = topSide.next();
+
+            // Zip with the northern tile.
+            final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
+
+            // FIXME - what do we do with the ISOBAND?!
+            for (int linei = 0; linei < iso.lineCount; linei++) {
+
+            }
+
+            nw = ne;
+            sw = se;
+        }
     }
 
     public void addNewRow(final VectorTile newTile) {
