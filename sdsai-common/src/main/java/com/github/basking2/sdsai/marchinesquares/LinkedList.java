@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.awt.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -82,6 +83,19 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
         }
     }
 
+    public static class LabeledNode<VALUE> extends Node<VALUE> {
+        public String label = null;
+
+        public LabeledNode(final VALUE value, final Node<VALUE> next) {
+            super(value, next);
+        }
+
+        @Override
+        public String toString() {
+            return label + " " + super.toString();
+        }
+    }
+
     public static class Node<VALUE> implements Iterable<VALUE> {
         public VALUE value;
         public Node<VALUE> next;
@@ -94,6 +108,7 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
          * The color of the node has no impact how how functions of this class operate.
          */
         public byte color;
+
 
         public Node(final VALUE value, final Node<VALUE> next) {
             this.value = value;
@@ -128,6 +143,12 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
                     return v;
                 }
             };
+        }
+
+        @Override
+        public String toString() {
+            return "" + value + " color " + color + ((next == null) ? " no next ":"has next")
+                    ;
         }
     }
 }

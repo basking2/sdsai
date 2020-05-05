@@ -1,14 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-public class VectorTileBuilder {
+import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
 
-    /**
-     * Whe the tile is built point colors are initially 0.
-     * When we detect loops to build polygons we set those values to COLLECT_COLOR.
-     * When tiles are zipped together, another color should be used to detect when connecting a tile completes a
-     * loop and reset otherwise..
-     */
-    public static final byte COLLECT_COLOR = 1;
+public class VectorTileBuilder {
 
     private final Tile tile;
     private final int HEIGHT;
@@ -183,12 +177,8 @@ public class VectorTileBuilder {
         vectorTile.left.add(new Side(tile.tile[tile.tile.length - tile.width]));
         vectorTile.right.add(new Side(tile.tile[tile.tile.length - 1]));
 
-
         collectPolygons();
 
-        for (final Side s : vectorTile.bottom) {
-            System.err.println("BOT SIDE: "+s.toString());
-        }
         return vectorTile;
     }
 

@@ -1,8 +1,13 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import org.omg.CORBA.TRANSACTION_UNAVAILABLE;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
+import static com.github.basking2.sdsai.marchinesquares.Colors.STITCH_COLOR;
 
 /**
  * A vector tile group connects many {@link Tile} objects so they may be
@@ -204,38 +209,72 @@ public class VectorTileGroup {
         final LinkedList.Node<Point> nextPoint;
         if (end.point1 == null) {
             // If there are no points, make one and use it.
-            nextPoint = end.point1 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), null);
+            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
+            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 1.";
+            end.point1 = nextPoint;
         }
         else if (end.point1.next != null) {
+            // Point1 points into feature.
             nextPoint = end.point1;
+        }
+        else if (end.point1.color == 0) {
+            // Point1 has NEVER been visited! We should use it.
+            nextPoint = end.point1;
+            // Never translated. Translate this.
+            nextPoint.value.x =+ xOffset;
+            nextPoint.value.y =+ yOffset;
         }
         else if (end.point2 == null) {
             // If there are no points, make one and use it.
-            nextPoint = end.point2 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), null);
+            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
+            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 2.";
+            end.point2 = nextPoint;
         }
         else if (end.point2.next != null) {
             nextPoint = end.point2;
+        }
+        else if (end.point2.color == 0) {
+            // Point2 has NEVER been visited! We should use it.
+            nextPoint = end.point2;
+            // Never translated. Translate this.
+            nextPoint.value.x =+ xOffset;
+            nextPoint.value.y =+ yOffset;
         }
         else {
             throw new IllegalStateException("End Side does not have a connected out-point to link to.");
         }
 
-
+        final LinkedList.Node<Point> originPoint;
         if (start.point1 == null) {
-            //start.point1 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), nextPoint);
+            originPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), nextPoint);
+            ((LinkedList.LabeledNode<Point>)originPoint).label = "Made here 3.";
+            originPoint.color = COLLECT_COLOR;
+            start.point1 = originPoint;
         }
         else if (start.point1.next == null) {
-            //start.point1.next = nextPoint;
+            originPoint = start.point1;
         }
         else if (start.point2 == null) {
-            //start.point2 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), nextPoint);
+            originPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), nextPoint);
+            ((LinkedList.LabeledNode<Point>)originPoint).label = "Made here 4.";
+            originPoint.color = COLLECT_COLOR;
+            start.point2 = originPoint;
         }
         else if (start.point2.next == null) {
-            //start.point2.next = nextPoint;
+            originPoint = start.point2;
         }
         else {
             throw new IllegalStateException("Start Side does not have an unconnected point to link.");
         }
+
+        if (originPoint.color == 0) {
+            originPoint.color = COLLECT_COLOR;
+            originPoint.value.x += xOffset;
+            originPoint.value.y += yOffset;
+        }
+
+        nextPoint.color = COLLECT_COLOR;
+        originPoint.next = nextPoint;
     }
 
     public void addNewRow(final VectorTile newTile) {
