@@ -55,4 +55,17 @@ public class Side {
             throw new IllegalArgumentException("Both point slots are filled in this side.");
         }
     }
+
+    @Override
+    public String toString() {
+        String s = "" + cell + " ";
+        if (point1 != null) {
+            s += "point1 "+point1.value;
+        }
+        if (point2 != null) {
+            s += "point2 "+point1.value;
+        }
+
+        return s;
+    }
 }

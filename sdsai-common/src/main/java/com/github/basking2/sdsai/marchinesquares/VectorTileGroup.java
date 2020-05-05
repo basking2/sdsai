@@ -53,6 +53,14 @@ public class VectorTileGroup {
         this.northWestPoint = null;
     }
 
+    public VectorTileGroup() {
+        this.northTiles = null;
+        this.westTile = null;
+        this.tile = new VectorTile();
+        this.currentRow = new LinkedList<>();
+        this.northWestPoint = null;
+    }
+
     public void addEast(final VectorTile eastTile) {
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
@@ -80,7 +88,7 @@ public class VectorTileGroup {
         // Record this tile for a call to addNewRow().
         this.currentRow.add(eastTile);
 
-        // The xOffset has permenantly changed.
+        // The xOffset has permanently changed.
         this.xOffset += eastTile.top.size();
 
         // The one stored west tile is updated.
@@ -99,7 +107,6 @@ public class VectorTileGroup {
             nw = northWestPoint;
             ne = northTile.left.getTail();
         } else {
-            xOffset++;
             nw = rightSide.next();
             ne = leftSide.next();
             yOffset++;
@@ -214,31 +221,20 @@ public class VectorTileGroup {
         }
 
 
-        if (start.point1 != null && start.point1.next == null) {
-            start.point1.next = nextPoint;
+        if (start.point1 == null) {
+            //start.point1 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), nextPoint);
         }
-        else if (start.point2 != null && start.point2.next == null) {
-            start.point2.next = nextPoint;
+        else if (start.point1.next == null) {
+            //start.point1.next = nextPoint;
+        }
+        else if (start.point2 == null) {
+            //start.point2 = new LinkedList.Node<>(new Point(xOffset, yOffset, pointSide), nextPoint);
+        }
+        else if (start.point2.next == null) {
+            //start.point2.next = nextPoint;
         }
         else {
             throw new IllegalStateException("Start Side does not have an unconnected point to link.");
-        }
-    }
-
-    /**
-     * When this is called, it is anticipated that any Side passed to this shall have at most 1 point with a free next pointer.
-     * @param side The side to inspect.
-     * @return The point node that has a free next node.
-     */
-    private LinkedList.Node<Point> getOrigin(final Side side) {
-        if (side.point1 == null) {
-            return side.point1;
-        }
-        else if (side.point2 == null) {
-            return side.point2;
-        }
-        else {
-            throw new IllegalStateException("After linking contours but before stitching tiles, two edge points both have next points.");
         }
     }
 
@@ -253,4 +249,14 @@ public class VectorTileGroup {
         addEast(newTile);
     }
 
+    public void addNewRow() {
+        // Drop to a new row.
+        if (westTile != null) {
+            this.yOffset += westTile.right.size();
+        }
+        this.xOffset = 0;
+        this.northTiles = this.currentRow.iterator();
+        this.northWestPoint = null;
+        this.westTile = null;
+    }
 }

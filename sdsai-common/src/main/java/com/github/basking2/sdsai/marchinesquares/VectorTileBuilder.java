@@ -183,8 +183,12 @@ public class VectorTileBuilder {
         vectorTile.left.add(new Side(tile.tile[tile.tile.length - tile.width]));
         vectorTile.right.add(new Side(tile.tile[tile.tile.length - 1]));
 
+
         collectPolygons();
 
+        for (final Side s : vectorTile.bottom) {
+            System.err.println("BOT SIDE: "+s.toString());
+        }
         return vectorTile;
     }
 
