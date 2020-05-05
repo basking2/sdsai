@@ -177,6 +177,7 @@ public class VectorTileBuilder {
         }
 
         // Put the last side values in place.
+        // NOTE: These do not have next points because those reside in future tiles.
         vectorTile.top.add(new Side(tile.tile[tile.width-1]));
         vectorTile.bottom.add(new Side(tile.tile[tile.tile.length - 1]));
         vectorTile.left.add(new Side(tile.tile[tile.tile.length - tile.width]));

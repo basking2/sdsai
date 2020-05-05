@@ -12,20 +12,45 @@ import java.util.List;
  */
 public class VectorTileGroup {
 
+    /**
+     * The first tile added. It is assumed all features will eventually be reachable through this.
+     */
     final private VectorTile tile;
 
-    private Iterator<VectorTile> northTile;
-    private LinkedList<VectorTile> currentRow;
+    /**
+     * Null or an iteration of the previous row.
+     */
+    private Iterator<VectorTile> northTiles;
+
+    /**
+     * Nyll or the last tile passed to {@link #addEast(VectorTile)} or {@link #addNewRow(VectorTile)}.
+     */
     private VectorTile westTile;
+
+    /**
+     * The south-east point of the previous tile added.
+     *
+     * This is cleared by calls to {@link #addNewRow(VectorTile)}.
+     */
+    private Side nortWestPoint;
+
+    /**
+     * Accumulates tiles passed to {@link #addEast(VectorTile)} or {@link #addNewRow(VectorTile)}.
+     *
+     * When {@link #addNewRow(VectorTile)} is called this is set to {@link #northTiles} and this is replaced
+     * with a new list.
+     */
+    private LinkedList<VectorTile> currentRow;
     private int xOffset = 0;
     private int yOffset = 0;
 
     public VectorTileGroup(final VectorTile vectorTile) {
-        this.northTile = null;
+        this.northTiles = null;
         this.westTile = null;
         this.tile = vectorTile;
         this.currentRow = new LinkedList<>();
         this.currentRow.add(vectorTile);
+        this.nortWestPoint = null;
     }
 
     public void addEast(final VectorTile eastTile) {
@@ -33,21 +58,22 @@ public class VectorTileGroup {
             feature.translate(xOffset, yOffset);
         }
 
-        if (northTile != null && northTile.hasNext()) {
-            stitchNorthSouth(northTile.next(), eastTile);
+        if (northTiles != null && northTiles.hasNext()) {
+            stitchNorthSouth(northTiles.next(), eastTile);
         }
 
         if (westTile != null) {
-            stitcheWestEast(westTile, eastTile);
+            stitchWestEast(westTile, eastTile);
         }
 
         // The last thing we do is add the east tile to the current row list and make it the western tile.
-        currentRow.add(eastTile);
+        this.currentRow.add(eastTile);
         this.xOffset += eastTile.top.size();
         this.westTile = eastTile;
+        this.nortWestPoint = eastTile.bottom.getTail();
     }
 
-    void stitcheWestEast(final VectorTile westTile, final VectorTile eastTile) {
+    void stitchWestEast(final VectorTile westTile, final VectorTile eastTile) {
         final Iterator<Side> rightSide = westTile.right.iterator();
         Side nw = rightSide.next();
 
@@ -60,6 +86,10 @@ public class VectorTileGroup {
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours( new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
+
+            for (int i = 0; i < iso.lineCount; i++) {
+
+            }
 
             // FIXME - what do we do with the ISOBAND?!
 
@@ -94,7 +124,8 @@ public class VectorTileGroup {
 
     public void addNewRow(final VectorTile newTile) {
         // Drop to a new row.
-        this.northTile = this.currentRow.iterator();
+        this.northTiles = this.currentRow.iterator();
+        this.nortWestPoint = null;
         this.westTile = null;
         this.xOffset = 0;
         this.yOffset += newTile.left.size();
