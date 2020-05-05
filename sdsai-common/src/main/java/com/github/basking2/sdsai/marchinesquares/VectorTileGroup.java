@@ -117,12 +117,12 @@ public class VectorTileGroup {
             yOffset++;
         }
 
-        Side northSide = new Side((byte)64); // Side with a bogus value. This only holds points.
-        Side southSide = new Side((byte)64); // Side with a bogus value. This only holds points.
+        Side northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)0, nw.cell, ne.cell);
 
         while (leftSide.hasNext() && rightSide.hasNext()) {
             final Side sw = rightSide.next();
             final Side se = leftSide.next();
+            final Side southSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, sw.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
@@ -138,7 +138,7 @@ public class VectorTileGroup {
             nw = sw;
             ne = se;
             northSide = southSide;
-            southSide = new Side((byte)64); // New east side with same bogus value.
+            northSide.cell = (byte)0;
             yOffset++;
         }
 
@@ -164,12 +164,12 @@ public class VectorTileGroup {
             xOffset++;
         }
 
-        Side eastSide = new Side((byte)64); // Side with a bogus value. This only holds points.
-        Side westSide = new Side((byte)64); // Side with a bogus value. This only holds points.
+        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, nw.cell, sw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
             final Side ne = bottomSide.next();
             final Side se = topSide.next();
+            final Side eastSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
@@ -185,7 +185,7 @@ public class VectorTileGroup {
             nw = ne;
             sw = se;
             westSide = eastSide;
-            eastSide = new Side((byte)64); // New east side with same bogus value.
+            westSide.cell = (byte)3;
             xOffset++;
         }
 
@@ -207,41 +207,30 @@ public class VectorTileGroup {
     private void connectSides(final Side start, final Side end, byte pointSide) {
 
         final LinkedList.Node<Point> nextPoint;
-        if (end.point1 == null) {
-            // If there are no points, make one and use it.
-            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
-            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 1.";
-            end.point1 = nextPoint;
+        if (end.point2 == null) {
+            // No second point. Easy.
+            if (end.point1 == null) {
+                throw new IllegalStateException("No linkable points.");
+            }
+            else {
+                nextPoint = end.point1;
+            }
         }
-        else if (end.point1.next != null) {
-            // Point1 points into feature.
-            nextPoint = end.point1;
-        }
-        else if (end.point1.color == 0) {
-            // Point1 has NEVER been visited! We should use it.
-            nextPoint = end.point1;
-            // Never translated. Translate this.
-            nextPoint.value.x =+ xOffset;
-            nextPoint.value.y =+ yOffset;
-        }
-        else if (end.point2 == null) {
-            // If there are no points, make one and use it.
-            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
-            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 2.";
-            end.point2 = nextPoint;
-        }
-        else if (end.point2.next != null) {
-            nextPoint = end.point2;
-        }
-        else if (end.point2.color == 0) {
-            // Point2 has NEVER been visited! We should use it.
-            nextPoint = end.point2;
-            // Never translated. Translate this.
-            nextPoint.value.x =+ xOffset;
-            nextPoint.value.y =+ yOffset;
-        }
-        else {
-            throw new IllegalStateException("End Side does not have a connected out-point to link to.");
+        else if (end.point1 == null) {
+            // Sanity check.
+            throw new IllegalStateException("No point to link against.");
+        } else {
+            // There are two points. Choose the best one.
+
+            if (end.point1.next != null && end.point2.next == null) {
+                nextPoint = end.point1;
+            }
+            else if (end.point1.next == null && end.point2.next != null) {
+                nextPoint = end.point2;
+            }
+            else {
+                throw new IllegalStateException("Both points are unlinked? This is unexpected.");
+            }
         }
 
         final LinkedList.Node<Point> originPoint;

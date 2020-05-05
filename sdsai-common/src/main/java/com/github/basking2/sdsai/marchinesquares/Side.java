@@ -8,6 +8,8 @@ public class Side {
     public LinkedList.Node<Point> point1;
     public LinkedList.Node<Point> point2;
 
+    public static byte BOGUS_VALUE = (byte)64;
+
     /**
      * Constructor.
      *
@@ -67,5 +69,34 @@ public class Side {
         }
 
         return s;
+    }
+
+    public static Side buildArtificialSide(final int x, final int y, final byte side, final byte value1, final byte value2) {
+       if (value1 == value2) {
+           // No sides.
+           return new Side((byte)64);
+       }
+       else if (value1 == 0) {
+           // One side.
+           return new Side(
+                   BOGUS_VALUE,
+                   new LinkedList.Node<Point>(new Point(x, y, side), null)
+           );
+       }
+       else if (value2 == 0) {
+           // One side.
+           return new Side(
+                   BOGUS_VALUE,
+                   new LinkedList.Node<Point>(new Point(x, y, side), null)
+           );
+       }
+       else {
+           // Two sides. Value 1 and 2 are different and neither is 0.
+           return new Side(
+                   BOGUS_VALUE,
+                   new LinkedList.Node<Point>(new Point(x, y, side), null),
+                   new LinkedList.Node<Point>(new Point(x, y, side), null)
+           );
+       }
     }
 }
