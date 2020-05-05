@@ -34,6 +34,7 @@ public class VectorTileBuilder {
      *
      * The tile should have had {@link Tile#isoband()} run on it already.
      *
+     *
      * @return A built vector tile.
      * @throws RuntimeException on errors that prevent object construction.
      */
@@ -76,14 +77,17 @@ public class VectorTileBuilder {
                     final byte lineBegin = tile.contours[i].lines[j * 2];
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
 
-                    final LinkedList.Node<Point> p = new LinkedList.Node(new Point(x, y, lineEnd), null);
-                    featureField[i][j] = p;
+                    final LinkedList.LabeledNode<Point> pBegin = new LinkedList.LabeledNode(new Point(x, y, lineBegin), null);
+                    final LinkedList.LabeledNode<Point> pEnd = new LinkedList.LabeledNode(new Point(x, y, lineEnd), null);
+                    pBegin.label = "Beginning";
+                    pEnd.label = "Ending";
+                    featureField[i][j] = pEnd;
 
                     // Handle where lines end in this square.
                     // We check the above and left squares for in-bound lines to us.
                     if (lineEnd == 3) {
                         if (x == 0) {
-                            vectorTile.left.getTail().point1 = p;
+                            vectorTile.left.getTail().point1 = pEnd;
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2] == 1) {
@@ -94,10 +98,10 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (x == WIDTH - 1 && lineEnd == 1) {
-                        vectorTile.right.getTail().point1 = p;
+                        vectorTile.right.getTail().point1 = pEnd;
                     } else if (lineEnd == 0) {
                         if (y == 0) {
-                            vectorTile.top.getTail().point1 = p;
+                            vectorTile.top.getTail().point1 = pEnd;
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2] == 2) {
@@ -108,7 +112,7 @@ public class VectorTileBuilder {
                             }
                         }
                     } else if (y == HEIGHT - 1 && lineEnd == 2) {
-                        vectorTile.bottom.getTail().point1 = p;
+                        vectorTile.bottom.getTail().point1 = pEnd;
                     }
 
                     // Handle where lines begin in this square.
@@ -116,12 +120,7 @@ public class VectorTileBuilder {
                     if (lineBegin == 3) {
                         if (x == 0) {
                             final Side s = vectorTile.left.getTail();
-                            if (s.point1 == null) {
-                                s.point1 = p;
-                            }
-                            else {
-                                s.point2 = p;
-                            }
+                            s.addPoint(pBegin);
                         } else {
                             for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
                                 if (tile.contours[i - 1].lines[k * 2 + 1] == 1) {
@@ -133,21 +132,11 @@ public class VectorTileBuilder {
                         }
                     } else if (x == WIDTH - 1 && lineBegin == 1) {
                         final Side s = vectorTile.right.getTail();
-                        if (s.point1 == null) {
-                            s.point1 = p;
-                        }
-                        else {
-                            s.point2 = p;
-                        }
+                        s.addPoint(pBegin);
                     } else if (lineBegin == 0) {
                         if (y == 0) {
                             final Side s = vectorTile.top.getTail();
-                            if (s.point1 == null) {
-                                s.point1 = p;
-                            }
-                            else {
-                                s.point2 = p;
-                            }
+                            s.addPoint(pBegin);
                         } else {
                             for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
                                 if (tile.contours[i - WIDTH].lines[k * 2 + 1] == 2) {
@@ -159,12 +148,7 @@ public class VectorTileBuilder {
                         }
                     } else if (y == HEIGHT - 1 && lineBegin == 2) {
                         final Side s = vectorTile.bottom.getTail();
-                        if (s.point1 == null) {
-                            s.point1 = p;
-                        }
-                        else {
-                            s.point2 = p;
-                        }
+                        s.addPoint(pBegin);
                     }
                 }
             }

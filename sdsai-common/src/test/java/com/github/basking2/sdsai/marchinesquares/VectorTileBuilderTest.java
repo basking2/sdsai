@@ -45,8 +45,8 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(1->0)(0->1)", t.contours[2].toString());
         Assert.assertEquals("(0->3)(3->0)", t.contours[3].toString());
 
-        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
-        //final VectorTile vectorTile = vtb.build();
+        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTile vectorTile = vtb.build();
     }
 
     @Test
@@ -66,8 +66,8 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(0->1)", t.contours[2].toString());
         Assert.assertEquals("(3->0)", t.contours[3].toString());
 
-        //final VectorTileBuilder vtb = new VectorTileBuilder(t);
-        //final VectorTile vectorTile = vtb.build();
+        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTile vectorTile = vtb.build();
     }
 
     @Test
@@ -87,8 +87,8 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(1->0)", t.contours[2].toString());
         Assert.assertEquals("(0->3)", t.contours[3].toString());
 
-        // final VectorTileBuilder vtb = new VectorTileBuilder(t);
-        // final VectorTile vectorTile = vtb.build();
+         final VectorTileBuilder vtb = new VectorTileBuilder(t);
+         final VectorTile vectorTile = vtb.build();
 
     }
 }
