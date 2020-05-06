@@ -38,7 +38,24 @@ public class VectorTileGroupTest {
             vectorTileGroup.addNewRow();
         }
 
-
     }
 
+    @Test
+    public void basicBuild2() {
+        final VectorTile[][] map = new VectorTile[][]{
+                {buildTile(100, 100), buildTile(100, 100), buildTile(100, 100)},
+                {buildTile(100, 100), buildTile(100, 100), buildTile(100, 100)},
+                {buildTile(100, 100), buildTile(100, 100), buildTile(100, 100)},
+        };
+
+        final VectorTileGroup vectorTileGroup = new VectorTileGroup();
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                vectorTileGroup.addEast(map[i][j]);
+            }
+            vectorTileGroup.addNewRow();
+        }
+
+    }
 }

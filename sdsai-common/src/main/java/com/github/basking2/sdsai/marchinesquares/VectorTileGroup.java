@@ -172,7 +172,8 @@ public class VectorTileGroup {
             final Side eastSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
 
             // Zip with the northern tile.
-            final IsobandContours iso = new IsobandContours(new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
+            final byte[] cells = new byte[]{nw.cell, ne.cell, se.cell, sw.cell};
+            final IsobandContours iso = new IsobandContours(cells);
 
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
@@ -208,10 +209,14 @@ public class VectorTileGroup {
 
         final LinkedList.Node<Point> nextPoint;
         if (end.point1 == null) {
-            throw new IllegalStateException("Point1 is null.");
+            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
+            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 1.";
+            nextPoint.color = COLLECT_COLOR;
+            end.point1 = nextPoint;
         }
-
-        nextPoint = end.point1;
+        else {
+            nextPoint = end.point1;
+        }
 
         final LinkedList.Node<Point> originPoint;
         if (start.point1 == null) {
