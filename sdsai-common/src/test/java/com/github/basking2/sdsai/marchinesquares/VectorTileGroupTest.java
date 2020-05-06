@@ -56,6 +56,7 @@ public class VectorTileGroupTest {
         };
 
         final VectorTileGroup vectorTileGroup = new VectorTileGroup();
+        vectorTileGroup.setStitchTiles(true);
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -78,8 +79,8 @@ public class VectorTileGroupTest {
             });
         });
 
-        int width = dims[0];
-        int height = dims[1];
+        float width = dims[0];
+        float height = dims[1];
 
         final StringBuilder sb = new StringBuilder();
         sb.append("{\n");
@@ -95,8 +96,8 @@ public class VectorTileGroupTest {
 
             sb.append("\"coordinates\": [ [ \n ");
             for (final Point p : f.points) {
-                float x = p.x * 360 / width - 180;
-                float y = p.y * 180 / height - 90;
+                float x = p.x * 360f / width - 180f;
+                float y = -(p.y * 180f / height - 90f);
                 if (!Float.isNaN(x) && !Float.isNaN(y)) {
                     sb.append("[")
                             .append(x)

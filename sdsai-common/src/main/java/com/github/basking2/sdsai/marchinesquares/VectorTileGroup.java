@@ -12,6 +12,8 @@ import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
  */
 public class VectorTileGroup {
 
+    private boolean stitchTiles = true;
+
     /**
      * The first tile added. It is assumed all features will eventually be reachable through this.
      */
@@ -67,23 +69,23 @@ public class VectorTileGroup {
             tile.features.add(feature);
         }
 
-        final VectorTile northTile;
+        if (stitchTiles) {
+            final VectorTile northTile;
+            if (northTiles != null && northTiles.hasNext()) {
+                northTile = northTiles.next();
+                stitchNorthSouth(northTile, eastTile);
+            } else {
+                northTile = null;
+            }
 
-        if (northTiles != null && northTiles.hasNext()) {
-            northTile = northTiles.next();
-            stitchNorthSouth(northTile, eastTile);
-        }
-        else {
-            northTile = null;
-        }
+            if (westTile != null) {
+                stitchWestEast(westTile, eastTile, northTile);
+            }
 
-        if (westTile != null) {
-            stitchWestEast(westTile, eastTile, northTile);
-        }
-
-        if (northTile != null) {
-            // Conditionally set the north-west point for a future tile.
-            northWestPoint = northTile.bottom.getTail();
+            if (northTile != null) {
+                // Conditionally set the north-west point for a future tile.
+                northWestPoint = northTile.bottom.getTail();
+            }
         }
 
         // Record this tile for a call to addNewRow().
@@ -271,5 +273,9 @@ public class VectorTileGroup {
 
     public VectorTile getVectorTile() {
         return tile;
+    }
+
+    public void setStitchTiles(final boolean stitchTiles) {
+        this.stitchTiles = stitchTiles;
     }
 }
