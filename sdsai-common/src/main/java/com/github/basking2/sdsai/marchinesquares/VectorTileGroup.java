@@ -208,32 +208,10 @@ public class VectorTileGroup {
 
         final LinkedList.Node<Point> nextPoint;
         if (end.point1 == null) {
-            nextPoint = new LinkedList.LabeledNode<Point>(new Point(xOffset, yOffset, pointSide), null);
-            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Make 1";
-            end.point1 = nextPoint;
+            throw new IllegalStateException("Point1 is null.");
         }
-        else if (end.point1.color == 0) {
-            // Point 1 was never touched.
-            nextPoint = end.point1;
-        }
-        else if (end.point1.next != null) {
-            // Point 1 is an out with a link!
-            nextPoint = end.point1;
-        }
-        else if (end.point2 == null) {
-            nextPoint = new LinkedList.LabeledNode<Point>(new Point(xOffset, yOffset, pointSide), null);
-            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Make 2";
-            end.point2 = nextPoint;
-        }
-        else if (end.point2.color == 0) {
-            nextPoint = end.point2;
-        }
-        else if (end.point2.next != null) {
-            nextPoint = end.point2;
-        }
-        else {
-            throw new IllegalStateException("No diea.");
-        }
+
+        nextPoint = end.point1;
 
         final LinkedList.Node<Point> originPoint;
         if (start.point1 == null) {
