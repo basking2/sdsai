@@ -37,18 +37,38 @@ public class IsobandContours {
      *
      * @param pointValues A 4-element array of values -1, 0, or 1.
      */
-    public IsobandContours(final byte[] pointValues) {
+    public static IsobandContours build(final byte[] pointValues) {
         if (pointValues.length != 4) {
             throw new IllegalArgumentException("The pointValues array must be 4 elements long.");
         }
+        return new IsobandContours(pointValues[0], pointValues[1], pointValues[2], pointValues[3]);
+    }
 
-        switch (pointValues[0]) {
+
+    /**
+     * Create a contour given the 4-element array of point values.
+     *
+     * Point values may be -1, 0, or 1 denoting that a corner of the square is
+     * below, at, or above the threshold. The 4-value array is used
+     * to populate the {@link #lines} member of this class with line segments.
+     *
+     * The order of the points, starting at index 0 are top-left, top-right, bottom-right, bottom-left.
+     * That is, they proceed around the square in a clockwise manner.
+     *
+     *
+     * @param p1 The north-west point.
+     * @param p2 The north-east pont.
+     * @param p3 The south-east point.
+     * @param p4 The sout-west point.
+     */
+    public IsobandContours(final byte p1, final byte p2, final byte p3, final byte p4) {
+        switch (p1) {
             case -1:
-                switch (pointValues[1]) {
+                switch (p2) {
                     case -1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1 -1 All below. No contours.
                                         // -1 -1
@@ -72,7 +92,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1 -1
                                         // -1  0
@@ -96,7 +116,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1 -1
                                         // -1  1
@@ -124,9 +144,9 @@ public class IsobandContours {
                         }
                         break;
                     case 0:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  0
                                         // -1 -1
@@ -150,7 +170,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  0
                                         // -1  0
@@ -174,7 +194,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  0
                                         // -1  1
@@ -202,9 +222,9 @@ public class IsobandContours {
                         }
                         break;
                     case 1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  1
                                         // -1 -1
@@ -228,7 +248,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  1
                                         // -1  0
@@ -252,7 +272,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         // -1  1
                                         // -1  1
@@ -284,11 +304,11 @@ public class IsobandContours {
                 }
                 break;
             case 0:
-                switch (pointValues[1]) {
+                switch (p2) {
                     case -1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0 -1
                                         // -1 -1
@@ -312,7 +332,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0 -1
                                         // -1  0
@@ -336,7 +356,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0 -1
                                         // -1  1
@@ -364,9 +384,9 @@ public class IsobandContours {
                         }
                         break;
                     case 0:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  0
                                         // -1 -1
@@ -390,7 +410,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  0
                                         // -1  0
@@ -414,7 +434,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  0
                                         // -1  1
@@ -442,9 +462,9 @@ public class IsobandContours {
                         }
                         break;
                     case 1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  1
                                         // -1 -1
@@ -468,7 +488,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  1
                                         // -1  0
@@ -492,7 +512,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  0  1
                                         // -1  1
@@ -524,11 +544,11 @@ public class IsobandContours {
                 }
                 break;
             case 1:
-                switch (pointValues[1]) {
+                switch (p2) {
                     case -1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1 -1
                                         // -1 -1
@@ -552,7 +572,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1 -1
                                         // -1  0
@@ -576,7 +596,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1 -1
                                         // -1  1
@@ -604,9 +624,9 @@ public class IsobandContours {
                         }
                         break;
                     case 0:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  0
                                         // -1 -1
@@ -630,7 +650,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  0
                                         // -1  0
@@ -654,7 +674,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  0
                                         // -1  1
@@ -682,9 +702,9 @@ public class IsobandContours {
                         }
                         break;
                     case 1:
-                        switch (pointValues[2]) {
+                        switch (p3) {
                             case -1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  1
                                         // -1 -1
@@ -708,7 +728,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 0:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  1
                                         // -1  0
@@ -732,7 +752,7 @@ public class IsobandContours {
                                 }
                                 break;
                             case 1:
-                                switch (pointValues[3]) {
+                                switch (p4) {
                                     case -1:
                                         //  1  1
                                         // -1  1

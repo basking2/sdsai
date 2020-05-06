@@ -123,7 +123,7 @@ public class VectorTileGroup {
             final Side southSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, sw.cell, se.cell);
 
             // Zip with the northern tile.
-            final IsobandContours iso = new IsobandContours(new byte[]{nw.cell, ne.cell, se.cell, sw.cell});
+            final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
 
             final Side[] sides = new Side[]{ northSide, ne, southSide, nw };
 
@@ -170,8 +170,7 @@ public class VectorTileGroup {
             final Side eastSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
 
             // Zip with the northern tile.
-            final byte[] cells = new byte[]{nw.cell, ne.cell, se.cell, sw.cell};
-            final IsobandContours iso = new IsobandContours(cells);
+            final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
 
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 

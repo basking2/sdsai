@@ -34,12 +34,12 @@ public class Tile {
         // Populate the contours array.
         for (int h = 0; h < H; h++) {
             for (int w = 0; w < W; w++) {
-                this.contours[h * W + w] = new IsobandContours(new byte[]{
+                this.contours[h * W + w] = new IsobandContours(
                         tile[h * width + w],
                         tile[h * width + w + 1],
                         tile[h * width + width + w + 1],
-                        tile[h * width + width + w],
-                });
+                        tile[h * width + width + w]
+                );
             }
         }
     }
