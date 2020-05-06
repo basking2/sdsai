@@ -23,8 +23,4 @@ public class Colors {
      */
     public static final byte COLLECT_COLOR = 1;
 
-    /**
-     * When walking points we can encounter loops. This marks a point as being in a Feature that is in a list.
-     */
-    public static final byte STITCH_COLOR = 2;
 }

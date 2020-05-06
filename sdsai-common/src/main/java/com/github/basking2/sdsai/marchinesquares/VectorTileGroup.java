@@ -1,13 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.omg.CORBA.TRANSACTION_UNAVAILABLE;
-
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
-import static com.github.basking2.sdsai.marchinesquares.Colors.STITCH_COLOR;
 
 /**
  * A vector tile group connects many {@link Tile} objects so they may be
@@ -69,6 +64,7 @@ public class VectorTileGroup {
     public void addEast(final VectorTile eastTile) {
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
+            tile.features.add(feature);
         }
 
         final VectorTile northTile;
@@ -271,5 +267,9 @@ public class VectorTileGroup {
         this.northTiles = this.currentRow.iterator();
         this.northWestPoint = null;
         this.westTile = null;
+    }
+
+    public VectorTile getVectorTile() {
+        return tile;
     }
 }
