@@ -1,14 +1,10 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class VectorTileGroupTest {
 
@@ -65,7 +61,7 @@ public class VectorTileGroupTest {
             vectorTileGroup.addNewRow();
         }
 
-        final int[] dims = new int[]{ 0, 0 };
+        final double[] dims = new double[]{ 0, 0 };
 
         vectorTileGroup.getVectorTile().features.forEach(f -> {
             f.points.forEach(p -> {
@@ -79,8 +75,8 @@ public class VectorTileGroupTest {
             });
         });
 
-        float width = dims[0];
-        float height = dims[1];
+        double width = dims[0];
+        double height = dims[1];
 
         final StringBuilder sb = new StringBuilder();
         sb.append("{\n");
@@ -96,9 +92,9 @@ public class VectorTileGroupTest {
 
             sb.append("\"coordinates\": [ [ \n ");
             for (final Point p : f.points) {
-                float x = p.x * 360f / width - 180f;
-                float y = -(p.y * 180f / height - 90f);
-                if (!Float.isNaN(x) && !Float.isNaN(y)) {
+                double x = p.x * 360f / width - 180f;
+                double y = -(p.y * 180f / height - 90f);
+                if (!Double.isNaN(x) && !Double.isNaN(y)) {
                     sb.append("[")
                             .append(x)
                             .append(",")

@@ -1,8 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 public class Point {
-    public int x;
-    public int y;
+    public double x;
+    public double y;
     public final byte side;
 
     /**
@@ -16,7 +16,7 @@ public class Point {
      * @param y The y location of the point.
      * @param side The side (0-3) that the point is on.
      */
-    public Point(final int x, final int y, final byte side) {
+    public Point(final double x, final double y, final byte side) {
         this.x = x;
         this.y = y;
         this.side = side;
@@ -24,6 +24,6 @@ public class Point {
 
     @Override
     public String toString() {
-        return String.format("(%d, %d)-%d", x, y, side);
+        return String.format("(%f, %f)-%d", x, y, side);
     }
 }

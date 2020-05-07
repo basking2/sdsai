@@ -77,8 +77,8 @@ public class VectorTileBuilder {
                     final byte lineBegin = tile.contours[i].lines[j * 2];
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
 
-                    final LinkedList.LabeledNode<Point> pBegin = new LinkedList.LabeledNode(new Point(x, y, lineBegin), null);
-                    final LinkedList.LabeledNode<Point> pEnd = new LinkedList.LabeledNode(new Point(x, y, lineEnd), null);
+                    final LinkedList.LabeledNode<Point> pBegin = buildPointLineNode(x, y, lineBegin);
+                    final LinkedList.LabeledNode<Point> pEnd = buildPointLineNode(x, y, lineEnd);
                     pBegin.label = "Beginning";
                     pEnd.label = "Ending";
                     featureField[i][j] = pEnd;
@@ -236,6 +236,21 @@ public class VectorTileBuilder {
                     }
                 }
             }
+        }
+    }
+
+    private LinkedList.LabeledNode<Point> buildPointLineNode(double x, double y, byte side) {
+        switch (side) {
+            case 0:
+                return new LinkedList.LabeledNode(new Point(x + 0.5, y, side), null);
+            case 1:
+                return new LinkedList.LabeledNode(new Point(x + 1.0, y+0.5, side), null);
+            case 2:
+                return new LinkedList.LabeledNode(new Point(x + 0.5, y+1.0, side), null);
+            case 3:
+                return new LinkedList.LabeledNode(new Point(x, y+0.5, side), null);
+            default:
+                throw new IllegalStateException("Side value must be 0, 1, 2, or 3 for nw, ne, se, or sw.");
         }
     }
 }
