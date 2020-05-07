@@ -9,14 +9,20 @@ public class VectorTileBuilder {
     private final int WIDTH;
     final VectorTile vectorTile;
 
-    final LinkedList.Node<Point>[][] featureField;
+    /**
+     * Feature field is indexed by [y][x][line] where the line is always a starting point connected to
+     * an exiting edge.
+     *
+     * When building polygons, edges from neighboring cells are obtained.
+     */
+    final LinkedList.Node<Point>[][][] featureField;
 
     public VectorTileBuilder(final Tile tile) {
         this.vectorTile = new VectorTile();
         this.tile = tile;
         this.HEIGHT = tile.tile.length / tile.width - 1;
         this.WIDTH = tile.width - 1;
-        this.featureField = new LinkedList.Node[tile.contours.length][];
+        this.featureField = new LinkedList.Node[HEIGHT][WIDTH][];
     }
     /**
      * Runs {@link Tile#isoband()} and calls {@link #build()}.
@@ -42,32 +48,15 @@ public class VectorTileBuilder {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 final int i = y * WIDTH + x;
+                featureField[y][x] = new LinkedList.Node[tile.contours[i].lineCount];
 
-                assert featureField[i] == null;
-                featureField[i] = new LinkedList.Node[tile.contours[i].lineCount];
-
-                // A holder in case we have a side.
-                if (x == 0) {
-                    vectorTile.left.add(new Side(tile.tile[x + y * tile.width]));
-                }
-
-                if (y == 0) {
-                    vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
-                }
-
-                if (x == WIDTH-1) {
-                    // +1 because, recall, there are -1 contours than squares.
-                    vectorTile.right.add(new Side(tile.tile[x+y * tile.width + 1]));
-                }
-
-                if (y == HEIGHT-1) {
-                    // +1 because, recall, there are -1 contours than squares.
-                    vectorTile.bottom.add(new Side(tile.tile[x+y * tile.width + 1]));
-                }
+                // Populate tile vectorTile.top, vectorTile.right, vectorTile.bottom, and vectorTile.left.
+                addSides(x, y);
 
                 // Walk all the contours we have. Each contour is 0 - 4 lines.
                 for (int j = 0; j < tile.contours[i].lineCount; j++) {
-                    assert featureField[i][j] == null;
+                    assert featureField[y][x][j] == null;
+
                     /**
                      * - lineBegin The side of the square the line begins on. The tail. Sides are 0 is the top,
                      *             1 is the right, 2 is the bottom, and 3 is the left side.
@@ -77,11 +66,55 @@ public class VectorTileBuilder {
                     final byte lineBegin = tile.contours[i].lines[j * 2];
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
 
+                    // FIXME - points are not offset from one another in any way, internal. They are all on the same xy.
                     final LinkedList.LabeledNode<Point> pBegin = buildPointLineNode(x, y, lineBegin);
                     final LinkedList.LabeledNode<Point> pEnd = buildPointLineNode(x, y, lineEnd);
                     pBegin.label = "Beginning";
                     pEnd.label = "Ending";
-                    featureField[i][j] = pEnd;
+                    pBegin.next = pEnd;
+                    featureField[y][x][j] = pBegin;
+
+                    //-------------------------------------------------------------------------
+                    // At here the [y][x] has a line in it. We should stitch it to
+                    // cells above and below.
+                    //-------------------------------------------------------------------------
+                    switch (lineEnd) {
+                        case 0:
+                            // FIXME fetch a line out from above us.
+                            // FIXME side check.
+                            break;
+                        case 1:
+                            // FIXME side check.
+                            break;
+                        case 2:
+                            // FIXME side check.
+                            break;
+                        case 3:
+                            // FIXME fetch from behind us.
+                            // FIXME side check.
+                            break;
+                        default:
+                            throw new IllegalStateException("Unhandled edge value "+lineEnd);
+                    }
+
+                    switch (lineBegin) {
+                        case 0:
+                            // FIXME fetch a line out from above us.
+                            // FIXME side check.
+                            break;
+                        case 1:
+                            // FIXME side check.
+                            break;
+                        case 2:
+                            // FIXME side check.
+                            break;
+                        case 3:
+                            // FIXME fetch from behind us.
+                            // FIXME side check.
+                            break;
+                        default:
+                            throw new IllegalStateException("Unhandled edge value "+lineBegin);
+                    }
 
                     // Handle where lines end in this square.
                     // We check the above and left squares for in-bound lines to us.
@@ -251,6 +284,52 @@ public class VectorTileBuilder {
                 return new LinkedList.LabeledNode(new Point(x, y+0.5, side), null);
             default:
                 throw new IllegalStateException("Side value must be 0, 1, 2, or 3 for nw, ne, se, or sw.");
+        }
+    }
+
+    /**
+     * Given an (x, y) index into the data array this will conditionally add {@link Side}
+     * objects to the top, right, bottom, or left side lists.
+     *
+     * @param x Index into the x dimension.
+     * @param y Index into the y dimension. Recall that y=0 is the top of the raster range.
+     */
+    private void addSides(final int x, final int y) {
+
+        // A holder in case we have a side.
+        if (x == 0) {
+            // On the left side.
+            vectorTile.left.add(new Side(tile.tile[x + y * tile.width]));
+            if (y == 0) {
+                // Also on the top!
+                vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
+            }
+            else if (y == HEIGHT-1) {
+                // Also on the bottom!
+                vectorTile.bottom.add(new Side(tile.tile[x + y * tile.width]));
+            }
+        }
+        else if (x == WIDTH-1) {
+            // +1 because, recall, there are -1 contours than squares.
+            vectorTile.right.add(new Side(tile.tile[x+y * tile.width + 1]));
+            if (y == 0) {
+                // Also on the top!
+                vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
+            }
+            else if (y == HEIGHT-1) {
+                // Also on the bottom!
+                vectorTile.bottom.add(new Side(tile.tile[x + y * tile.width]));
+            }
+        }
+        else if (y == 0) {
+            // Only on the top.
+            // +1 because, recall, there are -1 contours than squares.
+            vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
+        }
+        else if (y == HEIGHT-1) {
+            // Only on the bottom.
+            // +1 because, recall, there are -1 contours than squares.
+            vectorTile.bottom.add(new Side(tile.tile[x+y * tile.width + 1]));
         }
     }
 }
