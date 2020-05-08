@@ -3,7 +3,7 @@ package com.github.basking2.sdsai.marchinesquares;
 public class Point {
     public double x;
     public double y;
-    public final byte side;
+    public byte side;
 
     /**
      * Make a new point along the edge of a cell.

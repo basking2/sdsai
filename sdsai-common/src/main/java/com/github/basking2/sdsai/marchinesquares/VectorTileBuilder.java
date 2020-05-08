@@ -67,12 +67,16 @@ public class VectorTileBuilder {
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
 
                     // FIXME - points are not offset from one another in any way, internal. They are all on the same xy.
-                    final LinkedList.LabeledNode<Point> pBegin = buildPointLineNode(x, y, lineBegin);
-                    final LinkedList.LabeledNode<Point> pEnd = buildPointLineNode(x, y, lineEnd);
-                    pBegin.label = "Beginning";
-                    pEnd.label = "Ending";
-                    pBegin.next = pEnd;
-                    featureField[y][x][j] = pBegin;
+                    //final LinkedList.LabeledNode<Point> pBegin = buildPointLineNode(x, y, lineBegin);
+                    //final LinkedList.LabeledNode<Point> pEnd = buildPointLineNode(x, y, lineEnd);
+
+                    final LinkedList.Node<Point> pBegin;
+                    final LinkedList.Node<Point> pEnd;
+
+                    // Choose the points.
+                    // Points on the top and left are fetched from previous nodes (unless we are on a side).
+                    // Points on the bottom and right are created.
+
 
                     //-------------------------------------------------------------------------
                     // At here the [y][x] has a line in it. We should stitch it to
@@ -80,18 +84,42 @@ public class VectorTileBuilder {
                     //-------------------------------------------------------------------------
                     switch (lineEnd) {
                         case 0:
-                            // FIXME fetch a line out from above us.
-                            // FIXME side check.
+                            if (y==0) {
+                                // No cell above. Create.
+                                pEnd = buildPointLineNode(x, y, lineEnd);
+                                vectorTile.top.getTail().addPoint(pEnd);
+                            }
+                            else {
+                                // A cell above. Fetch.
+                                pEnd = findBegin(oppositeSide(lineEnd), featureField[y-1][x]);
+                                assert pEnd != null;
+                                pEnd.value.side = lineEnd;
+                            }
                             break;
                         case 1:
-                            // FIXME side check.
+                            // Not visited node. Create.
+                            pEnd = buildPointLineNode(x, y, lineEnd);
+                            if (x == WIDTH - 1) {
+                                vectorTile.right.getTail().addPoint(pEnd);
+                            }
                             break;
                         case 2:
-                            // FIXME side check.
+                            // Not visited node. Create.
+                            pEnd = buildPointLineNode(x, y, lineEnd);
+                            if (y == HEIGHT - 1) {
+                                vectorTile.bottom.getTail().addPoint(pEnd);
+                            }
                             break;
                         case 3:
-                            // FIXME fetch from behind us.
-                            // FIXME side check.
+                            if (x == 0) {
+                                pEnd = buildPointLineNode(x, y, lineEnd);
+                                vectorTile.left.getTail().addPoint(pEnd);
+                            }
+                            else {
+                                pEnd = findBegin(oppositeSide(lineEnd), featureField[y][x-1]);
+                                assert pEnd != null;
+                                pEnd.value.side = lineEnd;
+                            }
                             break;
                         default:
                             throw new IllegalStateException("Unhandled edge value "+lineEnd);
@@ -99,90 +127,51 @@ public class VectorTileBuilder {
 
                     switch (lineBegin) {
                         case 0:
-                            // FIXME fetch a line out from above us.
-                            // FIXME side check.
+                            if (y==0) {
+                                pBegin = buildPointLineNode(x, y, lineBegin);
+                                vectorTile.top.getTail().addPoint(pBegin);
+                            }
+                            else {
+                                pBegin = findEnd(oppositeSide(lineBegin), featureField[y-1][x]);
+                                assert pBegin != null;
+                                assert pBegin.next == null;
+                                pBegin.value.side = lineBegin;
+                            }
                             break;
                         case 1:
-                            // FIXME side check.
+                            pBegin = buildPointLineNode(x, y, lineBegin);
+                            if (x == WIDTH - 1) {
+                                vectorTile.right.getTail().addPoint(pBegin);
+                            }
                             break;
                         case 2:
-                            // FIXME side check.
+                            pBegin = buildPointLineNode(x, y, lineBegin);
+                            if (y == HEIGHT - 1) {
+                                vectorTile.bottom.getTail().addPoint(pBegin);
+                            }
                             break;
                         case 3:
-                            // FIXME fetch from behind us.
-                            // FIXME side check.
+                            if (x == 0) {
+                                pBegin = buildPointLineNode(x, y, lineBegin);
+                                vectorTile.left.getTail().addPoint(pBegin);
+                            }
+                            else {
+                                pBegin = findEnd(oppositeSide(lineBegin), featureField[y][x-1]);
+                                assert pBegin != null;
+                                assert pBegin.next == null;
+                                pBegin.value.side = lineBegin;
+                            }
                             break;
                         default:
                             throw new IllegalStateException("Unhandled edge value "+lineBegin);
                     }
 
-                    // Handle where lines end in this square.
-                    // We check the above and left squares for in-bound lines to us.
-                    if (lineEnd == 3) {
-                        if (x == 0) {
-                            vectorTile.left.getTail().point1 = pEnd;
-                        } else {
-                            for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
-                                if (tile.contours[i - 1].lines[k * 2] == 1) {
-                                    // Line k starts on side 1, then we connect our line j that ends on side 3.
-                                    assert featureField[i][j].next == null;
-                                    featureField[i][j].next = featureField[i - 1][k];
-                                }
-                            }
-                        }
-                    } else if (x == WIDTH - 1 && lineEnd == 1) {
-                        vectorTile.right.getTail().point1 = pEnd;
-                    } else if (lineEnd == 0) {
-                        if (y == 0) {
-                            vectorTile.top.getTail().point1 = pEnd;
-                        } else {
-                            for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
-                                if (tile.contours[i - WIDTH].lines[k * 2] == 2) {
-                                    // Line k starts on side 2, then we connect our line j that ends on side 0.
-                                    assert featureField[i][j].next == null;
-                                    featureField[i][j].next = featureField[i - WIDTH][k];
-                                }
-                            }
-                        }
-                    } else if (y == HEIGHT - 1 && lineEnd == 2) {
-                        vectorTile.bottom.getTail().point1 = pEnd;
-                    }
+                    // Link the pBegin to the pEnd.
+                    pBegin.next = pEnd;
 
-                    // Handle where lines begin in this square.
-                    // We check the above and left squares for out-bound lines to us.
-                    if (lineBegin == 3) {
-                        if (x == 0) {
-                            final Side s = vectorTile.left.getTail();
-                            s.addPoint(pBegin);
-                        } else {
-                            for (int k = 0; k < tile.contours[i - 1].lineCount; k++) {
-                                if (tile.contours[i - 1].lines[k * 2 + 1] == 1) {
-                                    // Line k ends on side 1, then we connect our line j that starts on side 3.
-                                    assert featureField[i - 1][k].next == null;
-                                    featureField[i - 1][k].next = featureField[i][j];
-                                }
-                            }
-                        }
-                    } else if (x == WIDTH - 1 && lineBegin == 1) {
-                        final Side s = vectorTile.right.getTail();
-                        s.addPoint(pBegin);
-                    } else if (lineBegin == 0) {
-                        if (y == 0) {
-                            final Side s = vectorTile.top.getTail();
-                            s.addPoint(pBegin);
-                        } else {
-                            for (int k = 0; k < tile.contours[i - WIDTH].lineCount; k++) {
-                                if (tile.contours[i - WIDTH].lines[k * 2 + 1] == 2) {
-                                    // Line k ends on side 2, then we connect our line j that starts on side 0.
-                                    assert featureField[i - WIDTH][k].next == null;
-                                    featureField[i - WIDTH][k].next = featureField[i][j];
-                                }
-                            }
-                        }
-                    } else if (y == HEIGHT - 1 && lineBegin == 2) {
-                        final Side s = vectorTile.bottom.getTail();
-                        s.addPoint(pBegin);
-                    }
+                    // Store the beginning, even if we copy it from another cell.
+                    featureField[y][x][j] = pBegin;
+
                 }
             }
         }
@@ -202,13 +191,13 @@ public class VectorTileBuilder {
     private void collectPolygons() {
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
-                final int i = y * WIDTH + x;
-                assert featureField[i] != null;
-                // Walk all the contours we have. Each contour is 0 - 4 lines.
-                for (int j = 0; j < tile.contours[i].lineCount; j++) {
-                    assert featureField[i][j] != null;
 
-                    final LinkedList.Node<Point> start = featureField[i][j];
+                // Walk all the line beginnings in the cell.
+                for (int j = 0; j < featureField[y][x].length; j++) {
+
+                    assert featureField[y][x][j] != null;
+
+                    final LinkedList.Node<Point> start = featureField[y][x][j];
                     LinkedList.Node<Point> stop = start.next;
                     start.color = COLLECT_COLOR;
                     while (start != stop && stop != null) {
@@ -365,5 +354,20 @@ public class VectorTileBuilder {
         }
 
         return null;
+    }
+
+    private byte oppositeSide(final byte side) {
+        switch (side) {
+            case 0:
+                return 2;
+            case 1:
+                return 3;
+            case 2:
+                return 0;
+            case 3:
+                return 1;
+            default:
+                throw new IllegalArgumentException("Unsupported byte values "+side);
+        }
     }
 }
