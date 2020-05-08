@@ -162,6 +162,7 @@ public class VectorTileGroup {
      * @param southTile The tile to the South. We want the top row.
      */
     private void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
+        System.out.println(">>> Stitch start.");
         final Iterator<Side> bottomSide = northTile.bottom.iterator();
         final Iterator<Side> topSide = southTile.top.iterator();
 
@@ -177,24 +178,36 @@ public class VectorTileGroup {
             xOffset++;
         }
 
-        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)3, sw.cell, nw.cell);
+        // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+        Side westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, sw.cell, nw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
             final Side ne = bottomSide.next();
             final Side se = topSide.next();
-            final Side eastSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
+
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
+            System.out.println(">>> Cells " + nw.cell+", "+ ne.cell+", "+ se.cell+", "+ sw.cell);
+            System.out.println(">>> ISO "+iso);
 
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
             for (int i = 0; i < iso.lines.length; i+=2) {
                 final byte lineStart = iso.lines[i];
                 final byte lineEnd = iso.lines[i+1];
+
+                System.out.println(">>> Start "+sides[lineStart]);
+                System.out.println(">>> End   "+sides[lineEnd]);
+
                 assert sides[lineStart].endPoint != null;
-                assert sides[lineEnd].beginPoint != null;
                 assert sides[lineStart].endPoint.next == null;
+                assert sides[lineEnd].beginPoint != null;
+
+                // The end of the neighbor cell's line points to...
+                //    ... the beginning of the other neighbor cell's line.
                 sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
             }
 
