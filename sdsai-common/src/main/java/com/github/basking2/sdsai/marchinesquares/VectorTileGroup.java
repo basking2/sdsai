@@ -209,46 +209,11 @@ public class VectorTileGroup {
      */
     private void connectSides(final Side start, final Side end, byte pointSide) {
 
-        final LinkedList.Node<Point> nextPoint;
-        if (end.point1 == null) {
-            nextPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), null);
-            ((LinkedList.LabeledNode<Point>)nextPoint).label = "Made here 1.";
-            nextPoint.color = COLLECT_COLOR;
-            end.point1 = nextPoint;
-        }
-        else {
-            nextPoint = end.point1;
-        }
+        final LinkedList.Node<Point> nextPoint = end.endPoint;
 
-        final LinkedList.Node<Point> originPoint;
-        if (start.point1 == null) {
-            originPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), nextPoint);
-            ((LinkedList.LabeledNode<Point>)originPoint).label = "Made here 3.";
-            originPoint.color = COLLECT_COLOR;
-            start.point1 = originPoint;
-        }
-        else if (start.point1.next == null) {
-            originPoint = start.point1;
-        }
-        else if (start.point2 == null) {
-            originPoint = new LinkedList.LabeledNode<>(new Point(xOffset, yOffset, pointSide), nextPoint);
-            ((LinkedList.LabeledNode<Point>)originPoint).label = "Made here 4.";
-            originPoint.color = COLLECT_COLOR;
-            start.point2 = originPoint;
-        }
-        else if (start.point2.next == null) {
-            originPoint = start.point2;
-        }
-        else {
-            throw new IllegalStateException("Start Side does not have an unconnected point to link.");
-        }
+        final LinkedList.Node<Point> originPoint = start.beginPoint;
 
-        if (originPoint.color == 0) {
-            originPoint.color = COLLECT_COLOR;
-            originPoint.value.x += xOffset;
-            originPoint.value.y += yOffset;
-        }
-
+        assert originPoint.next == null;
         nextPoint.color = COLLECT_COLOR;
         originPoint.next = nextPoint;
     }

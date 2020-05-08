@@ -1,38 +1,49 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 /**
- * A side is one cell value and optionally one or two points.
+ * A side is one cell value and optionally one or two points on the edge of a {@link Tile}.
+ *
+ * Points are assigned as either a begin or end point. That is, what role does that
+ * point play in the contour of the cell of the tile the side is describing.
  */
 public class Side {
-    public byte cell;
-    public LinkedList.Node<Point> point1;
-    public LinkedList.Node<Point> point2;
 
+    /**
+     * The value in the data grid. This is -1, 0, or 1.
+     * This is used to construct contours with neighboring tiles.
+     */
+    public byte cell;
+
+    /**
+     * A point that begins an contour. Its next field should be defined.
+     *
+     * The endPoint of one side should be linked to the beginPoint of another side.
+     */
+    public LinkedList.Node<Point> beginPoint;
+
+    /**
+     * A point that ends a contour. Its next field will be empty.
+     *
+     * The endPoint of one side should be linked to the beginPoint of another side.
+     */
+    public LinkedList.Node<Point> endPoint;
+
+    /**
+     * This is used to construct artificial sides as place holders.
+     */
     public static byte BOGUS_VALUE = (byte)64;
 
     /**
      * Constructor.
      *
      * @param cell A cell value.
-     * @param point1 A point of a line.
-     * @param point2 A point of a line.
+     * @param beginPoint A point of a line.
+     * @param endPoint A point of a line.
      */
-    public Side(final byte cell, final LinkedList.Node<Point> point1, final LinkedList.Node<Point> point2) {
+    public Side(final byte cell, final LinkedList.Node<Point> beginPoint, final LinkedList.Node<Point> endPoint) {
         this.cell = cell;
-        this.point1 = point1;
-        this.point2 = point2;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param cell A cell value.
-     * @param point1 A point of a line.
-     */
-    public Side(final byte cell, final LinkedList.Node<Point> point1) {
-        this.cell = cell;
-        this.point1 = point1;
-        this.point2 = null;
+        this.beginPoint = beginPoint;
+        this.endPoint = endPoint;
     }
 
     /**
@@ -42,61 +53,97 @@ public class Side {
      */
     public Side(final byte cell) {
         this.cell = cell;
-        this.point1 = null;
-        this.point2 = null;
-    }
-
-    public void addPoint(final LinkedList.Node<Point> p) {
-        if (point1 == null) {
-            point1 = p;
-        }
-        else if (point2 == null) {
-            point2 = p;
-        }
-        else {
-            throw new IllegalArgumentException("Both point slots are filled in this side.");
-        }
+        this.beginPoint = null;
+        this.endPoint = null;
     }
 
     @Override
     public String toString() {
         String s = "" + cell + " ";
-        if (point1 != null) {
-            s += "point1 "+point1.value;
+        if (beginPoint != null) {
+            s += "beginPoint "+beginPoint.value + " ";
         }
-        if (point2 != null) {
-            s += "point2 "+point1.value;
+        if (endPoint != null) {
+            s += "endPoint "+endPoint.value + " ";
         }
 
         return s;
     }
 
-    public static Side buildArtificialSide(final int x, final int y, final byte side, final byte value1, final byte value2) {
-       if (value1 == value2) {
-           // No sides.
-           return new Side((byte)64);
-       }
-       else if (value1 == 0) {
-           // One side.
-           return new Side(
-                   BOGUS_VALUE,
-                   new LinkedList.Node<Point>(new Point(x, y, side), null)
-           );
-       }
-       else if (value2 == 0) {
-           // One side.
-           return new Side(
-                   BOGUS_VALUE,
-                   new LinkedList.Node<Point>(new Point(x, y, side), null)
-           );
-       }
-       else {
-           // Two sides. Value 1 and 2 are different and neither is 0.
-           return new Side(
-                   BOGUS_VALUE,
-                   new LinkedList.Node<Point>(new Point(x, y, side), null),
-                   new LinkedList.Node<Point>(new Point(x, y, side), null)
-           );
-       }
+    /**
+     * Build an artificial side with the correct number of points.
+     * @param x The x value to create points at.
+     * @param y The y value to create points at.
+     * @param side The side of a cell that this lies on. The values are
+     *             0 is the top, 1 is the right, 2 is the bottom, and 3 is the left.
+     * @param left The value of the point that is on the left of the side, the side being viewed
+     *             from the center of the cell. The counter-clockwise most point.
+     * @param right The value of the point that is on the right of the side, the side being viewed
+     *              from the center of the cell. The clockwise most point.
+     * @return A built artificial side.
+     */
+    public static Side buildArtificialSide(final double x, final double y, final byte side, final byte left, final byte right) {
+        final Side s = new Side(BOGUS_VALUE);
+
+        switch (left) {
+            case -1:
+                switch (right) {
+                    case -1:
+                        // NOP: No points for contours on this side.
+                        break;
+                    case 0:
+                        // A begin point that should attach to an end point in this cell.
+                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 1:
+                        // Two points.
+                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            case 0:
+                switch (right) {
+                    case -1:
+                        // A end point that should attach to a begin point outside this cell.
+                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 0:
+                        // NOP: No points for contours on this side.
+                        break;
+                    case 1:
+                        // A end point that should attach to a begin point outside this cell.
+                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            case 1:
+                switch (right) {
+                    case -1:
+                        // Two points.
+                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 0:
+                        // A begin point that should attach to an end point in this cell.
+                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 1:
+                        // NOP: No points for contours on this side.
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unhandled byte "+left);
+
+        }
+
+        return s;
     }
 }

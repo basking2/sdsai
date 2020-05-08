@@ -81,7 +81,7 @@ public class VectorTileBuilder {
                             if (y==0) {
                                 // No cell above. Create.
                                 pEnd = buildPointLineNode(x, y, lineEnd);
-                                vectorTile.top.getTail().addPoint(pEnd);
+                                vectorTile.top.getTail().endPoint = pEnd;
                             }
                             else {
                                 // A cell above. Fetch.
@@ -94,20 +94,20 @@ public class VectorTileBuilder {
                             // Not visited node. Create.
                             pEnd = buildPointLineNode(x, y, lineEnd);
                             if (x == WIDTH - 1) {
-                                vectorTile.right.getTail().addPoint(pEnd);
+                                vectorTile.right.getTail().endPoint = pEnd;
                             }
                             break;
                         case 2:
                             // Not visited node. Create.
                             pEnd = buildPointLineNode(x, y, lineEnd);
                             if (y == HEIGHT - 1) {
-                                vectorTile.bottom.getTail().addPoint(pEnd);
+                                vectorTile.bottom.getTail().endPoint = pEnd;
                             }
                             break;
                         case 3:
                             if (x == 0) {
                                 pEnd = buildPointLineNode(x, y, lineEnd);
-                                vectorTile.left.getTail().addPoint(pEnd);
+                                vectorTile.left.getTail().endPoint = pEnd;
                             }
                             else {
                                 pEnd = findBegin(oppositeSide(lineEnd), featureField[y][x-1]);
@@ -123,7 +123,7 @@ public class VectorTileBuilder {
                         case 0:
                             if (y==0) {
                                 pBegin = buildPointLineNode(x, y, lineBegin);
-                                vectorTile.top.getTail().addPoint(pBegin);
+                                vectorTile.top.getTail().beginPoint = pBegin;
                             }
                             else {
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y-1][x]);
@@ -135,19 +135,19 @@ public class VectorTileBuilder {
                         case 1:
                             pBegin = buildPointLineNode(x, y, lineBegin);
                             if (x == WIDTH - 1) {
-                                vectorTile.right.getTail().addPoint(pBegin);
+                                vectorTile.right.getTail().beginPoint = pBegin;
                             }
                             break;
                         case 2:
                             pBegin = buildPointLineNode(x, y, lineBegin);
                             if (y == HEIGHT - 1) {
-                                vectorTile.bottom.getTail().addPoint(pBegin);
+                                vectorTile.bottom.getTail().beginPoint = pBegin;
                             }
                             break;
                         case 3:
                             if (x == 0) {
                                 pBegin = buildPointLineNode(x, y, lineBegin);
-                                vectorTile.left.getTail().addPoint(pBegin);
+                                vectorTile.left.getTail().beginPoint = pBegin;
                             }
                             else {
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y][x-1]);
