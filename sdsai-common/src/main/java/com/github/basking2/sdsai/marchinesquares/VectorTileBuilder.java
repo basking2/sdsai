@@ -289,19 +289,19 @@ public class VectorTileBuilder {
             }
             else if (y == HEIGHT-1) {
                 // Also on the bottom!
-                vectorTile.bottom.add(new Side(tile.tile[x + y * tile.width]));
+                vectorTile.bottom.add(new Side(tile.tile[x + (y+1) * tile.width]));
             }
         }
         else if (x == WIDTH-1) {
             // +1 because, recall, there are -1 contours than squares.
-            vectorTile.right.add(new Side(tile.tile[x+y * tile.width + 1]));
+            vectorTile.right.add(new Side(tile.tile[x + y * tile.width + 1]));
             if (y == 0) {
                 // Also on the top!
                 vectorTile.top.add(new Side(tile.tile[x + y * tile.width]));
             }
             else if (y == HEIGHT-1) {
                 // Also on the bottom!
-                vectorTile.bottom.add(new Side(tile.tile[x + y * tile.width]));
+                vectorTile.bottom.add(new Side(tile.tile[x + (y+1) * tile.width]));
             }
         }
         else if (y == 0) {
@@ -312,7 +312,7 @@ public class VectorTileBuilder {
         else if (y == HEIGHT-1) {
             // Only on the bottom.
             // +1 because, recall, there are -1 contours than squares.
-            vectorTile.bottom.add(new Side(tile.tile[x+y * tile.width + 1]));
+            vectorTile.bottom.add(new Side(tile.tile[x + (y+1) * tile.width]));
         }
     }
 
