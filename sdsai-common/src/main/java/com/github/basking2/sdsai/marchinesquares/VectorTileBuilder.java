@@ -332,4 +332,38 @@ public class VectorTileBuilder {
             vectorTile.bottom.add(new Side(tile.tile[x+y * tile.width + 1]));
         }
     }
+
+    /**
+     * Search all begin nodes and return the one with the matching side.
+     * @param side The side to find a node for.
+     * @param beginNodes The begin node.
+     * @return The begin node found or null if none.
+     */
+    private LinkedList.Node<Point> findBegin(final byte side, final LinkedList.Node<Point>[] beginNodes) {
+        for (int i = 0; i < beginNodes.length; i++) {
+            if (beginNodes[i].value.side == side) {
+                return beginNodes[i];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Search all begin nodes next point, which is the end node, and return the one with the matching side.
+     * @param side The side to find a node for.
+     * @param beginNodes The begin node.
+     * @return The end node found or null if none.
+     */
+    private LinkedList.Node<Point> findEnd(final byte side, final LinkedList.Node<Point>[] beginNodes) {
+        for (int i = 0; i < beginNodes.length; i++) {
+            if (beginNodes[i].next != null) {
+                if (beginNodes[i].next.value.side == side) {
+                    return beginNodes[i].next;
+                }
+            }
+        }
+
+        return null;
+    }
 }
