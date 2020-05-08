@@ -70,6 +70,25 @@ public class Side {
         return s;
     }
 
+    public static class ArtificialSide extends Side {
+        public String msg;
+        public ArtificialSide(final String msg) {
+            super(BOGUS_VALUE);
+            this.msg = msg;
+        }
+
+        @Override
+        public void swapPoints() {
+            super.swapPoints();
+            msg = msg +" flipped";
+        }
+
+        @Override
+        public String toString(){
+            return super.toString() + " msg:"+msg;
+        }
+    }
+
     /**
      * Build an artificial side with the correct number of points.
      * @param x The x value to create points at.
@@ -83,7 +102,7 @@ public class Side {
      * @return A built artificial side.
      */
     public static Side buildArtificialSide(final double x, final double y, final byte side, final byte left, final byte right) {
-        final Side s = new Side(BOGUS_VALUE);
+        final Side s = new ArtificialSide("LEFT RIGHT SIDE "+left+":"+right+":"+side);
 
         switch (left) {
             case -1:
@@ -145,5 +164,41 @@ public class Side {
         }
 
         return s;
+    }
+
+    /**
+     * Call {@link #buildArtificialSide(double, double, byte, byte, byte)} with reflected inputs.
+     * @param x The x coordinate.
+     * @param y The y coordinate.
+     * @param side The side. This is reflected 0 to 2, 2 to 0, 1 to 3, and 3 to 1.
+     * @param left This is reflected by swapping with right.
+     * @param right This is reflected by swapping with left.
+     * @return The reflected side.
+     */
+    public static Side buildReflectedArtificialSide(final double x, final double y, final byte side, final byte left, final byte right) {
+        final byte reflectedSide;
+        switch (side) {
+            case 0:
+                reflectedSide = 2;
+                break;
+            case 1:
+                reflectedSide = 3;
+                break;
+            case 2:
+                reflectedSide = 0;
+                break;
+            case 3:
+                reflectedSide = 1;
+                break;
+            default:
+                throw new IllegalStateException("Unhandled side "+side);
+        }
+        return buildArtificialSide(x, y, reflectedSide, right, left);
+    }
+
+    public void swapPoints() {
+        final LinkedList.Node<Point> swap = beginPoint;
+        beginPoint = endPoint;
+        endPoint = swap;
     }
 }

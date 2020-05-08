@@ -115,28 +115,38 @@ public class VectorTileGroup {
             yOffset++;
         }
 
-        Side northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)0, nw.cell, ne.cell);
+        // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+        Side northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, nw.cell, ne.cell);
 
         while (leftSide.hasNext() && rightSide.hasNext()) {
             final Side sw = rightSide.next();
             final Side se = leftSide.next();
-            final Side southSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, sw.cell, se.cell);
+
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, se.cell, sw.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
 
+            // Four sides of the cell we are in.
             final Side[] sides = new Side[]{ northSide, ne, southSide, nw };
 
             for (int i = 0; i < iso.lines.length; i+=2) {
                 final byte lineStart = iso.lines[i];
                 final byte lineEnd = iso.lines[i+1];
-                connectSides(sides[lineStart], sides[lineEnd], lineEnd);
+                assert sides[lineStart].endPoint != null;
+                assert sides[lineStart].endPoint.next == null;
+                assert sides[lineEnd].beginPoint != null;
+
+                // The end of the neighbor cell's line points to...
+                //    ... the beginning of the other neighbor cell's line.
+                sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
             }
 
             nw = sw;
             ne = se;
             northSide = southSide;
-            northSide.cell = (byte)0;
+            northSide.swapPoints();
             yOffset++;
         }
 
@@ -167,7 +177,7 @@ public class VectorTileGroup {
             xOffset++;
         }
 
-        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)3, nw.cell, sw.cell);
+        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)3, sw.cell, nw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
             final Side ne = bottomSide.next();
@@ -182,13 +192,16 @@ public class VectorTileGroup {
             for (int i = 0; i < iso.lines.length; i+=2) {
                 final byte lineStart = iso.lines[i];
                 final byte lineEnd = iso.lines[i+1];
-                connectSides(sides[lineStart], sides[lineEnd], lineEnd);
+                assert sides[lineStart].endPoint != null;
+                assert sides[lineEnd].beginPoint != null;
+                assert sides[lineStart].endPoint.next == null;
+                sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
             }
 
             nw = ne;
             sw = se;
             westSide = eastSide;
-            westSide.cell = (byte)3;
+            westSide.swapPoints();
             xOffset++;
         }
 
