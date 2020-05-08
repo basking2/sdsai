@@ -46,15 +46,6 @@ public class VectorTileGroup {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    public VectorTileGroup(final VectorTile vectorTile) {
-        this.northTiles = null;
-        this.westTile = null;
-        this.tile = vectorTile;
-        this.currentRow = new LinkedList<>();
-        this.currentRow.add(vectorTile);
-        this.northWestPoint = null;
-    }
-
     public VectorTileGroup() {
         this.northTiles = null;
         this.westTile = null;
@@ -98,7 +89,16 @@ public class VectorTileGroup {
         this.westTile = eastTile;
     }
 
-    // Stitch west-east nodes.
+    /**
+     * Stitch the eastern tiles to the western tiles.
+     *
+     * @param westTile The tile to the West. We want the right row.
+     * @param eastTile The tile to the South. We want the left row.
+     * @param northTile This is used to find the pixel directly north of the first pixel in the east tile.
+     *                  The complimentary function {@link #stitchNorthSouth(VectorTile, VectorTile)}
+     *                  does not need a third argument because it can directly access the {@link #westTile}
+     *                  field from any previous tile add.
+     */
     void stitchWestEast(final VectorTile westTile, final VectorTile eastTile, final VectorTile northTile) {
         final Iterator<Side> rightSide = westTile.right.iterator();
         final Iterator<Side> leftSide = eastTile.left.iterator();
@@ -145,8 +145,13 @@ public class VectorTileGroup {
         yOffset -= westTile.right.size();
     }
 
-    // Switch north-south nodes.
-    void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
+    /**
+     * Stitch the southern tiles to the northern tiles.
+     *
+     * @param northTile The tile to the North. We want the bottom row.
+     * @param southTile The tile to the South. We want the top row.
+     */
+    private void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
         final Iterator<Side> bottomSide = northTile.bottom.iterator();
         final Iterator<Side> topSide = southTile.top.iterator();
 
@@ -162,7 +167,7 @@ public class VectorTileGroup {
             xOffset++;
         }
 
-        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, nw.cell, sw.cell);
+        Side westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)3, nw.cell, sw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
             final Side ne = bottomSide.next();
@@ -248,17 +253,6 @@ public class VectorTileGroup {
         originPoint.next = nextPoint;
     }
 
-    public void addNewRow(final VectorTile newTile) {
-        // Drop to a new row.
-        this.northTiles = this.currentRow.iterator();
-        this.northWestPoint = null;
-        this.westTile = null;
-        this.xOffset = 0;
-
-        // Add an east tile.
-        addEast(newTile);
-    }
-
     public void addNewRow() {
         // Drop to a new row.
         if (westTile != null) {
@@ -268,6 +262,11 @@ public class VectorTileGroup {
         this.northTiles = this.currentRow.iterator();
         this.northWestPoint = null;
         this.westTile = null;
+    }
+
+    public void addNewRow(final VectorTile newTile) {
+        addNewRow();
+        addEast(newTile);
     }
 
     public VectorTile getVectorTile() {

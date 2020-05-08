@@ -57,26 +57,20 @@ public class VectorTileBuilder {
                 for (int j = 0; j < tile.contours[i].lineCount; j++) {
                     assert featureField[y][x][j] == null;
 
-                    /**
-                     * - lineBegin The side of the square the line begins on. The tail. Sides are 0 is the top,
-                     *             1 is the right, 2 is the bottom, and 3 is the left side.
-                     * - lineEnd The side of the square the line ends on. The head. Sides are 0 is the top,
-                     *           1 is the right, 2 is the bottom, and 3 is the left side.
-                     */
+                    //-------------------------------------------------------------------------
+                    // - lineBegin The side of the square the line begins on. The tail. Sides are 0 is the top,
+                    //             1 is the right, 2 is the bottom, and 3 is the left side.
+                    // - lineEnd The side of the square the line ends on. The head. Sides are 0 is the top,
+                    //           1 is the right, 2 is the bottom, and 3 is the left side.
+                    //-------------------------------------------------------------------------
                     final byte lineBegin = tile.contours[i].lines[j * 2];
                     final byte lineEnd = tile.contours[i].lines[j * 2 + 1];
-
-                    // FIXME - points are not offset from one another in any way, internal. They are all on the same xy.
-                    //final LinkedList.LabeledNode<Point> pBegin = buildPointLineNode(x, y, lineBegin);
-                    //final LinkedList.LabeledNode<Point> pEnd = buildPointLineNode(x, y, lineEnd);
-
-                    final LinkedList.Node<Point> pBegin;
-                    final LinkedList.Node<Point> pEnd;
 
                     // Choose the points.
                     // Points on the top and left are fetched from previous nodes (unless we are on a side).
                     // Points on the bottom and right are created.
-
+                    final LinkedList.Node<Point> pBegin;
+                    final LinkedList.Node<Point> pEnd;
 
                     //-------------------------------------------------------------------------
                     // At here the [y][x] has a line in it. We should stitch it to
