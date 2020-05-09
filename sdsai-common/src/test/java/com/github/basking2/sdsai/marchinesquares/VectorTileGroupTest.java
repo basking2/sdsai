@@ -1,5 +1,6 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
@@ -24,6 +25,29 @@ public class VectorTileGroupTest {
         return vectorTile;
     }
 
+    private void checkVectorTile(final VectorTile vectorTile) {
+        for (final Side s : vectorTile.top) {
+            if (s.endPoint != null) {
+                Assert.assertNull(s.endPoint.next);
+            }
+        }
+        for (final Side s : vectorTile.bottom) {
+            if (s.endPoint != null) {
+                Assert.assertNull(s.endPoint.next);
+            }
+        }
+        for (final Side s : vectorTile.left) {
+            if (s.endPoint != null) {
+                Assert.assertNull(s.endPoint.next);
+            }
+        }
+        for (final Side s : vectorTile.right) {
+            if (s.endPoint != null) {
+                Assert.assertNull(s.endPoint.next);
+            }
+        }
+    }
+
     @Test
     public void basicBuild(){
         final VectorTile[][] map = new VectorTile[][]{
@@ -36,6 +60,7 @@ public class VectorTileGroupTest {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
+                checkVectorTile(map[i][j]);
                 vectorTileGroup.addEast(map[i][j]);
             }
             vectorTileGroup.addNewRow();
@@ -56,6 +81,7 @@ public class VectorTileGroupTest {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
+                checkVectorTile(map[i][j]);
                 vectorTileGroup.addEast(map[i][j]);
             }
             vectorTileGroup.addNewRow();
