@@ -89,6 +89,67 @@ public class Side {
         }
     }
 
+    public void setPoints(final double x, final double y, final byte side, final byte left, final byte right) {
+        switch (left) {
+            case -1:
+                switch (right) {
+                    case -1:
+                        // NOP: No points for contours on this side.
+                        break;
+                    case 0:
+                        // A begin point that should attach to an end point in this cell.
+                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 1:
+                        // Two points.
+                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            case 0:
+                switch (right) {
+                    case -1:
+                        // A end point that should attach to a begin point outside this cell.
+                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 0:
+                        // NOP: No points for contours on this side.
+                        break;
+                    case 1:
+                        // A end point that should attach to a begin point outside this cell.
+                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            case 1:
+                switch (right) {
+                    case -1:
+                        // Two points.
+                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 0:
+                        // A begin point that should attach to an end point in this cell.
+                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
+                        break;
+                    case 1:
+                        // NOP: No points for contours on this side.
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unhandled byte "+right);
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unhandled byte "+left);
+
+        }
+    }
+
     /**
      * Build an artificial side with the correct number of points.
      * @param x The x value to create points at.
@@ -104,64 +165,7 @@ public class Side {
     public static Side buildArtificialSide(final double x, final double y, final byte side, final byte left, final byte right) {
         final Side s = new ArtificialSide("LEFT RIGHT SIDE "+left+":"+right+":"+side);
 
-        switch (left) {
-            case -1:
-                switch (right) {
-                    case -1:
-                        // NOP: No points for contours on this side.
-                        break;
-                    case 0:
-                        // A begin point that should attach to an end point in this cell.
-                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    case 1:
-                        // Two points.
-                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unhandled byte "+right);
-                }
-                break;
-            case 0:
-                switch (right) {
-                    case -1:
-                        // A end point that should attach to a begin point outside this cell.
-                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    case 0:
-                        // NOP: No points for contours on this side.
-                        break;
-                    case 1:
-                        // A end point that should attach to a begin point outside this cell.
-                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unhandled byte "+right);
-                }
-                break;
-            case 1:
-                switch (right) {
-                    case -1:
-                        // Two points.
-                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        s.endPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    case 0:
-                        // A begin point that should attach to an end point in this cell.
-                        s.beginPoint = new LinkedList.Node<>(new Point(x, y, side), null);
-                        break;
-                    case 1:
-                        // NOP: No points for contours on this side.
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unhandled byte "+right);
-                }
-                break;
-            default:
-                throw new IllegalArgumentException("Unhandled byte "+left);
-
-        }
+        s.setPoints(x, y, side, left, right);
 
         return s;
     }

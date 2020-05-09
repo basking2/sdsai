@@ -30,20 +30,32 @@ public class VectorTileGroupTest {
             if (s.endPoint != null) {
                 Assert.assertNull(s.endPoint.next);
             }
+            if (s.beginPoint != null) {
+                Assert.assertNotNull(s.beginPoint.next);
+            }
         }
         for (final Side s : vectorTile.bottom) {
             if (s.endPoint != null) {
                 Assert.assertNull(s.endPoint.next);
+            }
+            if (s.beginPoint != null) {
+                Assert.assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.left) {
             if (s.endPoint != null) {
                 Assert.assertNull(s.endPoint.next);
             }
+            if (s.beginPoint != null) {
+                Assert.assertNotNull(s.beginPoint.next);
+            }
         }
         for (final Side s : vectorTile.right) {
             if (s.endPoint != null) {
                 Assert.assertNull(s.endPoint.next);
+            }
+            if (s.beginPoint != null) {
+                Assert.assertNotNull(s.beginPoint.next);
             }
         }
     }

@@ -55,7 +55,6 @@ public class VectorTileGroup {
     }
 
     public void addEast(final VectorTile eastTile) {
-        System.err.println("--------------------------------------------------------------------------------");
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
             tile.features.add(feature);
@@ -110,9 +109,10 @@ public class VectorTileGroup {
         if (northWestPoint != null && northTile != null) {
             nw = northWestPoint;
             ne = northTile.left.getTail();
-            assert ne.endPoint == null;
+            assert nw.beginPoint == null;
+            assert nw.endPoint == null;
             assert ne.beginPoint == null;
-            // FIXME ne is missing points.
+            assert ne.endPoint == null;
         } else {
             nw = rightSide.next();
             ne = leftSide.next();
@@ -166,7 +166,6 @@ public class VectorTileGroup {
      * @param southTile The tile to the South. We want the top row.
      */
     private void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
-        System.err.println(">>> Stitch start.");
         final Iterator<Side> bottomSide = northTile.bottom.iterator();
         final Iterator<Side> topSide = southTile.top.iterator();
 
@@ -174,14 +173,13 @@ public class VectorTileGroup {
         Side nw;
         Side sw;
         if (northWestPoint != null) {
-            System.err.println("Use NW point.");
             nw = northWestPoint;
             sw = westTile.top.getTail();
-            assert sw.endPoint == null;
+            assert nw.beginPoint == null;
+            assert nw.endPoint == null;
             assert sw.beginPoint == null;
-            // FIXME sw is missing points.
+            assert sw.endPoint == null;
         } else {
-            System.err.println("No NW point.");
             nw = bottomSide.next();
             sw = topSide.next();
             xOffset++;
@@ -199,17 +197,12 @@ public class VectorTileGroup {
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
-            System.err.println(">>> Cells " + nw.cell+", "+ ne.cell+", "+ se.cell+", "+ sw.cell);
-            System.err.println(">>> ISO "+iso);
 
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
             for (int i = 0; i < iso.lines.length; i+=2) {
                 final byte lineStart = iso.lines[i];
                 final byte lineEnd = iso.lines[i+1];
-
-                System.err.println(">>> Start "+sides[lineStart]);
-                System.err.println(">>> End   "+sides[lineEnd]);
 
                 assert sides[lineStart].endPoint != null;
                 assert sides[lineStart].endPoint.next == null;
@@ -260,6 +253,7 @@ public class VectorTileGroup {
         }
         this.xOffset = 0;
         this.northTiles = this.currentRow.iterator();
+        this.currentRow = new LinkedList<>();
         this.northWestPoint = null;
         this.westTile = null;
     }
@@ -276,4 +270,5 @@ public class VectorTileGroup {
     public void setStitchTiles(final boolean stitchTiles) {
         this.stitchTiles = stitchTiles;
     }
+
 }

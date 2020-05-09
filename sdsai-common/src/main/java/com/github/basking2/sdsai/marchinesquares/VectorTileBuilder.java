@@ -86,7 +86,6 @@ public class VectorTileBuilder {
                             else {
                                 // A cell above. Fetch.
                                 pEnd = findBegin(oppositeSide(lineEnd), featureField[y-1][x]);
-                                assert pEnd != null;
                                 pEnd.value.side = lineEnd;
                             }
                             break;
@@ -111,7 +110,6 @@ public class VectorTileBuilder {
                             }
                             else {
                                 pEnd = findBegin(oppositeSide(lineEnd), featureField[y][x-1]);
-                                assert pEnd != null;
                                 pEnd.value.side = lineEnd;
                             }
                             break;
@@ -127,8 +125,6 @@ public class VectorTileBuilder {
                             }
                             else {
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y-1][x]);
-                                assert pBegin != null;
-                                assert pBegin.next == null;
                                 pBegin.value.side = lineBegin;
                             }
                             break;
@@ -151,8 +147,6 @@ public class VectorTileBuilder {
                             }
                             else {
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y][x-1]);
-                                assert pBegin != null;
-                                assert pBegin.next == null;
                                 pBegin.value.side = lineBegin;
                             }
                             break;
@@ -161,6 +155,7 @@ public class VectorTileBuilder {
                     }
 
                     // Link the pBegin to the pEnd.
+                    assert pBegin.next == null;
                     pBegin.next = pEnd;
 
                     // Store the beginning, even if we copy it from another cell.
