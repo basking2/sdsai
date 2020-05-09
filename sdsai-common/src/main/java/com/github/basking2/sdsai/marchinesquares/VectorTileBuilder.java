@@ -235,7 +235,7 @@ public class VectorTileBuilder {
 
                         // Make sure we are 3 segments long for a proper polygon.
                         if (start.next.next != start) {
-                            final LinkedList.Node<Point> newStartNode = new LinkedList.Node<>(start.value, start.next, start.color);
+                            final LinkedList.Node<Point> newStartNode = new LinkedList.Node<>(new Point(start.value), start.next, start.color);
 
                             // The start node is now the end node.
                             start.next = null;

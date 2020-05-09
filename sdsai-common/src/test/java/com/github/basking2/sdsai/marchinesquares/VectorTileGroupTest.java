@@ -82,10 +82,11 @@ public class VectorTileGroupTest {
 
     @Test
     public void basicBuild2() throws IOException {
+        final int sz = 30;
         final VectorTile[][] map = new VectorTile[][]{
-                {buildTile(10, 10), buildTile(10, 10), buildTile(10, 10)},
-                {buildTile(10, 10), buildTile(10, 10), buildTile(10, 10)},
-                {buildTile(10, 10), buildTile(10, 10), buildTile(10, 10)},
+                {buildTile(sz, sz), buildTile(sz, sz), buildTile(sz, sz)},
+                {buildTile(sz, sz), buildTile(sz, sz), buildTile(sz, sz)},
+                {buildTile(sz, sz), buildTile(sz, sz), buildTile(sz, sz)},
         };
 
         final VectorTileGroup vectorTileGroup = new VectorTileGroup();

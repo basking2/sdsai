@@ -58,6 +58,19 @@ public class VectorTileGroup {
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
             tile.features.add(feature);
+
+            for (final Side s : eastTile.top) {
+                translateSide(s);
+            }
+            for (final Side s : eastTile.right) {
+                translateSide(s);
+            }
+            for (final Side s : eastTile.bottom) {
+                translateSide(s);
+            }
+            for (final Side s : eastTile.left) {
+                translateSide(s);
+            }
         }
 
         if (stitchTiles) {
@@ -109,10 +122,6 @@ public class VectorTileGroup {
         if (northWestPoint != null && northTile != null) {
             nw = northWestPoint;
             ne = northTile.left.getTail();
-            assert nw.beginPoint == null;
-            assert nw.endPoint == null;
-            assert ne.beginPoint == null;
-            assert ne.endPoint == null;
         } else {
             nw = rightSide.next();
             ne = leftSide.next();
@@ -135,17 +144,7 @@ public class VectorTileGroup {
             // Four sides of the cell we are in.
             final Side[] sides = new Side[]{ northSide, ne, southSide, nw };
 
-            for (int i = 0; i < iso.lines.length; i+=2) {
-                final byte lineStart = iso.lines[i];
-                final byte lineEnd = iso.lines[i+1];
-                assert sides[lineStart].endPoint != null;
-                assert sides[lineStart].endPoint.next == null;
-                assert sides[lineEnd].beginPoint != null;
-
-                // The end of the neighbor cell's line points to...
-                //    ... the beginning of the other neighbor cell's line.
-                sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
-            }
+            linkSides(iso, sides);
 
             nw = sw;
             ne = se;
@@ -157,6 +156,28 @@ public class VectorTileGroup {
 
         // Put the yOffset back where we found it.
         yOffset -= westTile.right.size();
+    }
+
+    private void linkSides(final IsobandContours iso, final Side[] sides) {
+        for (int i = 0; i < iso.lines.length; i+=2) {
+            final byte lineStart = iso.lines[i];
+            final byte lineEnd = iso.lines[i+1];
+
+            if (sides[lineStart].endPoint == null) {
+                sides[lineStart].endPoint = new LinkedList.Node<Point>(new Point(xOffset, yOffset, lineStart), null, COLLECT_COLOR);
+            }
+            if (sides[lineEnd].beginPoint == null) {
+                sides[lineEnd].beginPoint = new LinkedList.Node<Point>(new Point(xOffset, yOffset, lineEnd), null, COLLECT_COLOR);
+            }
+
+            assert sides[lineStart].endPoint != null;
+            assert sides[lineStart].endPoint.next == null;
+            assert sides[lineEnd].beginPoint != null;
+
+            // The end of the neighbor cell's line points to...
+            //    ... the beginning of the other neighbor cell's line.
+            sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
+        }
     }
 
     /**
@@ -175,10 +196,6 @@ public class VectorTileGroup {
         if (northWestPoint != null) {
             nw = northWestPoint;
             sw = westTile.top.getTail();
-            assert nw.beginPoint == null;
-            assert nw.endPoint == null;
-            assert sw.beginPoint == null;
-            assert sw.endPoint == null;
         } else {
             nw = bottomSide.next();
             sw = topSide.next();
@@ -200,18 +217,7 @@ public class VectorTileGroup {
 
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
-            for (int i = 0; i < iso.lines.length; i+=2) {
-                final byte lineStart = iso.lines[i];
-                final byte lineEnd = iso.lines[i+1];
-
-                assert sides[lineStart].endPoint != null;
-                assert sides[lineStart].endPoint.next == null;
-                assert sides[lineEnd].beginPoint != null;
-
-                // The end of the neighbor cell's line points to...
-                //    ... the beginning of the other neighbor cell's line.
-                sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
-            }
+            linkSides(iso, sides);
 
             nw = ne;
             sw = se;
@@ -271,4 +277,15 @@ public class VectorTileGroup {
         this.stitchTiles = stitchTiles;
     }
 
+    private void translateSide(final Side s) {
+        if (s.beginPoint != null && s.beginPoint.next == null) {
+            s.beginPoint.value.x += xOffset;
+            s.beginPoint.value.y += yOffset;
+        }
+
+        if (s.endPoint != null && s.endPoint.next == null) {
+            s.endPoint.value.x += xOffset;
+            s.endPoint.value.y += yOffset;
+        }
+    }
 }

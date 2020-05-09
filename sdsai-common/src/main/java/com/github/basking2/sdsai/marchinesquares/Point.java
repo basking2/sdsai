@@ -22,6 +22,16 @@ public class Point {
         this.side = side;
     }
 
+    /**
+     * Copy constructor.
+     * @param p Point.
+     */
+    public Point(final Point p) {
+        this.x = p.x;
+        this.y = p.y;
+        this.side = p.side;
+    }
+
     @Override
     public String toString() {
         return String.format("(%f, %f)-%d", x, y, side);
