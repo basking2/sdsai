@@ -126,7 +126,7 @@ public class IsobandContours {
                                     case 0:
                                         // -1 -1
                                         //  0  1
-                                        lines = new byte[]{ 3, 1, 1, 2 };
+                                        lines = new byte[]{ 2, 1, 1, 3 };
                                         lineCount = 2;
                                         break;
                                     case 1:

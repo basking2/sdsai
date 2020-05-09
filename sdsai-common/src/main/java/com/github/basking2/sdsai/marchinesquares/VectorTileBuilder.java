@@ -1,5 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
 
 public class VectorTileBuilder {
@@ -8,6 +11,21 @@ public class VectorTileBuilder {
     private final int HEIGHT;
     private final int WIDTH;
     final VectorTile vectorTile;
+
+    private final boolean DEBUG = false;
+
+    private void p(Object ... s) {
+        if (DEBUG) {
+            if (s.length == 1) {
+                System.out.println(s[0].toString());
+            } else {
+                for (final Object t : s) {
+                    System.out.print(t.toString());
+                }
+                System.out.println("");
+            }
+        }
+    }
 
     /**
      * Feature field is indexed by [y][x][line] where the line is always a starting point connected to
@@ -55,6 +73,14 @@ public class VectorTileBuilder {
 
                 // Walk all the contours we have. Each contour is 0 - 4 lines.
                 for (int j = 0; j < tile.contours[i].lineCount; j++) {
+
+                    p(String.format("Processing %d, %d line %d.", x, y, j));
+                    p(String.format("  Cells %d %d %d %d",
+                            tile.tile[x + y * tile.width],
+                            tile.tile[x + y * tile.width + 1],
+                            tile.tile[x + y * tile.width + 1 + tile.width],
+                            tile.tile[x + y * tile.width + tile.width]
+                    ));
                     assert featureField[y][x][j] == null;
 
                     //-------------------------------------------------------------------------
@@ -80,17 +106,20 @@ public class VectorTileBuilder {
                         case 0:
                             if (y==0) {
                                 // No cell above. Create.
+                                p("  Build lineEnd ", lineEnd);
                                 pEnd = buildPointLineNode(x, y, lineEnd);
                                 vectorTile.top.getTail().endPoint = pEnd;
                             }
                             else {
                                 // A cell above. Fetch.
+                                p("  Find lineEnd ", lineEnd);
                                 pEnd = findBegin(oppositeSide(lineEnd), featureField[y-1][x]);
                                 pEnd.value.side = lineEnd;
                             }
                             break;
                         case 1:
                             // Not visited node. Create.
+                            p("  Build lineEnd ", lineEnd);
                             pEnd = buildPointLineNode(x, y, lineEnd);
                             if (x == WIDTH - 1) {
                                 vectorTile.right.getTail().endPoint = pEnd;
@@ -98,6 +127,7 @@ public class VectorTileBuilder {
                             break;
                         case 2:
                             // Not visited node. Create.
+                            p("  Build lineEnd ", lineEnd);
                             pEnd = buildPointLineNode(x, y, lineEnd);
                             if (y == HEIGHT - 1) {
                                 vectorTile.bottom.getTail().endPoint = pEnd;
@@ -105,10 +135,12 @@ public class VectorTileBuilder {
                             break;
                         case 3:
                             if (x == 0) {
+                                p("  Build lineEnd ", lineEnd);
                                 pEnd = buildPointLineNode(x, y, lineEnd);
                                 vectorTile.left.getTail().endPoint = pEnd;
                             }
                             else {
+                                p("  Find lineEnd ", lineEnd);
                                 pEnd = findBegin(oppositeSide(lineEnd), featureField[y][x-1]);
                                 pEnd.value.side = lineEnd;
                             }
@@ -120,21 +152,25 @@ public class VectorTileBuilder {
                     switch (lineBegin) {
                         case 0:
                             if (y==0) {
+                                p("  Build lineBegin ", lineBegin);
                                 pBegin = buildPointLineNode(x, y, lineBegin);
                                 vectorTile.top.getTail().beginPoint = pBegin;
                             }
                             else {
+                                p("  Find lineBegin ", lineBegin);
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y-1][x]);
                                 pBegin.value.side = lineBegin;
                             }
                             break;
                         case 1:
+                            p("  Build lineBegin ", lineBegin);
                             pBegin = buildPointLineNode(x, y, lineBegin);
                             if (x == WIDTH - 1) {
                                 vectorTile.right.getTail().beginPoint = pBegin;
                             }
                             break;
                         case 2:
+                            p("  Build lineBegin ", lineBegin);
                             pBegin = buildPointLineNode(x, y, lineBegin);
                             if (y == HEIGHT - 1) {
                                 vectorTile.bottom.getTail().beginPoint = pBegin;
@@ -142,10 +178,13 @@ public class VectorTileBuilder {
                             break;
                         case 3:
                             if (x == 0) {
+                                p("  Build lineBegin ", lineBegin);
                                 pBegin = buildPointLineNode(x, y, lineBegin);
                                 vectorTile.left.getTail().beginPoint = pBegin;
                             }
                             else {
+                                p("  Find lineBegin ", lineBegin);
+                                p("  Opposie is "+oppositeSide(lineBegin));
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y][x-1]);
                                 pBegin.value.side = lineBegin;
                             }

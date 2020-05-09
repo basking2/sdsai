@@ -14,7 +14,7 @@ public class VectorTileBuilderTest {
         final int height = 256;
         final byte[] array = new byte[height * width];
         for (int i = 0; i < array.length; i++) {
-            array[i] = (byte)((Math.random()*100 % 3) - 2);
+            array[i] = (byte)((int)(Math.random()*100 % 3) - 1);
         }
 
         final Tile t = new Tile(array, width);
