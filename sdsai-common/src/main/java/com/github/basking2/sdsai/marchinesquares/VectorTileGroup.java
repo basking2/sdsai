@@ -3,6 +3,7 @@ package com.github.basking2.sdsai.marchinesquares;
 import java.util.Iterator;
 
 import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
+import static com.github.basking2.sdsai.marchinesquares.Colors.STITCH_COLOR;
 
 /**
  * A vector tile group connects many {@link Tile} objects so they may be
@@ -59,18 +60,18 @@ public class VectorTileGroup {
             feature.translate(xOffset, yOffset);
             tile.features.add(feature);
 
-            for (final Side s : eastTile.top) {
-                translateSide(s);
-            }
-            for (final Side s : eastTile.right) {
-                translateSide(s);
-            }
-            for (final Side s : eastTile.bottom) {
-                translateSide(s);
-            }
-            for (final Side s : eastTile.left) {
-                translateSide(s);
-            }
+        }
+        for (final Side s : eastTile.top) {
+            translateSide(s);
+        }
+        for (final Side s : eastTile.right) {
+            translateSide(s);
+        }
+        for (final Side s : eastTile.bottom) {
+            translateSide(s);
+        }
+        for (final Side s : eastTile.left) {
+            translateSide(s);
         }
 
         if (stitchTiles) {
@@ -177,6 +178,8 @@ public class VectorTileGroup {
             // The end of the neighbor cell's line points to...
             //    ... the beginning of the other neighbor cell's line.
             sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
+
+            checkFeature(sides[lineStart].endPoint);
         }
     }
 
@@ -286,6 +289,44 @@ public class VectorTileGroup {
         if (s.endPoint != null && s.endPoint.next == null) {
             s.endPoint.value.x += xOffset;
             s.endPoint.value.y += yOffset;
+        }
+    }
+
+    /**
+     * Check if the node is a feature. If it is, add it.
+     * @param start The node to check.
+     */
+    private void checkFeature(final LinkedList.Node<Point> start) {
+        LinkedList.Node<Point> stop = start;
+
+        // While there is no loop and there is a node.
+        while (stop != null && stop.color != STITCH_COLOR) {
+            stop.color = STITCH_COLOR;
+            stop = stop.next;
+        }
+
+        if (stop != null) {
+            // Make sure we are 3 segments long for a proper polygon.
+            if (start.next.next != start) {
+                final LinkedList.Node<Point> newStartNode = new LinkedList.Node<>(new Point(start.value), start.next, start.color);
+
+                // The start node is now the end node.
+                start.next = null;
+
+                final Feature feature = new Feature(newStartNode);
+
+                tile.features.add(feature);
+            }
+        }
+        else {
+            // Uncolor the nodes.
+            stop = start;
+
+            // While there is no loop and there is a node.
+            while (stop != null) {
+                stop.color = COLLECT_COLOR;
+                stop = stop.next;
+            }
         }
     }
 }

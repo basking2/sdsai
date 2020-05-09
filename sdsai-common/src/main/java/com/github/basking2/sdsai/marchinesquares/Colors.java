@@ -23,4 +23,8 @@ public class Colors {
      */
     public static final byte COLLECT_COLOR = 1;
 
+    /**
+     * When nodes are stitched, they are colored this to detect loops.
+     */
+    public static final byte STITCH_COLOR = 2;
 }
