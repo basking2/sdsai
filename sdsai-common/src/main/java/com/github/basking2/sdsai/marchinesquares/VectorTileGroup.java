@@ -306,7 +306,7 @@ public class VectorTileGroup {
         LinkedList.Node<Point> stop = start;
 
         // While there is no loop and there is a node.
-        while (stop != null) {
+        while (stop != null && stop != start) {
             stop.color = STITCH_COLOR;
             stop = stop.next;
         }
