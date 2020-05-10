@@ -109,7 +109,6 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
          */
         public byte color;
 
-
         public Node(final VALUE value, final Node<VALUE> next) {
             this.value = value;
             this.next = next;

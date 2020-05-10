@@ -129,14 +129,14 @@ public class VectorTileGroup {
         }
 
         // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-        Side northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, nw.cell, ne.cell);
+        Side northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
 
         while (leftSide.hasNext() && rightSide.hasNext()) {
             final Side sw = rightSide.next();
             final Side se = leftSide.next();
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, se.cell, sw.cell);
+            final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, se.cell, sw.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -208,14 +208,14 @@ public class VectorTileGroup {
         }
 
         // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-        Side westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, sw.cell, nw.cell);
+        Side westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
             final Side ne = bottomSide.next();
             final Side se = topSide.next();
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, ne.cell, se.cell);
+            final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, ne.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -306,7 +306,7 @@ public class VectorTileGroup {
         LinkedList.Node<Point> stop = start;
 
         // While there is no loop and there is a node.
-        while (stop != null && stop.color != STITCH_COLOR) {
+        while (stop != null) {
             stop.color = STITCH_COLOR;
             stop = stop.next;
         }
@@ -330,7 +330,7 @@ public class VectorTileGroup {
 
             // While there is no loop and there is a node.
             while (stop != null) {
-                stop.color = COLLECT_COLOR;
+                stop.color = DEFAULT_COLOR;
                 stop = stop.next;
             }
         }
