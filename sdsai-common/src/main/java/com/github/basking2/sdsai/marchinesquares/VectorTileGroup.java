@@ -2,8 +2,7 @@ package com.github.basking2.sdsai.marchinesquares;
 
 import java.util.Iterator;
 
-import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
-import static com.github.basking2.sdsai.marchinesquares.Colors.STITCH_COLOR;
+import static com.github.basking2.sdsai.marchinesquares.Colors.*;
 
 /**
  * A vector tile group connects many {@link Tile} objects so they may be
@@ -165,14 +164,17 @@ public class VectorTileGroup {
             final byte lineEnd = iso.lines[i+1];
 
             if (sides[lineStart].endPoint == null) {
-                sides[lineStart].endPoint = new LinkedList.Node<Point>(new Point(xOffset, yOffset, lineStart), null, COLLECT_COLOR);
+                sides[lineStart].endPoint = new LinkedList.Node<>(new Point(xOffset, yOffset, lineStart), null, STITCH_COLOR);
             }
             if (sides[lineEnd].beginPoint == null) {
-                sides[lineEnd].beginPoint = new LinkedList.Node<Point>(new Point(xOffset, yOffset, lineEnd), null, COLLECT_COLOR);
+                sides[lineEnd].beginPoint = new LinkedList.Node<>(new Point(xOffset, yOffset, lineEnd), null, STITCH_COLOR);
             }
 
             assert sides[lineStart].endPoint != null;
-            assert sides[lineStart].endPoint.next == null;
+
+            // We believe it is rare, but possible, for tile stitching to cause this condition.
+            // We, therefore, remove the assertion.
+            //assert sides[lineStart].endPoint.next == null;
             assert sides[lineEnd].beginPoint != null;
 
             // The end of the neighbor cell's line points to...
@@ -281,14 +283,18 @@ public class VectorTileGroup {
     }
 
     private void translateSide(final Side s) {
-        if (s.beginPoint != null && s.beginPoint.next == null) {
-            s.beginPoint.value.x += xOffset;
-            s.beginPoint.value.y += yOffset;
-        }
+        translateUnfeaturedPoints(s.beginPoint);
+        translateUnfeaturedPoints(s.endPoint);
+    }
 
-        if (s.endPoint != null && s.endPoint.next == null) {
-            s.endPoint.value.x += xOffset;
-            s.endPoint.value.y += yOffset;
+    private void translateUnfeaturedPoints(LinkedList.Node<Point> point) {
+        while (point != null) {
+            if (point.color == DEFAULT_COLOR) {
+                point.color = STITCH_COLOR;
+                point.value.x += xOffset;
+                point.value.y += yOffset;
+            }
+            point = point.next;
         }
     }
 

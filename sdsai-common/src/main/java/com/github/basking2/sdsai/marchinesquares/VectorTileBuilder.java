@@ -1,9 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
 import static com.github.basking2.sdsai.marchinesquares.Colors.COLLECT_COLOR;
+import static com.github.basking2.sdsai.marchinesquares.Colors.DEFAULT_COLOR;
 
 public class VectorTileBuilder {
 
@@ -184,7 +182,6 @@ public class VectorTileBuilder {
                             }
                             else {
                                 p("  Find lineBegin ", lineBegin);
-                                p("  Opposie is "+oppositeSide(lineBegin));
                                 pBegin = findEnd(oppositeSide(lineBegin), featureField[y][x-1]);
                                 pBegin.value.side = lineBegin;
                             }
@@ -221,49 +218,22 @@ public class VectorTileBuilder {
             for (int x = 0; x < WIDTH; x++) {
 
                 // Walk all the line beginnings in the cell.
-                for (int j = 0; j < featureField[y][x].length; j++) {
+                nextField: for (int j = 0; j < featureField[y][x].length; j++) {
 
                     assert featureField[y][x][j] != null;
 
                     final LinkedList.Node<Point> start = featureField[y][x][j];
                     LinkedList.Node<Point> stop = start.next;
                     start.color = COLLECT_COLOR;
+                    // Exit this loop in 3 conditions.
+                    // 1. We reach start again.
+                    // 2. We reach COLLECT_COLOR nodes against, we are already linked.
+                    // 3. We dead-end and are not a polygon (yet).
                     while (start != stop && stop != null) {
                         if (stop.color == COLLECT_COLOR) {
-                            stop = null;
+                            break nextField;
                         }
                         else {
-
-                            //
-                            // Validation code.
-                            //
-                            // This code checks that all paths that terminate (not loop) are on border nodes.
-                            //
-                            // It is expensive to keep on, so it remains here commented out.
-                            //
-
-                            /*
-                            if (stop.next == null && stop.value.x != 0 && stop.value.y != 0 && stop.value.y != HEIGHT-1 && stop.value.x != WIDTH-1 ) {
-                                System.out.println("An internal node has a null pointer??? How?");
-                                LinkedList.Node<Point> last = start;
-                                while (last != null) {
-                                    System.out.println("\tPoint "+last.value);
-                                    last = last.next;
-                                }
-
-                                System.out.println("Values around the last good end point.");
-                                for (int y2 = stop.value.y; y2 < stop.value.y+3; y2++) {
-                                    for (int x2 = stop.value.x; x2 < stop.value.x+3; x2++) {
-                                        System.out.print(tile.tile[y2*tile.width+x2]);
-                                        System.out.print(" ");
-                                    }
-                                    System.out.println("");
-                                }
-
-                                assert false;
-                            }
-                             */
-
                             stop.color = COLLECT_COLOR;
                             stop = stop.next;
                         }
@@ -282,6 +252,14 @@ public class VectorTileBuilder {
                             final Feature feature = new Feature(newStartNode);
 
                             vectorTile.features.add(feature);
+                        }
+                    }
+                    else {
+                        // We dead-ended. Uncolor the nodes we set.
+                        stop = start;
+                        while (stop != null) {
+                            stop.color = DEFAULT_COLOR;
+                            stop = stop.next;
                         }
                     }
                 }

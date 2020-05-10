@@ -16,6 +16,11 @@ public class Colors {
     private Colors(){}
 
     /**
+     * The default color of nodes.
+     */
+    public static final byte DEFAULT_COLOR = 0;
+
+    /**
      * When the tile is built point colors are initially 0.
      * When we detect loops to build polygons we set those values to COLLECT_COLOR.
      * When tiles are zipped together, another color should be used to detect when connecting a tile completes a
