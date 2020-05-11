@@ -118,6 +118,7 @@ public class VectorTileGroup {
         final Iterator<Side> leftSide = eastTile.left.iterator();
 
         // Find the previous two Side nodes.
+        Side northSide;
         Side nw;
         Side ne;
         Side sw;
@@ -128,6 +129,8 @@ public class VectorTileGroup {
             ne = northTile.left.getTail();
             sw = rightSide.next();
             se = leftSide.next();
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
             yOffset++;
 
             // Stitch points in nw and se.
@@ -138,11 +141,11 @@ public class VectorTileGroup {
             ne = leftSide.next();
             sw = rightSide.next();
             se = leftSide.next();
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
             yOffset += 2;
         }
 
-        // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-        Side northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
 
         while (leftSide.hasNext() && rightSide.hasNext()) {
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
@@ -175,23 +178,8 @@ public class VectorTileGroup {
             final byte lineStart = iso.lines[i];
             final byte lineEnd = iso.lines[i+1];
 
-            if (sides[lineStart].endPoint == null) {
-                sides[lineStart].endPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
-                sides[lineStart].endPoint.color = STITCH_COLOR;
-            }
-
-            assert sides[lineEnd].beginPoint != null;
-            // TODO - The commented out code should be unecessary! Assertion above protects against this.
-            //if (sides[lineEnd].beginPoint == null) {
-            //    sides[lineEnd].beginPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
-            //    sides[lineEnd].beginPoint.color = STITCH_COLOR;
-            //}
-
             assert sides[lineStart].endPoint != null;
-
-            // We believe it is rare, but possible, for tile stitching to cause this condition.
-            // We, therefore, remove the assertion.
-            //assert sides[lineStart].endPoint.next == null;
+            assert sides[lineStart].endPoint.next == null;
             assert sides[lineEnd].beginPoint != null;
 
             // The end of the neighbor cell's line points to...
@@ -217,11 +205,14 @@ public class VectorTileGroup {
         Side sw;
         Side ne;
         Side se;
+        Side westSide;
         if (northWestPoint != null) {
             nw = northWestPoint;
             sw = westTile.top.getTail();
             ne = bottomSide.next();
             se = topSide.next();
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
             xOffset++;
 
             // Stitch points in nw and se.
@@ -232,11 +223,11 @@ public class VectorTileGroup {
             sw = topSide.next();
             ne = bottomSide.next();
             se = topSide.next();
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
             xOffset += 2;
         }
 
-        // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-        Side westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
 
