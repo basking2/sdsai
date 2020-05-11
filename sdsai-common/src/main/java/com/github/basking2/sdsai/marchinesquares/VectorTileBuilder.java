@@ -267,7 +267,7 @@ public class VectorTileBuilder {
         }
     }
 
-    private LinkedList.LabeledNode<Point> buildPointLineNode(double x, double y, byte side) {
+    public static LinkedList.LabeledNode<Point> buildPointLineNode(double x, double y, byte side) {
         switch (side) {
             case 0:
                 return new LinkedList.LabeledNode(new Point(x + 0.5, y, side), null);

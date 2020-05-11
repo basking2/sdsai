@@ -60,6 +60,7 @@ public class VectorTileGroup {
             tile.features.add(feature);
 
         }
+
         for (final Side s : eastTile.top) {
             translateSide(s);
         }
@@ -119,22 +120,31 @@ public class VectorTileGroup {
         // Find the previous two Side nodes.
         Side nw;
         Side ne;
+        Side sw;
+        Side se;
+
         if (northWestPoint != null && northTile != null) {
             nw = northWestPoint;
             ne = northTile.left.getTail();
+            sw = rightSide.next();
+            se = leftSide.next();
+            yOffset++;
+
+            // Stitch points in nw and se.
+            nw.setPoints(xOffset, yOffset, (byte)3, (byte)0, nw.cell, sw.cell);
+            ne.setPoints(xOffset, yOffset, (byte)1, (byte)0, ne.cell, se.cell);
         } else {
             nw = rightSide.next();
             ne = leftSide.next();
-            yOffset++;
+            sw = rightSide.next();
+            se = leftSide.next();
+            yOffset += 2;
         }
 
         // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
         Side northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
 
         while (leftSide.hasNext() && rightSide.hasNext()) {
-            final Side sw = rightSide.next();
-            final Side se = leftSide.next();
-
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
             final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, se.cell, sw.cell);
 
@@ -148,6 +158,8 @@ public class VectorTileGroup {
 
             nw = sw;
             ne = se;
+            sw = rightSide.next();
+            se = leftSide.next();
             northSide = southSide;
             northSide.swapPoints();
             yOffset++;
@@ -164,10 +176,12 @@ public class VectorTileGroup {
             final byte lineEnd = iso.lines[i+1];
 
             if (sides[lineStart].endPoint == null) {
-                sides[lineStart].endPoint = new LinkedList.Node<>(new Point(xOffset, yOffset, lineStart), null, STITCH_COLOR);
+                sides[lineStart].endPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
+                sides[lineStart].endPoint.color = STITCH_COLOR;
             }
             if (sides[lineEnd].beginPoint == null) {
-                sides[lineEnd].beginPoint = new LinkedList.Node<>(new Point(xOffset, yOffset, lineEnd), null, STITCH_COLOR);
+                sides[lineEnd].beginPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
+                sides[lineEnd].beginPoint.color = STITCH_COLOR;
             }
 
             assert sides[lineStart].endPoint != null;
@@ -198,21 +212,30 @@ public class VectorTileGroup {
         // Find the previous two Side nodes.
         Side nw;
         Side sw;
+        Side ne;
+        Side se;
         if (northWestPoint != null) {
             nw = northWestPoint;
             sw = westTile.top.getTail();
+            ne = bottomSide.next();
+            se = topSide.next();
+            xOffset++;
+
+            // Stitch points in nw and se.
+            nw.setPoints(xOffset, yOffset, (byte)0, (byte)0, nw.cell, ne.cell);
+            sw.setPoints(xOffset, yOffset, (byte)2, (byte)0, sw.cell, se.cell);
         } else {
             nw = bottomSide.next();
             sw = topSide.next();
-            xOffset++;
+            ne = bottomSide.next();
+            se = topSide.next();
+            xOffset += 2;
         }
 
         // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
         Side westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
 
         while (bottomSide.hasNext() && topSide.hasNext()) {
-            final Side ne = bottomSide.next();
-            final Side se = topSide.next();
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
             final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, ne.cell, se.cell);
@@ -226,6 +249,8 @@ public class VectorTileGroup {
 
             nw = ne;
             sw = se;
+            ne = bottomSide.next();
+            se = topSide.next();
             westSide = eastSide;
             westSide.swapPoints();
             xOffset++;
