@@ -131,8 +131,8 @@ public class VectorTileGroup {
             yOffset++;
 
             // Stitch points in nw and se.
-            nw.setPoints(xOffset, yOffset, (byte)3, (byte)0, nw.cell, sw.cell);
-            ne.setPoints(xOffset, yOffset, (byte)1, (byte)0, ne.cell, se.cell);
+            nw.setPoints(xOffset, yOffset, (byte)1, (byte)0, nw.cell, sw.cell);
+            ne.setPoints(xOffset, yOffset, (byte)3, (byte)0, se.cell, ne.cell);
         } else {
             nw = rightSide.next();
             ne = leftSide.next();
@@ -179,10 +179,13 @@ public class VectorTileGroup {
                 sides[lineStart].endPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
                 sides[lineStart].endPoint.color = STITCH_COLOR;
             }
-            if (sides[lineEnd].beginPoint == null) {
-                sides[lineEnd].beginPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
-                sides[lineEnd].beginPoint.color = STITCH_COLOR;
-            }
+
+            assert sides[lineEnd].beginPoint != null;
+            // TODO - The commented out code should be unecessary! Assertion above protects against this.
+            //if (sides[lineEnd].beginPoint == null) {
+            //    sides[lineEnd].beginPoint = VectorTileBuilder.buildPointLineNode(xOffset, yOffset, lineStart);
+            //    sides[lineEnd].beginPoint.color = STITCH_COLOR;
+            //}
 
             assert sides[lineStart].endPoint != null;
 
@@ -222,8 +225,8 @@ public class VectorTileGroup {
             xOffset++;
 
             // Stitch points in nw and se.
-            nw.setPoints(xOffset, yOffset, (byte)0, (byte)0, nw.cell, ne.cell);
-            sw.setPoints(xOffset, yOffset, (byte)2, (byte)0, sw.cell, se.cell);
+            nw.setPoints(xOffset, yOffset, (byte)2, (byte)0, ne.cell, nw.cell);
+            sw.setPoints(xOffset, yOffset, (byte)0, (byte)0, sw.cell, se.cell);
         } else {
             nw = bottomSide.next();
             sw = topSide.next();
