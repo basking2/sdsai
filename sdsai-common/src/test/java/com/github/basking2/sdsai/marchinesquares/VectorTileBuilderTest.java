@@ -110,45 +110,32 @@ public class VectorTileBuilderTest {
         t.isoband();
         final VectorTile vectorTile = new VectorTileBuilder(t).build();
 
-        final double[] dims = new double[]{ 0, 0 };
-
-        final StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
-        sb.append("\"type\": \"FeatureCollection\",\n");
-        sb.append("\"features\": [\n");
-
-        for (final Feature f: vectorTile.features) {
-            sb.append("{\n");
-            sb.append("\"type\": \"Feature\",\n");
-            sb.append("\"properties\": {},\n");
-            sb.append("\"geometry\": {\n");
-            sb.append("\"type\": \"Polygon\",\n");
-
-            sb.append("\"coordinates\": [ [ \n ");
-            for (final Point p : f.points) {
-                double x = p.x * 360f / width - 180f;
-                double y = -(p.y * 180f / height - 90f);
-                if (!Double.isNaN(x) && !Double.isNaN(y)) {
-                    sb.append("[")
-                            .append(x)
-                            .append(",")
-                            .append(y)
-                            .append("],\n");
-                }
-            }
-            sb.setCharAt(sb.length()-2, ' ');
-            sb.append("] ]\n");
-
-            sb.append("}\n");
-            sb.append("},\n");
-        }
-        sb.setCharAt(sb.length()-2, ' ');
-
-        sb.append("]\n");
-        sb.append("}\n");
+        final String geoJson = SimpleGeoJson.write(vectorTile);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + ".geojson")) {
-            os.write(sb.toString().getBytes("UTF-8"));
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+    @Test
+    public void craftedBuild() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile tile =
+                new Tile(new byte[]{
+                        0, 0, 0, 0, 0 , 0,
+                        0, n, n, n, n, 0,
+                        0, n, p, p, n, 0,
+                        0, n, p, p, n, 0,
+                        0, n, n, n, n, 0,
+                        0, 0, 0, 0, 0 , 0,
+                }, 6);
+
+        final String geoJson = SimpleGeoJson.write(new VectorTileBuilder(tile).buildIsoband());
+
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
         }
     }
 }
