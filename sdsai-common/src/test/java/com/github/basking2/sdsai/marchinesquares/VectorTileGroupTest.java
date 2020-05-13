@@ -121,7 +121,6 @@ public class VectorTileGroupTest {
                         0, n, n,
                         0, 0, 0}, 3),
                 new Tile(new byte[]{
-
                         0, 0, 0,
                         n, n, 0,
                         p, n, 0,
@@ -135,10 +134,40 @@ public class VectorTileGroupTest {
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 6);
 
-        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x.geojson")) {
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x1.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
+
+    @Test
+    public void craftedBuild1x2() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{
+                        0, 0, 0, 0, 0,
+                        0, p, p, p, 0,
+                        0, p, n, p, 0}, 5),
+                new Tile(new byte[]{
+                        0, p, n, p, 0,
+                        0, p, p, p, 0,
+                        0, 0, 0, 0, 0}, 5)
+        };
+
+        final VectorTileGroup g = new VectorTileGroup();
+        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
+        g.addNewRow();
+        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 6, 5);
+
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "1x2.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
     @Test
     public void craftedBuild2x2() throws IOException {
 
@@ -173,7 +202,7 @@ public class VectorTileGroupTest {
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile());
 
-        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2.geojson")) {
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
