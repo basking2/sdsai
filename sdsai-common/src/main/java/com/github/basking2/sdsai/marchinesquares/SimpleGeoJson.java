@@ -1,22 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 public class SimpleGeoJson {
-    public static String write(final VectorTile tile) {
-        final double[] dims = new double[2];
-        tile.features.forEach(f -> {
-            f.points.forEach(p -> {
-                if (p.x > dims[0]) {
-                    dims[0] = p.x;
-                }
-                if (p.y > dims[1]) {
-                    dims[1] = p.y;
-                }
+    public static String write(final VectorTile tile, double height, double width) {
 
-            });
-        });
-
-        double width = dims[0];
-        double height = dims[1];
         final StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append("\"type\": \"FeatureCollection\",\n");
@@ -53,5 +39,25 @@ public class SimpleGeoJson {
         sb.append("}\n");
 
         return sb.toString();
+    }
+
+    public static String write(final VectorTile tile) {
+        final double[] dims = new double[2];
+        tile.features.forEach(f -> {
+            f.points.forEach(p -> {
+                if (p.x > dims[0]) {
+                    dims[0] = p.x;
+                }
+                if (p.y > dims[1]) {
+                    dims[1] = p.y;
+                }
+
+            });
+        });
+
+        double width = dims[0];
+        double height = dims[1];
+
+        return write(tile, height, width);
     }
 }

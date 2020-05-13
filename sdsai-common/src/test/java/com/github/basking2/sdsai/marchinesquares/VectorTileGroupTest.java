@@ -116,16 +116,16 @@ public class VectorTileGroupTest {
         final Tile[] tiles = {
                 new Tile(new byte[]{
                         0, 0, 0,
-                        0, 0, 0,
-                        0, 0, p,
-                        0, 0, 0,
+                        0, n, n,
+                        0, n, p,
+                        0, n, n,
                         0, 0, 0}, 3),
                 new Tile(new byte[]{
 
                         0, 0, 0,
-                        0, 0, 0,
-                        p, 0, 0,
-                        0, 0, 0,
+                        n, n, 0,
+                        p, n, 0,
+                        n, n, 0,
                         0, 0, 0}, 3)
         };
 
@@ -133,7 +133,7 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile());
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 6);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
