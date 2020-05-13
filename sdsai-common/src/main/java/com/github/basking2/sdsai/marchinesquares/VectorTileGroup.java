@@ -322,7 +322,7 @@ public class VectorTileGroup {
      * @param start The node to check.
      */
     private void checkFeature(final LinkedList.Node<Point> start) {
-        LinkedList.Node<Point> stop = start;
+        LinkedList.Node<Point> stop = start.next;
 
         // While there is no loop and there is a node.
         while (stop != null && stop != start) {

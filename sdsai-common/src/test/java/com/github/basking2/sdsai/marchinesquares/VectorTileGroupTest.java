@@ -108,7 +108,39 @@ public class VectorTileGroupTest {
     }
 
     @Test
-    public void craftedBuild() throws IOException {
+    public void craftedBuild2x1() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 0, p,
+                        0, 0, 0,
+                        0, 0, 0}, 3),
+                new Tile(new byte[]{
+
+                        0, 0, 0,
+                        0, 0, 0,
+                        p, 0, 0,
+                        0, 0, 0,
+                        0, 0, 0}, 3)
+        };
+
+        final VectorTileGroup g = new VectorTileGroup();
+        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile());
+
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+    @Test
+    public void craftedBuild2x2() throws IOException {
 
         final byte p = 1;
         final byte n = -1;
