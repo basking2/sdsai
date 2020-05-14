@@ -147,7 +147,7 @@ public class VectorTileGroup {
         }
 
 
-        while (leftSide.hasNext() && rightSide.hasNext()) {
+        while (true) {
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
             final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, se.cell, sw.cell);
 
@@ -158,6 +158,10 @@ public class VectorTileGroup {
             final Side[] sides = new Side[]{ northSide, ne, southSide, nw };
 
             linkSides(iso, sides);
+
+            if (!leftSide.hasNext() || !rightSide.hasNext()) {
+                break;
+            }
 
             nw = sw;
             ne = se;
@@ -229,7 +233,7 @@ public class VectorTileGroup {
         }
 
 
-        while (bottomSide.hasNext() && topSide.hasNext()) {
+        while (true) {
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
             final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, ne.cell, se.cell);
@@ -240,6 +244,10 @@ public class VectorTileGroup {
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
             linkSides(iso, sides);
+
+            if (!bottomSide.hasNext() || !topSide.hasNext()) {
+                break;
+            }
 
             nw = ne;
             sw = se;
