@@ -89,7 +89,26 @@ public class Side {
         }
     }
 
-    public void setPoints(final double x, final double y, final byte side, final byte color, final byte left, final byte right) {
+    public void setPoints(double x, double y, final byte side, final byte color, final byte left, final byte right) {
+        switch (side) {
+            case 0:
+                x += 0.5;
+                break;
+            case 1:
+                x += 1.0;
+                y += 0.5;
+                break;
+            case 2:
+                x += 0.5;
+                y += 1.0;
+                break;
+            case 3:
+                y += 0.5;
+                break;
+            default:
+                throw new IllegalArgumentException("Side must be 0 - 3 but was "+side);
+        }
+
         switch (left) {
             case -1:
                 switch (right) {
@@ -169,37 +188,6 @@ public class Side {
         s.setPoints(x, y, side, color, left, right);
 
         return s;
-    }
-
-    /**
-     * Call {@link #buildArtificialSide(double, double, byte, byte, byte, byte)} with reflected inputs.
-     * @param x The x coordinate.
-     * @param y The y coordinate.
-     * @param side The side. This is reflected 0 to 2, 2 to 0, 1 to 3, and 3 to 1.
-     * @param color The color to set the linked list nodes to.
-     * @param left This is reflected by swapping with right.
-     * @param right This is reflected by swapping with left.
-     * @return The reflected side.
-     */
-    public static Side buildReflectedArtificialSide(final double x, final double y, final byte side, final byte color, final byte left, final byte right) {
-        final byte reflectedSide;
-        switch (side) {
-            case 0:
-                reflectedSide = 2;
-                break;
-            case 1:
-                reflectedSide = 3;
-                break;
-            case 2:
-                reflectedSide = 0;
-                break;
-            case 3:
-                reflectedSide = 1;
-                break;
-            default:
-                throw new IllegalStateException("Unhandled side "+side);
-        }
-        return buildArtificialSide(x, y, reflectedSide, color, right, left);
     }
 
     public void swapPoints() {

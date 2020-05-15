@@ -130,7 +130,7 @@ public class VectorTileGroup {
             sw = rightSide.next();
             se = leftSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
+            northSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
             yOffset++;
 
             // Stitch points in nw and se.
@@ -142,14 +142,14 @@ public class VectorTileGroup {
             sw = rightSide.next();
             se = leftSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, nw.cell, ne.cell);
+            northSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
             yOffset += 2;
         }
 
 
         while (true) {
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, se.cell, sw.cell);
+            final Side southSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -216,7 +216,7 @@ public class VectorTileGroup {
             ne = bottomSide.next();
             se = topSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
+            westSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
             xOffset++;
 
             // Stitch points in nw and se.
@@ -228,7 +228,7 @@ public class VectorTileGroup {
             ne = bottomSide.next();
             se = topSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)3, STITCH_COLOR, sw.cell, nw.cell);
+            westSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
             xOffset += 2;
         }
 
@@ -236,7 +236,7 @@ public class VectorTileGroup {
         while (true) {
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildReflectedArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, ne.cell, se.cell);
+            final Side eastSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)3, STITCH_COLOR, se.cell, ne.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -260,28 +260,6 @@ public class VectorTileGroup {
 
         // Put the xOffset back where we found it.
         xOffset -= northTile.bottom.size();
-    }
-
-    /**
-     * Connect a start side to an end side, taking the first null-next
-     * from the start and connecting it with the first not-null-next
-     * in the end side.
-     *
-     * The intuitive logic is that we should never connect to a point that
-     * doesn't go somewhere.
-     *
-     * @param start The start side.
-     * @param end The end side with on node with a defined next.
-     */
-    private void connectSides(final Side start, final Side end, byte pointSide) {
-
-        final LinkedList.Node<Point> nextPoint = end.endPoint;
-
-        final LinkedList.Node<Point> originPoint = start.beginPoint;
-
-        assert originPoint.next == null;
-        nextPoint.color = COLLECT_COLOR;
-        originPoint.next = nextPoint;
     }
 
     public void addNewRow() {

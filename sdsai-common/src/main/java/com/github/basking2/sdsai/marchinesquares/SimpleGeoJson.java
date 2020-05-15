@@ -19,7 +19,7 @@ public class SimpleGeoJson {
             sb.append("\"coordinates\": [ [ \n ");
             for (final Point p : f.points) {
                 final double x = p.x * 360d / width - 180d;
-                final double y = ((height - p.y) * 180d / height - 90d);
+                final double y = (height - p.y) * 180d / height - 90d;
                 if (!Double.isNaN(x) && !Double.isNaN(y)) {
                     sb.append("[")
                             .append(x)
@@ -56,8 +56,8 @@ public class SimpleGeoJson {
             });
         });
 
-        double width = dims[0];
-        double height = dims[1];
+        double width = dims[0]-1;
+        double height = dims[1]-1;
 
         return write(tile, height, width);
     }

@@ -132,7 +132,7 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 6);
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x1.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -161,7 +161,7 @@ public class VectorTileGroupTest {
         g.addNewRow();
         g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 6, 5);
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 4);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "1x2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -200,7 +200,7 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[2]).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[3]).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 6, 6);
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 5);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2x2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
