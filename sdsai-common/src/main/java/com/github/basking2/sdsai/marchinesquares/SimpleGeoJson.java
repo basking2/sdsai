@@ -11,14 +11,15 @@ public class SimpleGeoJson {
         for (final Feature f : tile.features) {
             sb.append("{\n");
             sb.append("\"type\": \"Feature\",\n");
-            sb.append("\"properties\": {},\n");
+            sb.append("\"properties\": {\n");
+            sb.append("},\n");
             sb.append("\"geometry\": {\n");
             sb.append("\"type\": \"Polygon\",\n");
 
             sb.append("\"coordinates\": [ [ \n ");
             for (final Point p : f.points) {
-                double x = p.x * 360f / width - 180f;
-                double y = -(p.y * 180f / height - 90f);
+                final double x = p.x * 360d / width - 180d;
+                final double y = ((height - p.y) * 180d / height - 90d);
                 if (!Double.isNaN(x) && !Double.isNaN(y)) {
                     sb.append("[")
                             .append(x)
