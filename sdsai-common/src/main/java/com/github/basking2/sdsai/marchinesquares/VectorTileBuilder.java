@@ -105,7 +105,7 @@ public class VectorTileBuilder {
                             if (y==0) {
                                 // No cell above. Create.
                                 p("  Build lineEnd ", lineEnd);
-                                pEnd = buildPointLineNode(x, y, lineEnd);
+                                pEnd = Point.buildPointLineNode(x, y, lineEnd);
                                 vectorTile.top.getTail().endPoint = pEnd;
                             }
                             else {
@@ -118,7 +118,7 @@ public class VectorTileBuilder {
                         case 1:
                             // Not visited node. Create.
                             p("  Build lineEnd ", lineEnd);
-                            pEnd = buildPointLineNode(x, y, lineEnd);
+                            pEnd = Point.buildPointLineNode(x, y, lineEnd);
                             if (x == WIDTH - 1) {
                                 vectorTile.right.getTail().endPoint = pEnd;
                             }
@@ -126,7 +126,7 @@ public class VectorTileBuilder {
                         case 2:
                             // Not visited node. Create.
                             p("  Build lineEnd ", lineEnd);
-                            pEnd = buildPointLineNode(x, y, lineEnd);
+                            pEnd = Point.buildPointLineNode(x, y, lineEnd);
                             if (y == HEIGHT - 1) {
                                 vectorTile.bottom.getTail().endPoint = pEnd;
                             }
@@ -134,7 +134,7 @@ public class VectorTileBuilder {
                         case 3:
                             if (x == 0) {
                                 p("  Build lineEnd ", lineEnd);
-                                pEnd = buildPointLineNode(x, y, lineEnd);
+                                pEnd = Point.buildPointLineNode(x, y, lineEnd);
                                 vectorTile.left.getTail().endPoint = pEnd;
                             }
                             else {
@@ -151,7 +151,7 @@ public class VectorTileBuilder {
                         case 0:
                             if (y==0) {
                                 p("  Build lineBegin ", lineBegin);
-                                pBegin = buildPointLineNode(x, y, lineBegin);
+                                pBegin = Point.buildPointLineNode(x, y, lineBegin);
                                 vectorTile.top.getTail().beginPoint = pBegin;
                             }
                             else {
@@ -162,14 +162,14 @@ public class VectorTileBuilder {
                             break;
                         case 1:
                             p("  Build lineBegin ", lineBegin);
-                            pBegin = buildPointLineNode(x, y, lineBegin);
+                            pBegin = Point.buildPointLineNode(x, y, lineBegin);
                             if (x == WIDTH - 1) {
                                 vectorTile.right.getTail().beginPoint = pBegin;
                             }
                             break;
                         case 2:
                             p("  Build lineBegin ", lineBegin);
-                            pBegin = buildPointLineNode(x, y, lineBegin);
+                            pBegin = Point.buildPointLineNode(x, y, lineBegin);
                             if (y == HEIGHT - 1) {
                                 vectorTile.bottom.getTail().beginPoint = pBegin;
                             }
@@ -177,7 +177,7 @@ public class VectorTileBuilder {
                         case 3:
                             if (x == 0) {
                                 p("  Build lineBegin ", lineBegin);
-                                pBegin = buildPointLineNode(x, y, lineBegin);
+                                pBegin = Point.buildPointLineNode(x, y, lineBegin);
                                 vectorTile.left.getTail().beginPoint = pBegin;
                             }
                             else {
@@ -264,21 +264,6 @@ public class VectorTileBuilder {
                     }
                 }
             }
-        }
-    }
-
-    public static LinkedList.LabeledNode<Point> buildPointLineNode(double x, double y, byte side) {
-        switch (side) {
-            case 0:
-                return new LinkedList.LabeledNode(new Point(x + 0.5, y, side), null);
-            case 1:
-                return new LinkedList.LabeledNode(new Point(x + 1.0, y+0.5, side), null);
-            case 2:
-                return new LinkedList.LabeledNode(new Point(x + 0.5, y+1.0, side), null);
-            case 3:
-                return new LinkedList.LabeledNode(new Point(x, y+0.5, side), null);
-            default:
-                throw new IllegalStateException("Side value must be 0, 1, 2, or 3 for nw, ne, se, or sw.");
         }
     }
 

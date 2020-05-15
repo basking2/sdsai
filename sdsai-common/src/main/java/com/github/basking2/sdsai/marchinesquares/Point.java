@@ -36,4 +36,20 @@ public class Point {
     public String toString() {
         return String.format("(%f, %f)-%d", x, y, side);
     }
+
+    public static LinkedList.LabeledNode<Point> buildPointLineNode(double x, double y, byte side) {
+        switch (side) {
+            case 0:
+                return new LinkedList.LabeledNode(new Point(x + 0.5, y, side), null);
+            case 1:
+                return new LinkedList.LabeledNode(new Point(x + 1.0, y+0.5, side), null);
+            case 2:
+                return new LinkedList.LabeledNode(new Point(x + 0.5, y+1.0, side), null);
+            case 3:
+                return new LinkedList.LabeledNode(new Point(x, y+0.5, side), null);
+            default:
+                throw new IllegalStateException("Side value must be 0, 1, 2, or 3 for nw, ne, se, or sw.");
+        }
+    }
+
 }

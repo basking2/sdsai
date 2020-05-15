@@ -89,26 +89,7 @@ public class Side {
         }
     }
 
-    public void setPoints(double x, double y, final byte side, final byte color, final byte left, final byte right) {
-        switch (side) {
-            case 0:
-                x += 0.5;
-                break;
-            case 1:
-                x += 1.0;
-                y += 0.5;
-                break;
-            case 2:
-                x += 0.5;
-                y += 1.0;
-                break;
-            case 3:
-                y += 0.5;
-                break;
-            default:
-                throw new IllegalArgumentException("Side must be 0 - 3 but was "+side);
-        }
-
+    public void setPoints(final double x, final double y, final byte side, final byte color, final byte left, final byte right) {
         switch (left) {
             case -1:
                 switch (right) {
@@ -117,12 +98,15 @@ public class Side {
                         break;
                     case 0:
                         // A begin point that should attach to an end point in this cell.
-                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        beginPoint = Point.buildPointLineNode(x, y, side);
+                        beginPoint.color = color;
                         break;
                     case 1:
                         // Two points.
-                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
-                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        beginPoint = Point.buildPointLineNode(x, y, side);
+                        endPoint = Point.buildPointLineNode(x, y, side);
+                        beginPoint.color = color;
+                        endPoint.color = color;
                         break;
                     default:
                         throw new IllegalArgumentException("Unhandled byte "+right);
@@ -132,14 +116,16 @@ public class Side {
                 switch (right) {
                     case -1:
                         // A end point that should attach to a begin point outside this cell.
-                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        endPoint = Point.buildPointLineNode(x, y, side);
+                        endPoint.color = color;
                         break;
                     case 0:
                         // NOP: No points for contours on this side.
                         break;
                     case 1:
                         // A end point that should attach to a begin point outside this cell.
-                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        endPoint = Point.buildPointLineNode(x, y, side);
+                        endPoint.color = color;
                         break;
                     default:
                         throw new IllegalArgumentException("Unhandled byte "+right);
@@ -149,12 +135,15 @@ public class Side {
                 switch (right) {
                     case -1:
                         // Two points.
-                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
-                        endPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        beginPoint = Point.buildPointLineNode(x, y, side);
+                        endPoint = Point.buildPointLineNode(x, y, side);
+                        beginPoint.color = color;
+                        endPoint.color = color;
                         break;
                     case 0:
                         // A begin point that should attach to an end point in this cell.
-                        beginPoint = new LinkedList.Node<>(new Point(x, y, side), null, color);
+                        beginPoint = Point.buildPointLineNode(x, y, side);
+                        beginPoint.color = color;
                         break;
                     case 1:
                         // NOP: No points for contours on this side.

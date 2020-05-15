@@ -130,7 +130,7 @@ public class VectorTileGroup {
             sw = rightSide.next();
             se = leftSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
             yOffset++;
 
             // Stitch points in nw and se.
@@ -142,14 +142,14 @@ public class VectorTileGroup {
             sw = rightSide.next();
             se = leftSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
             yOffset += 2;
         }
 
 
         while (true) {
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildArtificialSide(xOffset, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+            final Side southSide = Side.buildArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -216,7 +216,7 @@ public class VectorTileGroup {
             ne = bottomSide.next();
             se = topSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
+            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
             xOffset++;
 
             // Stitch points in nw and se.
@@ -228,7 +228,7 @@ public class VectorTileGroup {
             ne = bottomSide.next();
             se = topSide.next();
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
+            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
             xOffset += 2;
         }
 
@@ -236,7 +236,7 @@ public class VectorTileGroup {
         while (true) {
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            final Side eastSide = Side.buildArtificialSide(xOffset, yOffset+1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);

@@ -206,4 +206,36 @@ public class VectorTileGroupTest {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
+
+    @Test
+    public void swizzle() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{
+                        p, p, p,
+                        p, p, 0,
+                        p, p, p,
+                        p, p, 0,
+                        p, p, p}, 3),
+                new Tile(new byte[]{
+                        p, p, p,
+                        p, p, p,
+                        0, p, p,
+                        p, p, p,
+                        p, p, p}, 3)
+        };
+
+        final VectorTileGroup g = new VectorTileGroup();
+        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
+
+        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "swizzle.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
 }
