@@ -13,7 +13,7 @@ public class Tile {
      *
      * This is one column and one row smaller than the {@link #tile} array.
      * That is to say, it is {@code width+1} elements shorter.
-     * When read as a two-dimensional tile the stride (the width) is {@link #width-1}.
+     * When read as a two-dimensional tile the stride (the width) is {@code width-1}.
      */
     final public IsobandContours[] contours;
 
