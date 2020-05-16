@@ -112,7 +112,7 @@ public class VectorTileBuilderTest {
 
         final String geoJson = SimpleGeoJson.write(vectorTile);
 
-        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + ".geojson")) {
+        try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + ".geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
@@ -134,7 +134,7 @@ public class VectorTileBuilderTest {
 
         final String geoJson = SimpleGeoJson.write(new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband(), 5, 5);
 
-        try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2.geojson")) {
+        try (final OutputStream os = new FileOutputStream("build/" +getClass().getSimpleName()  + "2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
