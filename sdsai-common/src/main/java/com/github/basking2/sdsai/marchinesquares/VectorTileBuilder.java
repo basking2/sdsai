@@ -329,4 +329,35 @@ public class VectorTileBuilder {
                 throw new IllegalArgumentException("Unsupported byte values "+side);
         }
     }
+
+    /**
+     * Build a tile that has no contours because it is composed of solid values.
+     *
+     * What this does is creates the 4 sides of the tile, all sides not having any points, only
+     * the cell value.
+     *
+     * This may be used by {@link VectorTileGroup} to close off a collection of tiles.
+     *
+     * @param value The value that this tile should be considered to be comprised of.
+     * @param height The height of the tile.
+     * @param width The width of the tile.
+     * @return A newly built tile with no features and top, bottom, left, and right side lists defined..
+     */
+    public VectorTile buildConstantTile(final byte value, final int height, final int width) {
+        final VectorTile tile = new VectorTile();
+
+        // Make top and bottom sides.
+        for (int i = 0; i < width; i++) {
+            tile.top.add(new Side(value));
+            tile.bottom.add(new Side(value));
+        }
+
+        // Make left and right sides.
+        for (int i = 0; i < height; i++) {
+            tile.left.add(new Side(value));
+            tile.right.add(new Side(value));
+        }
+
+        return tile;
+    }
 }
