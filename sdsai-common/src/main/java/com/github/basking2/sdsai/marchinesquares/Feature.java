@@ -15,7 +15,7 @@ public class Feature {
     /**
      * Properties.
      */
-    public final Map<String, String> properties;
+    public final Map<String, Object> properties;
 
     /**
      * A list of all points that make up this feature.
@@ -29,6 +29,12 @@ public class Feature {
         this.properties = new HashMap<>();
     }
 
+    /**
+     * Add the given x and y offset to this point, translating it.
+     *
+     * @param xOffset The distance to move x.
+     * @param yOffset The distance to move y.
+     */
     public void translate(final double xOffset, final double yOffset) {
         for (final Point point: points) {
             point.x += xOffset;

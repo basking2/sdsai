@@ -1,5 +1,8 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+/**
+ * A very naive method to build a simple GeoJSON object.
+ */
 public class SimpleGeoJson {
     public static String write(final VectorTile tile, double height, double width) {
 

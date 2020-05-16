@@ -6,14 +6,21 @@ public class Tile {
      * the threshold. A value of 0 means it is at the threshold. A value of 1
      * means the cell is above the threshold.
      */
-    public byte[] tile;
+    final public byte[] tile;
 
-    public IsobandContours[] contours;
+    /**
+     * An array of {@link IsobandContours} that is populated when {@link #isoband()} is run.
+     *
+     * This is one column and one row smaller than the {@link #tile} array.
+     * That is to say, it is {@code width+1} elements shorter.
+     * When read as a two-dimensional tile the stride (the width) is {@link #width-1}.
+     */
+    final public IsobandContours[] contours;
 
     /**
      * How wide is each row in the tile.
      */
-    public int width;
+    final public int width;
 
     public Tile(final byte[] tile, final int width) {
         this.tile = tile;

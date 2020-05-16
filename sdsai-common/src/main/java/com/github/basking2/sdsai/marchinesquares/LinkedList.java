@@ -1,6 +1,5 @@
 package com.github.basking2.sdsai.marchinesquares;
 
-import java.awt.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -80,19 +79,6 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
                     throw new NoSuchElementException();
                 }
             };
-        }
-    }
-
-    public static class LabeledNode<VALUE> extends Node<VALUE> {
-        public String label = null;
-
-        public LabeledNode(final VALUE value, final Node<VALUE> next) {
-            super(value, next);
-        }
-
-        @Override
-        public String toString() {
-            return label + " " + super.toString();
         }
     }
 
