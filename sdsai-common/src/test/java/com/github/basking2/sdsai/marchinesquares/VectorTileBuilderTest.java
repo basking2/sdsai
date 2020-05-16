@@ -21,7 +21,7 @@ public class VectorTileBuilderTest {
 
         t.isoband();
 
-        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
 
         final VectorTile vectorTile = vtb.build();
 
@@ -49,7 +49,7 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(1->0)(0->1)", t.contours[2].toString());
         Assert.assertEquals("(0->3)(3->0)", t.contours[3].toString());
 
-        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
         final VectorTile vectorTile = vtb.build();
     }
 
@@ -70,7 +70,7 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(0->1)", t.contours[2].toString());
         Assert.assertEquals("(3->0)", t.contours[3].toString());
 
-        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
         final VectorTile vectorTile = vtb.build();
     }
 
@@ -91,7 +91,7 @@ public class VectorTileBuilderTest {
         Assert.assertEquals("(1->0)", t.contours[2].toString());
         Assert.assertEquals("(0->3)", t.contours[3].toString());
 
-         final VectorTileBuilder vtb = new VectorTileBuilder(t);
+         final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
          final VectorTile vectorTile = vtb.build();
 
     }
@@ -108,7 +108,7 @@ public class VectorTileBuilderTest {
         final Tile t = new Tile(array, width);
 
         t.isoband();
-        final VectorTile vectorTile = new VectorTileBuilder(t).build();
+        final VectorTile vectorTile = new VectorTileBuilder(t, FeatureFactory.uuidProperty()).build();
 
         final String geoJson = SimpleGeoJson.write(vectorTile);
 
@@ -132,7 +132,7 @@ public class VectorTileBuilderTest {
                         0, 0, 0, 0, 0 , 0,
                 }, 6);
 
-        final String geoJson = SimpleGeoJson.write(new VectorTileBuilder(tile).buildIsoband());
+        final String geoJson = SimpleGeoJson.write(new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband(), 5, 5);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));

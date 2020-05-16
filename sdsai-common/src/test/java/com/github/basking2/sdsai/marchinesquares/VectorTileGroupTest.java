@@ -19,7 +19,7 @@ public class VectorTileGroupTest {
 
         t.isoband();
 
-        final VectorTileBuilder vtb = new VectorTileBuilder(t);
+        final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
 
         final VectorTile vectorTile = vtb.build();
         return vectorTile;
@@ -68,7 +68,7 @@ public class VectorTileGroupTest {
                 {buildTile(100, 100), buildTile(100, 100), buildTile(100, 100)},
         };
 
-        final VectorTileGroup vectorTileGroup = new VectorTileGroup();
+        final VectorTileGroup vectorTileGroup = new VectorTileGroup(FeatureFactory.uuidProperty());
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -89,7 +89,7 @@ public class VectorTileGroupTest {
                 {buildTile(sz, sz), buildTile(sz, sz), buildTile(sz, sz)},
         };
 
-        final VectorTileGroup vectorTileGroup = new VectorTileGroup();
+        final VectorTileGroup vectorTileGroup = new VectorTileGroup(FeatureFactory.uuidProperty());
         vectorTileGroup.setStitchTiles(true);
 
         for (int i = 0; i < map.length; i++) {
@@ -128,9 +128,9 @@ public class VectorTileGroupTest {
                         0, 0, 0}, 3)
         };
 
-        final VectorTileGroup g = new VectorTileGroup();
-        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+        final VectorTileGroup g = new VectorTileGroup(FeatureFactory.uuidProperty());
+        g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
@@ -156,10 +156,10 @@ public class VectorTileGroupTest {
                         0, 0, 0, 0, 0}, 5)
         };
 
-        final VectorTileGroup g = new VectorTileGroup();
-        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
+        final VectorTileGroup g = new VectorTileGroup(FeatureFactory.uuidProperty());
+        g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
         g.addNewRow();
-        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 4);
 
@@ -193,12 +193,14 @@ public class VectorTileGroupTest {
                         0, 0, 0}, 3)
         };
 
-        final VectorTileGroup g = new VectorTileGroup();
-        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+
+        final VectorTileGroup g = new VectorTileGroup(featureFactory);
+        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
         g.addNewRow();
-        g.addEast(new VectorTileBuilder(tiles[2]).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[3]).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 5);
 
@@ -228,9 +230,11 @@ public class VectorTileGroupTest {
                         p, p, p}, 3)
         };
 
-        final VectorTileGroup g = new VectorTileGroup();
-        g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+
+        final VectorTileGroup g = new VectorTileGroup(featureFactory);
+        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
 
         for (final Point pt : g.getVectorTile().features.getHead().points) {
             System.out.println("P "+pt.x+ " "+pt.y);

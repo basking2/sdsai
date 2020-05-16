@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.util.Map;
+
 /**
  * A very naive method to build a simple GeoJSON object.
  */
@@ -15,6 +17,7 @@ public class SimpleGeoJson {
             sb.append("{\n");
             sb.append("\"type\": \"Feature\",\n");
             sb.append("\"properties\": {\n");
+            appendProperties(sb, f.properties);
             sb.append("},\n");
             sb.append("\"geometry\": {\n");
             sb.append("\"type\": \"Polygon\",\n");
@@ -63,5 +66,23 @@ public class SimpleGeoJson {
         double height = dims[1]-1;
 
         return write(tile, height, width);
+    }
+
+    private static void appendProperties(final StringBuilder sb, final Map<? extends Object, Object> properties) {
+        for (final Map.Entry<? extends Object, Object> entry : properties.entrySet()) {
+            final String key = entry.getKey().toString();
+            final Object value = entry.getValue();
+            sb.append("\""+key+"\": ");
+            if (value instanceof Map) {
+                sb.append("{\n");
+                appendProperties(sb, properties);
+                sb.append("}\n");
+            }
+            else {
+                sb.append('"').append(value).append("\",\n");
+            }
+            sb.setCharAt(sb.length() - 2, ' ');
+        }
+
     }
 }

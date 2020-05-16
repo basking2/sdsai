@@ -46,12 +46,15 @@ public class VectorTileGroup {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    public VectorTileGroup() {
+    private final FeatureFactory featureFactory;
+
+    public VectorTileGroup(final FeatureFactory featureFactory) {
         this.northTiles = null;
         this.westTile = null;
         this.tile = new VectorTile();
         this.currentRow = new LinkedList<>();
         this.northWestPoint = null;
+        this.featureFactory = featureFactory;
     }
 
     public void addEast(final VectorTile eastTile) {
@@ -324,7 +327,7 @@ public class VectorTileGroup {
                 // The start node is now the end node.
                 start.next = null;
 
-                final Feature feature = new Feature(newStartNode);
+                final Feature feature = featureFactory.buildFeature(newStartNode);
 
                 tile.features.add(feature);
             }

@@ -9,6 +9,7 @@ public class VectorTileBuilder {
     private final int HEIGHT;
     private final int WIDTH;
     private final VectorTile vectorTile;
+    private final FeatureFactory featureFactory;
 
     /**
      * Feature field is indexed by [y][x][line] where the line is always a starting point connected to
@@ -18,12 +19,13 @@ public class VectorTileBuilder {
      */
     final LinkedList.Node<Point>[][][] featureField;
 
-    public VectorTileBuilder(final Tile tile) {
+    public VectorTileBuilder(final Tile tile, final FeatureFactory featureFactory) {
         this.vectorTile = new VectorTile();
         this.tile = tile;
         this.HEIGHT = tile.tile.length / tile.width - 1;
         this.WIDTH = tile.width - 1;
         this.featureField = new LinkedList.Node[HEIGHT][WIDTH][];
+        this.featureFactory = featureFactory;
     }
     /**
      * Runs {@link Tile#isoband()} and calls {@link #build()}.
@@ -215,7 +217,7 @@ public class VectorTileBuilder {
                             // The start node is now the end node.
                             start.next = null;
 
-                            final Feature feature = new Feature(newStartNode);
+                            final Feature feature = featureFactory.buildFeature(newStartNode);
 
                             vectorTile.features.add(feature);
                         }
