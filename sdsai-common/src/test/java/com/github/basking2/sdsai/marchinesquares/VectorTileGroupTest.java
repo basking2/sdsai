@@ -232,6 +232,10 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[0]).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[1]).buildIsoband());
 
+        for (final Point pt : g.getVectorTile().features.getHead().points) {
+            System.out.println("P "+pt.x+ " "+pt.y);
+        }
+
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
         try (final OutputStream os = new FileOutputStream(getClass().getSimpleName()  + "swizzle.geojson")) {

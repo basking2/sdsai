@@ -25,7 +25,7 @@ public class VectorTileGroup {
     private Iterator<VectorTile> northTiles;
 
     /**
-     * Nyll or the last tile passed to {@link #addEast(VectorTile)} or {@link #addNewRow(VectorTile)}.
+     * Null or the last tile passed to {@link #addEast(VectorTile)} or {@link #addNewRow(VectorTile)}.
      */
     private VectorTile westTile;
 
@@ -149,7 +149,7 @@ public class VectorTileGroup {
 
         while (true) {
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildArtificialSide(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+            final Side southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -236,7 +236,7 @@ public class VectorTileGroup {
         while (true) {
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildArtificialSide(xOffset, yOffset+1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            final Side eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
