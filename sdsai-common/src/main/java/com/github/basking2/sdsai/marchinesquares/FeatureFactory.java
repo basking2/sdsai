@@ -8,7 +8,7 @@ import java.util.UUID;
  * This allows the user to define ways to populate {@link Feature#properties} at creation time instead of looking for the feature after they are created.
  */
 @FunctionalInterface
-interface FeatureFactory {
+public interface FeatureFactory {
     Feature buildFeature(final LinkedList.Node<Point> points);
 
     /**
