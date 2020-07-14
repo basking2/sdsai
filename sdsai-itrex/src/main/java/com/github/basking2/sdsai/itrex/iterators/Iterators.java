@@ -212,14 +212,20 @@ public class Iterators {
      * @param <K> The key type.
      * @param <T1> The type of elements of iterator 1.
      * @param <T2> The type of elements of iterator 2.
+     * @return An array that reports the statistics of the merge operation.
+     *         This array is 3 elements long.
+     *         The first value is the number of left-values that have no match on the right (T1).
+     *         The third value is the number of the right-values that have no match on the left (T2).
+     *         The second value, the middle value, is the number of elemnts for which a match is found.
      */
-    public static <K extends Comparable<K>, T1, T2> void mergeSorted(
+    public static <K extends Comparable<K>, T1, T2> long[] mergeSorted(
             final Iterator<T1> itr1,
             final Function<T1, K> toKey1,
             final Iterator<T2> itr2,
             final Function<T2, K> toKey2,
             final BiConsumer<T1, T2> consumer
     ) {
+        final long[] stats = new long[]{0L, 0L, 0L};
         if (itr1.hasNext() && itr2.hasNext()) {
             T1 v1 = itr1.next();
             T2 v2 = itr2.next();
@@ -231,6 +237,7 @@ public class Iterators {
                 if (cmp == 0) {
                     // The two keys are equal! Merge them.
                     consumer.accept(v1, v2);
+                    stats[1] += 1L;
                     if (itr1.hasNext() && itr2.hasNext()) {
                         // We've merged the current nodes. Now advance both iterators.
                         // If we cannot advance them _both_ we exit.
@@ -238,27 +245,31 @@ public class Iterators {
                         v2 = itr2.next();
                     } else {
                         // Exit if we cannot advance both iterators.
-                        return;
+                        return stats;
                     }
                 } else if (cmp < 0) {
+                    stats[0]+=1L;
                     if (itr1.hasNext()) {
                         // If key1 is  smaller, advance it.
                         v1 = itr1.next();
                     } else {
                         // If we cannot make progress on merging itr1, exit.
-                        return;
+                        return stats;
                     }
                 } else if (cmp > 0) {
+                    stats[2]+=1L;
                     if (itr2.hasNext()) {
                         // If key2 is  smaller, advance it.
                         v2 = itr2.next();
                     } else {
                         // If we cannot make progress on merging itr1, exit.
-                        return;
+                        return stats;
                     }
                 }
             }
         }
+
+        return stats;
     }
 
     /**
