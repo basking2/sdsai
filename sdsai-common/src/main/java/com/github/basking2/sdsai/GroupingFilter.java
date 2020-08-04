@@ -132,7 +132,27 @@ public interface GroupingFilter<T> extends Predicate<T> {
 
             return new RangeImpl<>(start, startExclusive, end, endExclusive);
         }
+
+        @Override
+        public String normalForm() {
+            final StringBuilder sb = new StringBuilder();
+
+            sb
+                    .append(startExclusive ? "(" : "[")
+                    .append(start != null ? start.toString() : "_")
+                    .append(", ")
+                    .append(end != null ? end.toString() : "_")
+                    .append(endExclusive ? ")" : "]");
+
+            return sb.toString();
+        }
     }
+
+    /**
+     * Return this filter in a normalized textual format.
+     * @return this filter in a normalized textual format.
+     */
+    String normalForm();
 
     class True<T extends Comparable<T>> extends RangeImpl<T> {
         public True() {
@@ -148,6 +168,11 @@ public interface GroupingFilter<T> extends Predicate<T> {
         @Override
         public RangeImpl<T> simplify(final RangeImpl<T> that) {
             return that;
+        }
+
+        @Override
+        public String normalForm() {
+            return "(true)";
         }
     }
 
@@ -166,11 +191,21 @@ public interface GroupingFilter<T> extends Predicate<T> {
         public RangeImpl<T> simplify(final RangeImpl<T> that) {
             return this;
         }
+
+        @Override
+        public String normalForm() {
+            return "(false)";
+        }
     }
 
     class GreaterThan<T extends Comparable<T>> extends RangeImpl<T> {
         GreaterThan(final T t) {
             super(t, true, null, true);
+        }
+
+        @Override
+        public String normalForm() {
+            return String.format("(gt %s)", start.toString());
         }
     }
 
@@ -178,11 +213,21 @@ public interface GroupingFilter<T> extends Predicate<T> {
         GreaterThanEqual(final T t) {
             super(t, false, null, true);
         }
+
+        @Override
+        public String normalForm() {
+            return String.format("(gte %s)", start.toString());
+        }
     }
 
     class LessThan<T extends Comparable<T>> extends RangeImpl<T> {
         LessThan(final T t) {
             super(null, true, t, true);
+        }
+
+        @Override
+        public String normalForm() {
+            return String.format("(lt %s)", end.toString());
         }
     }
 
@@ -190,11 +235,21 @@ public interface GroupingFilter<T> extends Predicate<T> {
         LessThanEqual(final T t) {
             super(null, true, t, false);
         }
+
+        @Override
+        public String normalForm() {
+            return String.format("(lte %s)", end.toString());
+        }
     }
 
     class Equal<T extends Comparable<T>> extends RangeImpl<T> {
         Equal(final T t) {
             super(t, false, t, false);
+        }
+
+        @Override
+        public String normalForm() {
+            return String.format("(eq %s)", start.toString());
         }
     }
 }

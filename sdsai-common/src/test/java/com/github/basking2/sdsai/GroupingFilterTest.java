@@ -3,6 +3,7 @@ package com.github.basking2.sdsai;
 import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class GroupingFilterTest {
     @Test
@@ -42,5 +43,23 @@ public class GroupingFilterTest {
         assertFalse(r3.test(2.0f));
     }
 
+    @Test
+    public void testNormalForm() {
+        assertEquals("(lt 0)", new GroupingFilter.LessThan(0).normalForm());
+
+        assertEquals("(lte 0)", new GroupingFilter.LessThanEqual(0).normalForm());
+
+        assertEquals("(gt 0)", new GroupingFilter.GreaterThan(0).normalForm());
+
+        assertEquals("(gte 0)", new GroupingFilter.GreaterThanEqual(0).normalForm());
+
+        assertEquals("(eq 0)", new GroupingFilter.Equal(0).normalForm());
+
+        assertEquals("(false)", new GroupingFilter.False().normalForm());
+
+        assertEquals("(true)", new GroupingFilter.True().normalForm());
+
+        assertEquals("[5.0, _)", new GroupingFilter.RangeImpl(5f, false, null, true).normalForm());
+    }
 
 }
