@@ -29,7 +29,7 @@ public interface GroupingFilter<T> extends Predicate<T> {
         }
 
         @Override
-        public boolean test(T t) {
+        public boolean test(final T t) {
             if (start != null) {
                 final int cmp = start.compareTo(t);
                 if (cmp > 0) {
@@ -145,6 +145,15 @@ public interface GroupingFilter<T> extends Predicate<T> {
                     .append(endExclusive ? ")" : "]");
 
             return sb.toString();
+        }
+
+        /**
+         * This is the hash code of the output of {@link #normalForm()}.
+         * @return the hash code of the output of {@link #normalForm()}.
+         */
+        @Override
+        public int hashCode() {
+            return normalForm().hashCode();
         }
     }
 
