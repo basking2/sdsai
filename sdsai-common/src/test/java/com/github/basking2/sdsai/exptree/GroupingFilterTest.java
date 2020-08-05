@@ -1,4 +1,4 @@
-package com.github.basking2.sdsai;
+package com.github.basking2.sdsai.exptree;
 
 import org.junit.Test;
 import static org.junit.Assert.assertFalse;
