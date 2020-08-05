@@ -5,4 +5,4 @@
  * That is (A (gt 0))(B (lt 0)) expresses the dimension A where it is greater than 0
  * and dimension B where it is less than 0.
  */
-package com.github.basking2.sdsai.exptree;
+package com.github.basking2.sdsai.selectiontree;
