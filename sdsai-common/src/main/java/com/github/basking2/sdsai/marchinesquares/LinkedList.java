@@ -132,7 +132,7 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
 
         @Override
         public String toString() {
-            return "" + value + " color " + color + ((next == null) ? " no next ":"has next")
+            return "" + value + " color " + color + ((next == null) ? " no next ":" has next")
                     ;
         }
     }

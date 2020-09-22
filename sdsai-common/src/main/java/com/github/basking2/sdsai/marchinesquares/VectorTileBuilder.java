@@ -343,7 +343,7 @@ public class VectorTileBuilder {
      * @param width The width of the tile.
      * @return A newly built tile with no features and top, bottom, left, and right side lists defined..
      */
-    public VectorTile buildConstantTile(final byte value, final int height, final int width) {
+    public static VectorTile buildConstantTile(final byte value, final int height, final int width) {
         final VectorTile tile = new VectorTile();
 
         // Make top and bottom sides.

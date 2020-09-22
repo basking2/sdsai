@@ -216,6 +216,80 @@ public class EnclosedVectorTileGroupTest {
     }
 
     @Test
+    public void testSimpleEdges() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 0, 0}, 3)
+        };
+
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+
+        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup(n, featureFactory);
+        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+
+        final VectorTile vt = g.getVectorTile();
+
+        Assert.assertTrue(vt.features.size() > 0);
+        final String geoJson = SimpleGeoJson.write(vt, 5, 5);
+
+        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "simple_edges.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
+
+    @Test
+    public void testEdges() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{
+                        p, 0, p,
+                        0, 0, 0,
+                        p, 0, 0}, 3),
+                new Tile(new byte[]{
+                        p, 0, p,
+                        0, 0, 0,
+                        0, 0, p}, 3),
+                new Tile(new byte[]{
+                        p, 0, 0,
+                        0, 0, 0,
+                        p, 0, p}, 3),
+                new Tile(new byte[]{
+                        0, 0, p,
+                        0, 0, 0,
+                        p, 0, p}, 3)
+        };
+
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+
+        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup(n, featureFactory);
+        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
+        g.addNewRow();
+        g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
+
+        g.close();
+        final VectorTile vt = g.getVectorTile();
+
+        Assert.assertTrue(vt.features.size() > 0);
+        final String geoJson = SimpleGeoJson.write(vt, 5, 5);
+
+        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "_edges.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
+    @Test
     public void swizzle() throws IOException {
 
         final byte p = 1;

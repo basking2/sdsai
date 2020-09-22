@@ -2,7 +2,6 @@ package com.github.basking2.sdsai.marchinesquares;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This performs much the same function as the {@link VectorTileGroup} but surrounding the shape with a constant field.
@@ -11,95 +10,75 @@ import java.util.Arrays;
  *
  */
 public class EnclosedVectorTileGroup implements Closeable {
-    private static byte field;
+    private final byte cell;
 
-    private static VectorTileGroup vectorTileGroup;
+    private final VectorTileGroup vectorTileGroup;
+
+    private final static int buffer = 3;
 
     boolean topRow;
     boolean leftCol;
+    boolean closed;
     int lastTileHeight;
-    ArrayList<Integer> northernWidths = new ArrayList<>();
+
+    final ArrayList<Integer> northernWidths;
+    final ArrayList<VectorTile> firstRow;
 
     public EnclosedVectorTileGroup(final byte field, final FeatureFactory featureFactory){
-        this.field = field;
+        this.closed = false;
+        this.cell = field;
         this.topRow = true;
         this.leftCol = true;
         this.vectorTileGroup = new VectorTileGroup(featureFactory);
-        this.vectorTileGroup.setNorthWestPoint(new Side(field));
+        this.northernWidths = new ArrayList<>();
+        this.firstRow = new ArrayList<>();
+
     }
 
     public void addEast(final VectorTile east) {
 
-        if (leftCol) {
-            // Heading east, we move off the left column.
-            leftCol = false;
-
-            // When we add the first tiler in a new row, clear the width list.
-            northernWidths = new ArrayList<>(northernWidths.size());
-
-            // Make the out-of-bounds tile that should exit to our east already.
-            final VectorTile left = new VectorTile();
-            for (int i = 0; i < east.left.size(); i++) {
-                left.right.add(new Side(field));
-                left.left.add(new Side(field));
-            }
-            left.top.add(new Side(field));
-            left.top.add(new Side(field));
-            left.bottom.add(new Side(field));
-            left.bottom.add(new Side(field));
-            vectorTileGroup.addEast(left);
-
-        }
-
-        if (topRow) {
-            // If this is the top row, we must add an uppder level tile.
-            final VectorTile top = new VectorTile();
-            for (int i = 0; i < east.top.size(); i++) {
-                top.bottom.add(new Side(field));
-                top.top.add(new Side(field));
-            }
-            top.left.add(new Side(field));
-            top.left.add(new Side(field));
-            top.right.add(new Side(field));
-            top.right.add(new Side(field));
-            vectorTileGroup.setNorthTiles(Arrays.asList(top).iterator());
-        }
-
-        vectorTileGroup.addEast(east);
-
-        // Every *user* tile, record the width for the close() operation.
         northernWidths.add(east.bottom.size());
 
-        lastTileHeight = east.right.size();
+        if (topRow) {
+            lastTileHeight = buffer;
+            if (leftCol) {
+                leftCol = false;
+                vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+            }
+
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, east.top.size()));
+            firstRow.add(east);
+        }
+        else if (leftCol) {
+            leftCol = false;
+            lastTileHeight = east.right.size();
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
+            vectorTileGroup.addEast(east);
+        }
+        else {
+            lastTileHeight = east.right.size();
+            vectorTileGroup.addEast(east);
+        }
     }
 
     public void addNewRow() {
-
         if (topRow) {
             topRow = false;
+            // Top-right corner.
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+            vectorTileGroup.addNewRow();
 
-            // If we are on the top-row, add a tile to the upper-right must exist.
-            final VectorTile top = new VectorTile();
-            top.left.add(new Side(field));
-            top.left.add(new Side(field));
-            top.bottom.add(new Side(field));
-            top.bottom.add(new Side(field));
-            vectorTileGroup.setNorthTiles(Arrays.asList(top).iterator());
+            // West-most tile.
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
+            for (final VectorTile vt: firstRow) {
+                vectorTileGroup.addEast(vt);
+            }
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
+            firstRow.clear();
         }
 
-        final VectorTile east = new VectorTile();
-        for (int i = 0; i < lastTileHeight; i++) {
-            east.left.add(new Side(field));
-            east.right.add(new Side(field));
-        }
-        east.top.add(new Side(field));
-        east.top.add(new Side(field));
-        east.bottom.add(new Side(field));
-        east.bottom.add(new Side(field));
-        vectorTileGroup.addEast(east);
-
-        leftCol = true;
         vectorTileGroup.addNewRow();
+        leftCol = true;
     }
 
     public void addNewRow(final VectorTile newTile) {
@@ -107,7 +86,13 @@ public class EnclosedVectorTileGroup implements Closeable {
         addEast(newTile);
     }
 
+    /**
+     * Close and get the {@link VectorTile}.
+     *
+     * @return The {@link VectorTile}.
+     */
     public VectorTile getVectorTile() {
+        close();
         return vectorTileGroup.getVectorTile();
     }
 
@@ -117,31 +102,20 @@ public class EnclosedVectorTileGroup implements Closeable {
 
     /**
      * Close the bottom layer of this object.
-     *
-     * @throws Exception Not thrown.
      */
     @Override
     public void close() {
-        addNewRow();
+        if (!closed) {
+            closed = true;
+            addNewRow();
 
-        for (int i: northernWidths) {
-            final VectorTile bottom = new VectorTile();
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
 
-            for (int w = 0; w < i; w++) {
-                bottom.top.add(new Side(field));
-                bottom.top.add(new Side(field));
-                bottom.bottom.add(new Side(field));
-                bottom.bottom.add(new Side(field));
+            for (int i : northernWidths) {
+                vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, i));
             }
 
-            bottom.left.add(new Side(field));
-            bottom.left.add(new Side(field));
-            bottom.right.add(new Side(field));
-            bottom.right.add(new Side(field));
-
-            addEast(bottom);
+            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
         }
-
-        addNewRow();
     }
 }

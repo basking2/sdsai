@@ -3,6 +3,7 @@ package com.github.basking2.sdsai.marchinesquares;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -243,6 +244,80 @@ public class VectorTileGroupTest {
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "swizzle.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
+    @Test
+    public void testBorderingEmpty() throws IOException {
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+        final VectorTileGroup g = new VectorTileGroup(featureFactory);
+        final byte n = (byte)-1;
+        final byte z = (byte) 0;
+        final byte p = (byte) 1;
+
+        final Tile[] tiles = {
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+                new Tile(new byte[]{p, p, p, p, p, p, p, p, p}, 3),
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+                new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
+        };
+
+        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
+
+        g.addNewRow();
+
+        g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[4], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[5], featureFactory).buildIsoband());
+
+        g.addNewRow();
+
+        g.addEast(new VectorTileBuilder(tiles[6], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[7], featureFactory).buildIsoband());
+        g.addEast(new VectorTileBuilder(tiles[8], featureFactory).buildIsoband());
+
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 9, 9);
+
+        try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "_border.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
+    @Test
+    public void testBorderingEmpty2() throws IOException {
+        final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
+        final VectorTileGroup g = new VectorTileGroup(featureFactory);
+        final byte n = (byte)-1;
+        final byte p = (byte) 1;
+
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,3));
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
+
+        g.addNewRow();
+
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 3,2));
+        g.addEast(VectorTileBuilder.buildConstantTile((byte)0, 3,3));
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 3,2));
+
+        g.addNewRow();
+
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,3));
+        g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 9, 9);
+
+        try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "_border2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }

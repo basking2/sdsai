@@ -362,4 +362,12 @@ public class VectorTileGroup {
     protected void setNorthWestPoint(final Side northWestPoint) {
         this.northWestPoint = northWestPoint;
     }
+
+    protected void setXOffset(final int xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    protected void setYOffset(final int yOffset) {
+        this.yOffset = yOffset;
+    }
 }
