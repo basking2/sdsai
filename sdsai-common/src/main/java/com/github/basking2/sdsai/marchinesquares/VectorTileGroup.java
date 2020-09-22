@@ -61,7 +61,6 @@ public class VectorTileGroup {
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
             tile.features.add(feature);
-
         }
 
         for (final Side s : eastTile.top) {
@@ -116,7 +115,7 @@ public class VectorTileGroup {
      *                  does not need a third argument because it can directly access the {@link #westTile}
      *                  field from any previous tile add.
      */
-    void stitchWestEast(final VectorTile westTile, final VectorTile eastTile, final VectorTile northTile) {
+    private void stitchWestEast(final VectorTile westTile, final VectorTile eastTile, final VectorTile northTile) {
         final Iterator<Side> rightSide = westTile.right.iterator();
         final Iterator<Side> leftSide = eastTile.left.iterator();
 
@@ -342,5 +341,25 @@ public class VectorTileGroup {
                 stop = stop.next;
             }
         }
+    }
+
+    /**
+     * This is used by {@link EnclosedVectorTileGroup} to set northern tiles before stitching.
+     * @param northTiles An iterator where the next tile is the one above the tile about to be added.
+     */
+    protected void setNorthTiles(final Iterator<VectorTile> northTiles) {
+        this.northTiles = northTiles;
+    }
+
+    protected Iterator<VectorTile> getNorthTiles() {
+        return this.northTiles;
+    }
+
+    /**
+     * This is used by {@link EnclosedVectorTileGroup} to set north western points before stitching.
+     * @param northWestPoint The northwest point.
+     */
+    protected void setNorthWestPoint(final Side northWestPoint) {
+        this.northWestPoint = northWestPoint;
     }
 }
