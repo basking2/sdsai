@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Arrays;
  * The effect is that all edges should be closed.
  *
  */
-public class EnclosedVectorTileGroup {
+public class EnclosedVectorTileGroup implements Closeable {
     private static byte field;
 
     private static VectorTileGroup vectorTileGroup;
@@ -16,6 +18,7 @@ public class EnclosedVectorTileGroup {
     boolean topRow;
     boolean leftCol;
     int lastTileHeight;
+    ArrayList<Integer> northernWidths = new ArrayList<>();
 
     public EnclosedVectorTileGroup(final byte field, final FeatureFactory featureFactory){
         this.field = field;
@@ -31,6 +34,9 @@ public class EnclosedVectorTileGroup {
             // Heading east, we move off the left column.
             leftCol = false;
 
+            // When we add the first tiler in a new row, clear the width list.
+            northernWidths = new ArrayList<>(northernWidths.size());
+
             // Make the out-of-bounds tile that should exit to our east already.
             final VectorTile left = new VectorTile();
             for (int i = 0; i < east.left.size(); i++) {
@@ -42,6 +48,7 @@ public class EnclosedVectorTileGroup {
             left.bottom.add(new Side(field));
             left.bottom.add(new Side(field));
             vectorTileGroup.addEast(left);
+
         }
 
         if (topRow) {
@@ -59,6 +66,9 @@ public class EnclosedVectorTileGroup {
         }
 
         vectorTileGroup.addEast(east);
+
+        // Every *user* tile, record the width for the close() operation.
+        northernWidths.add(east.bottom.size());
 
         lastTileHeight = east.right.size();
     }
@@ -103,5 +113,35 @@ public class EnclosedVectorTileGroup {
 
     public void setStitchTiles(boolean b){
         vectorTileGroup.setStitchTiles(b);
+    }
+
+    /**
+     * Close the bottom layer of this object.
+     *
+     * @throws Exception Not thrown.
+     */
+    @Override
+    public void close() {
+        addNewRow();
+
+        for (int i: northernWidths) {
+            final VectorTile bottom = new VectorTile();
+
+            for (int w = 0; w < i; w++) {
+                bottom.top.add(new Side(field));
+                bottom.top.add(new Side(field));
+                bottom.bottom.add(new Side(field));
+                bottom.bottom.add(new Side(field));
+            }
+
+            bottom.left.add(new Side(field));
+            bottom.left.add(new Side(field));
+            bottom.right.add(new Side(field));
+            bottom.right.add(new Side(field));
+
+            addEast(bottom);
+        }
+
+        addNewRow();
     }
 }

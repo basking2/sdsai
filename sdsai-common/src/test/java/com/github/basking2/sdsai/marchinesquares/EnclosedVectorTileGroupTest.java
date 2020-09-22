@@ -68,14 +68,16 @@ public class EnclosedVectorTileGroupTest {
                 {buildTile(100, 100), buildTile(100, 100), buildTile(100, 100)},
         };
 
-        final EnclosedVectorTileGroup vectorTileGroup = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty());
+        try (final EnclosedVectorTileGroup vectorTileGroup = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty())) {
 
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                checkVectorTile(map[i][j]);
-                vectorTileGroup.addEast(map[i][j]);
+
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    checkVectorTile(map[i][j]);
+                    vectorTileGroup.addEast(map[i][j]);
+                }
+                vectorTileGroup.addNewRow();
             }
-            vectorTileGroup.addNewRow();
         }
 
     }
@@ -89,21 +91,22 @@ public class EnclosedVectorTileGroupTest {
                 {buildTile(sz, sz), buildTile(sz, sz), buildTile(sz, sz)},
         };
 
-        final EnclosedVectorTileGroup vectorTileGroup = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty());
-        vectorTileGroup.setStitchTiles(true);
+        try (final EnclosedVectorTileGroup vectorTileGroup = new EnclosedVectorTileGroup((byte) -1, FeatureFactory.uuidProperty())) {
+            vectorTileGroup.setStitchTiles(true);
 
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[i].length; j++) {
-                checkVectorTile(map[i][j]);
-                vectorTileGroup.addEast(map[i][j]);
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[i].length; j++) {
+                    checkVectorTile(map[i][j]);
+                    vectorTileGroup.addEast(map[i][j]);
+                }
+                vectorTileGroup.addNewRow();
             }
-            vectorTileGroup.addNewRow();
-        }
 
-        final String geoJson = SimpleGeoJson.write(vectorTileGroup.getVectorTile());
+            final String geoJson = SimpleGeoJson.write(vectorTileGroup.getVectorTile());
 
-        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + ".geojson")) {
-            os.write(geoJson.getBytes("UTF-8"));
+            try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + ".geojson")) {
+                os.write(geoJson.getBytes("UTF-8"));
+            }
         }
     }
 
@@ -128,14 +131,15 @@ public class EnclosedVectorTileGroupTest {
                         0, 0, 0}, 3)
         };
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty());
-        g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
+        try (final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty())) {
+            g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
+            g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
+            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
-        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x1.geojson")) {
-            os.write(geoJson.getBytes("UTF-8"));
+            try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x1.geojson")) {
+                os.write(geoJson.getBytes("UTF-8"));
+            }
         }
     }
 
@@ -156,15 +160,16 @@ public class EnclosedVectorTileGroupTest {
                         0, 0, 0, 0, 0}, 5)
         };
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty());
-        g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
-        g.addNewRow();
-        g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
+        try (final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, FeatureFactory.uuidProperty())) {
+            g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
+            g.addNewRow();
+            g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 4);
+            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 4);
 
-        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "1x2.geojson")) {
-            os.write(geoJson.getBytes("UTF-8"));
+            try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "1x2.geojson")) {
+                os.write(geoJson.getBytes("UTF-8"));
+            }
         }
     }
 
@@ -195,17 +200,18 @@ public class EnclosedVectorTileGroupTest {
 
         final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, featureFactory);
-        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
-        g.addNewRow();
-        g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
+        try (final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, featureFactory)) {
+            g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+            g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
+            g.addNewRow();
+            g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
+            g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 5);
+            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 5);
 
-        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x2.geojson")) {
-            os.write(geoJson.getBytes("UTF-8"));
+            try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x2.geojson")) {
+                os.write(geoJson.getBytes("UTF-8"));
+            }
         }
     }
 
@@ -232,18 +238,19 @@ public class EnclosedVectorTileGroupTest {
 
         final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, featureFactory);
-        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
+        try (final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)-1, featureFactory)) {
+            g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
+            g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
 
-        for (final Point pt : g.getVectorTile().features.getHead().points) {
-            System.out.println("P " + pt.x + " " + pt.y);
-        }
+            for (final Point pt : g.getVectorTile().features.getHead().points) {
+                System.out.println("P " + pt.x + " " + pt.y);
+            }
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
+            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
 
-        try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "swizzle.geojson")) {
-            os.write(geoJson.getBytes("UTF-8"));
+            try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "swizzle.geojson")) {
+                os.write(geoJson.getBytes("UTF-8"));
+            }
         }
 
     }
