@@ -34,7 +34,14 @@ public class VectorTileGroup {
      *
      * This is cleared by calls to {@link #addNewRow(VectorTile)}.
      */
-    private Side northWestPoint;
+    private Side northWestBottomPoint;
+
+    /**
+     * The south-east point of the previous tile added.
+     *
+     * This is cleared by calls to {@link #addNewRow(VectorTile)}.
+     */
+    private Side northWestRightPoint;
 
     /**
      * Accumulates tiles passed to {@link #addEast(VectorTile)} or {@link #addNewRow(VectorTile)}.
@@ -53,7 +60,8 @@ public class VectorTileGroup {
         this.westTile = null;
         this.tile = new VectorTile();
         this.currentRow = new LinkedList<>();
-        this.northWestPoint = null;
+        this.northWestBottomPoint = null;
+        this.northWestRightPoint = null;
         this.featureFactory = featureFactory;
     }
 
@@ -91,7 +99,8 @@ public class VectorTileGroup {
 
             if (northTile != null) {
                 // Conditionally set the north-west point for a future tile.
-                northWestPoint = northTile.bottom.getTail();
+                northWestBottomPoint = northTile.bottom.getTail();
+                northWestRightPoint = northTile.right.getTail();
             }
         }
 
@@ -126,8 +135,8 @@ public class VectorTileGroup {
         Side sw;
         Side se;
 
-        if (northWestPoint != null && northTile != null) {
-            nw = northWestPoint;
+        if (northWestRightPoint != null && northTile != null) {
+            nw = northWestRightPoint;
             ne = northTile.left.getTail();
             sw = rightSide.next();
             se = leftSide.next();
@@ -212,8 +221,8 @@ public class VectorTileGroup {
         Side ne;
         Side se;
         Side westSide;
-        if (northWestPoint != null) {
-            nw = northWestPoint;
+        if (northWestBottomPoint != null) {
+            nw = northWestBottomPoint;
             sw = westTile.top.getTail();
             ne = bottomSide.next();
             se = topSide.next();
@@ -272,7 +281,8 @@ public class VectorTileGroup {
         this.xOffset = 0;
         this.northTiles = this.currentRow.iterator();
         this.currentRow = new LinkedList<>();
-        this.northWestPoint = null;
+        this.northWestBottomPoint = null;
+        this.northWestRightPoint = null;
         this.westTile = null;
     }
 
@@ -341,33 +351,5 @@ public class VectorTileGroup {
                 stop = stop.next;
             }
         }
-    }
-
-    /**
-     * This is used by {@link EnclosedVectorTileGroup} to set northern tiles before stitching.
-     * @param northTiles An iterator where the next tile is the one above the tile about to be added.
-     */
-    protected void setNorthTiles(final Iterator<VectorTile> northTiles) {
-        this.northTiles = northTiles;
-    }
-
-    protected Iterator<VectorTile> getNorthTiles() {
-        return this.northTiles;
-    }
-
-    /**
-     * This is used by {@link EnclosedVectorTileGroup} to set north western points before stitching.
-     * @param northWestPoint The northwest point.
-     */
-    protected void setNorthWestPoint(final Side northWestPoint) {
-        this.northWestPoint = northWestPoint;
-    }
-
-    protected void setXOffset(final int xOffset) {
-        this.xOffset = xOffset;
-    }
-
-    protected void setYOffset(final int yOffset) {
-        this.yOffset = yOffset;
     }
 }
