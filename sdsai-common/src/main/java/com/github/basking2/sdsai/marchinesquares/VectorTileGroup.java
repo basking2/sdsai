@@ -199,6 +199,9 @@ public class VectorTileGroup {
 
             // The end of the neighbor cell's line points to...
             //    ... the beginning of the other neighbor cell's line.
+            // This relationship is backward when stitching between tiles.
+            // The end is the end of a feature that went to the wall of a
+            // tile and could not continue.
             sides[lineStart].endPoint.next = sides[lineEnd].beginPoint;
 
             checkFeature(sides[lineStart].endPoint);
@@ -221,6 +224,7 @@ public class VectorTileGroup {
         Side ne;
         Side se;
         Side westSide;
+
         if (northWestBottomPoint != null) {
             nw = northWestBottomPoint;
             sw = westTile.top.getTail();

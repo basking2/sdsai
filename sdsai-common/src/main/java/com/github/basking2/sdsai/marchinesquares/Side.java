@@ -15,14 +15,16 @@ public class Side {
     public byte cell;
 
     /**
-     * A point that begins an contour. Its next field should be defined.
+     * A point that begins a contour in a particular cell. Its next field should be defined.
      *
-     * The endPoint of one side should be linked to the beginPoint of another side.
+     * The endPoint of one side should be linked to the beginPoint of another side
+     * in the same cell.
      */
     public LinkedList.Node<Point> beginPoint;
 
     /**
-     * A point that ends a contour. Its next field will be empty.
+     * A point that ends a contour. Its next field will be empty if only a single cell
+     * is contoured.
      *
      * The endPoint of one side should be linked to the beginPoint of another side.
      */
@@ -183,5 +185,27 @@ public class Side {
         final LinkedList.Node<Point> swap = beginPoint;
         beginPoint = endPoint;
         endPoint = swap;
+    }
+
+    public String prettyPrint() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(cell);
+
+        LinkedList.Node<Point> p = this.endPoint;
+
+        sb.append("\n\tEND: ");
+        while (p != null) {
+            sb.append(" ->").append(p.value).append(":").append(p.color);
+            p = p.next;
+        }
+
+        p = beginPoint;
+        sb.append("\n\tBEGIN: ");
+        while (p != null) {
+            sb.append(" ->").append(p.value).append(":").append(p.color);
+            p = p.next;
+        }
+
+        return sb.toString();
     }
 }

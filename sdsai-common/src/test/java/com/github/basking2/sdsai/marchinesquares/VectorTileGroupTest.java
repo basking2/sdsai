@@ -270,21 +270,59 @@ public class VectorTileGroupTest {
                 new Tile(new byte[]{z, z, z, z, z, z, z, z, z}, 3),
         };
 
-        g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[1], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
+        final VectorTile vectorTiles[] = new VectorTile[]{
+                new VectorTileBuilder(tiles[0], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[1], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[2], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[3], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[4], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[5], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[6], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[7], featureFactory).buildIsoband(),
+                new VectorTileBuilder(tiles[8], featureFactory).buildIsoband()
+        };
+
+        g.addEast(vectorTiles[0]);
+        g.addEast(vectorTiles[1]);
+        g.addEast(vectorTiles[2]);
 
         g.addNewRow();
 
-        g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[4], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[5], featureFactory).buildIsoband());
+        g.addEast(vectorTiles[3]);
+        g.addEast(vectorTiles[4]);
+        g.addEast(vectorTiles[5]);
 
         g.addNewRow();
 
-        g.addEast(new VectorTileBuilder(tiles[6], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[7], featureFactory).buildIsoband());
-        g.addEast(new VectorTileBuilder(tiles[8], featureFactory).buildIsoband());
+        g.addEast(vectorTiles[6]);
+        g.addEast(vectorTiles[7]);
+        g.addEast(vectorTiles[8]);
+
+        for (int i = 0; i < vectorTiles.length; i++) {
+            System.out.println(" ==== " + i + " ==== ");
+            System.out.println("Top ");
+            for (final Side s : vectorTiles[i].top) {
+                System.out.print("\t");
+                System.out.println(s.prettyPrint());
+            }
+            System.out.println("Bottom ");
+            for (final Side s : vectorTiles[i].bottom) {
+                System.out.print("\t");
+                System.out.println(s.prettyPrint());
+            }
+            System.out.println("Left ");
+            for (final Side s : vectorTiles[i].left) {
+                System.out.print("\t");
+                System.out.println(s.prettyPrint());
+            }
+            System.out.println("Right ");
+            for (final Side s : vectorTiles[i].right) {
+                System.out.print("\t");
+                System.out.println(s.prettyPrint());
+            }
+        }
+
+        Assert.assertTrue(g.getVectorTile().features.size() > 0);
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 9, 9);
 
@@ -315,6 +353,9 @@ public class VectorTileGroupTest {
         g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
         g.addEast(VectorTileBuilder.buildConstantTile(n, 2,3));
         g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
+
+        Assert.assertTrue(g.getVectorTile().features.size() > 0);
+
         final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 9, 9);
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "_border2.geojson")) {
