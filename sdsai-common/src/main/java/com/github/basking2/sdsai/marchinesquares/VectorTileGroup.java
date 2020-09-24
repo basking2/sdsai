@@ -170,6 +170,14 @@ public class VectorTileGroup {
 
             linkSides(iso, sides);
 
+            if (!leftSide.hasNext()) {
+                final Side lastSide = westTile.bottom.getTail();
+                assert(lastSide.beginPoint == null);
+                assert(lastSide.endPoint == null);
+                lastSide.beginPoint = southSide.endPoint;
+                lastSide.endPoint = southSide.beginPoint;
+            }
+
             if (!leftSide.hasNext() || !rightSide.hasNext()) {
                 break;
             }
@@ -259,6 +267,14 @@ public class VectorTileGroup {
             final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
 
             linkSides(iso, sides);
+
+            if (!topSide.hasNext()) {
+                final Side lastSide = northTile.right.getTail();
+                assert(lastSide.beginPoint == null);
+                assert(lastSide.endPoint == null);
+                lastSide.beginPoint = eastSide.endPoint;
+                lastSide.endPoint = eastSide.beginPoint;
+            }
 
             if (!bottomSide.hasNext() || !topSide.hasNext()) {
                 break;
