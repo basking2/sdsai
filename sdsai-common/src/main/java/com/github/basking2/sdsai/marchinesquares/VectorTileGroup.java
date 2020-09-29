@@ -130,38 +130,49 @@ public class VectorTileGroup {
 
         // Find the previous two Side nodes.
         Side northSide;
+        Side southSide;
         Side nw;
         Side ne;
         Side sw;
         Side se;
+
 
         if (northWestRightPoint != null && northTile != null) {
             nw = northWestRightPoint;
             ne = northTile.left.getTail();
             sw = rightSide.next();
             se = leftSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            northSide = northWestBottomPoint;
+            southSide = westTile.top.getTail();;
             yOffset++;
 
             // Stitch points in nw and se.
             nw.setPoints(xOffset, yOffset, (byte)1, (byte)0, nw.cell, sw.cell);
             ne.setPoints(xOffset, yOffset, (byte)3, (byte)0, se.cell, ne.cell);
+
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            // FIXME - is the x and y correct?
+            northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            southSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, sw.cell, se.cell);
         } else {
             nw = rightSide.next();
             ne = leftSide.next();
             sw = rightSide.next();
             se = leftSide.next();
+
+            // The north side has no points in it. We must build those with setPoints.
+            northSide = westTile.top.getTail();
+
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            // FIXME - is the x and y correct?
+            northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+
             yOffset += 2;
+            southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
         }
 
 
         while (true) {
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
-
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
 
@@ -188,6 +199,10 @@ public class VectorTileGroup {
             se = leftSide.next();
             northSide = southSide;
             northSide.swapPoints();
+
+            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+            southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+
             yOffset++;
         }
 
@@ -217,7 +232,9 @@ public class VectorTileGroup {
     }
 
     /**
-     * Stitch the southern tiles to the northern tiles.
+     * Stitch the southern tiles to the northern tiles starting with the first cell, not the previous cell.
+     *
+     * The previous cell is stitched by the east-west function.
      *
      * @param northTile The tile to the North. We want the bottom row.
      * @param southTile The tile to the South. We want the top row.
@@ -233,28 +250,13 @@ public class VectorTileGroup {
         Side se;
         Side westSide;
 
-        if (northWestBottomPoint != null) {
-            nw = northWestBottomPoint;
-            sw = westTile.top.getTail();
-            ne = bottomSide.next();
-            se = topSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
-            xOffset++;
-
-            // Stitch points in nw and se.
-            nw.setPoints(xOffset, yOffset, (byte)2, (byte)0, ne.cell, nw.cell);
-            sw.setPoints(xOffset, yOffset, (byte)0, (byte)0, sw.cell, se.cell);
-        } else {
-            nw = bottomSide.next();
-            sw = topSide.next();
-            ne = bottomSide.next();
-            se = topSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
-            xOffset += 2;
-        }
-
+        nw = bottomSide.next();
+        sw = topSide.next();
+        ne = bottomSide.next();
+        se = topSide.next();
+        // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+        westSide = Side.buildArtificialSide(xOffset, yOffset, (byte) 1, STITCH_COLOR, nw.cell, sw.cell);
+        xOffset += 2;
 
         while (true) {
 
