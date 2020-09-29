@@ -202,7 +202,7 @@ public class VectorTileGroup {
             northSide.swapPoints();
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+            southSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
 
             yOffset++;
         }
