@@ -150,7 +150,6 @@ public class VectorTileGroup {
             ne.setPoints(xOffset, yOffset, (byte)3, (byte)0, se.cell, ne.cell);
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            // FIXME - is the x and y correct?
             northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
             yOffset++;
             southSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, sw.cell, se.cell);
@@ -164,7 +163,6 @@ public class VectorTileGroup {
             northSide = westTile.top.getTail();
 
             // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            // FIXME - is the x and y correct?
             yOffset += 1;
             northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
 
