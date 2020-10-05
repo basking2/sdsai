@@ -254,7 +254,9 @@ public class VectorTileGroup {
         ne = bottomSide.next();
         se = topSide.next();
         // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-        westSide = Side.buildArtificialSide(xOffset, yOffset, (byte) 1, STITCH_COLOR, nw.cell, sw.cell);
+        westSide = northTile.left.getTail();
+        westSide.setPoints(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
+
         xOffset += 2;
 
         while (true) {
@@ -277,16 +279,20 @@ public class VectorTileGroup {
                 lastSide.endPoint = eastSide.beginPoint;
             }
 
+            // Advance the sides and swap the points.
+            // Yes, we do this before the possible break.
+            westSide = eastSide;
+            westSide.swapPoints();
+
             if (!bottomSide.hasNext() || !topSide.hasNext()) {
                 break;
             }
 
+            // If we did not break above, adjust the corners using .next().
             nw = ne;
             sw = se;
             ne = bottomSide.next();
             se = topSide.next();
-            westSide = eastSide;
-            westSide.swapPoints();
             xOffset++;
         }
 
