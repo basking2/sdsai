@@ -259,10 +259,19 @@ public class VectorTileGroup {
 
         xOffset += 2;
 
+
         while (true) {
 
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            final Side eastSide;
+            if (topSide.hasNext()) {
+                // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
+                eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            } else {
+                // On the last iteration, do not build an artificial side.
+                eastSide = northTile.right.getTail();
+                eastSide.setPoints(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            }
+
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -293,6 +302,7 @@ public class VectorTileGroup {
             sw = se;
             ne = bottomSide.next();
             se = topSide.next();
+
             xOffset++;
         }
 
