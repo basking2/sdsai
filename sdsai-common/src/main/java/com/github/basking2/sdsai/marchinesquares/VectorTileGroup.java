@@ -130,30 +130,32 @@ public class VectorTileGroup {
 
         // Find the previous two Side nodes.
         Side northSide;
-        Side southSide;
         Side nw;
         Side ne;
         Side sw;
         Side se;
 
-
         if (northWestRightPoint != null && northTile != null) {
+
+            // --------------------------------------------------------------------------------
+            // FIXME - consider skipping this if body to debug.
+            // That is, don't stitch the Four Corners square.
+            // --------------------------------------------------------------------------------
+
             // If there is a Four Corners square, set up to stitch it.
             nw = northWestRightPoint;
+
+            // The previous stitchNorthSouth() call set the points for this.
             ne = northTile.left.getTail();
+            ne.swapPoints();
+
             sw = leftItr.next();
             se = rightItr.next();
 
             northSide = northWestBottomPoint;
 
-            // Sides that have never been processed need their points set.
-            ne.setPoints(xOffset, yOffset, (byte)3, STITCH_COLOR, se.cell, ne.cell);
-            se.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
-
             yOffset++;
 
-            southSide = westTile.top.getTail();
-            southSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, sw.cell, se.cell);
         } else {
             nw = leftItr.next();
             ne = rightItr.next();
@@ -167,7 +169,6 @@ public class VectorTileGroup {
             northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
 
             yOffset += 1;
-            southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
         }
 
         // FIXME
@@ -175,6 +176,26 @@ public class VectorTileGroup {
         // FIXME
 
         while (true) {
+
+            final Side southSide;
+
+            if (leftItr.hasNext()) {
+                if (nw == northWestRightPoint) {
+                    // The first time through *and* we are stitching the Four Corners square.
+                    southSide = westTile.top.getTail();
+                    southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                }
+                else {
+                    // Most cases end up here. Make an artificial side.
+                    southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                }
+            }
+            else {
+                // Finally, the last side.
+                southSide = westTile.bottom.getTail();
+                southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+            }
+
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
 
@@ -182,6 +203,9 @@ public class VectorTileGroup {
             final Side[] sides = new Side[]{ northSide, ne, southSide, nw };
 
             linkSides(iso, sides);
+
+            northSide = southSide;
+            northSide.swapPoints();
 
             if (!leftItr.hasNext() || !rightItr.hasNext()) {
                 break;
@@ -191,11 +215,6 @@ public class VectorTileGroup {
             ne = se;
             sw = leftItr.next();
             se = rightItr.next();
-            northSide = southSide;
-            northSide.swapPoints();
-
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            southSide = Side.buildArtificialSide(xOffset-1, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
 
             yOffset++;
         }
