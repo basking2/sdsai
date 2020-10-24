@@ -125,8 +125,8 @@ public class VectorTileGroup {
      *                  field from any previous tile add.
      */
     private void stitchWestEast(final VectorTile westTile, final VectorTile eastTile, final VectorTile northTile) {
-        final Iterator<Side> rightSide = westTile.right.iterator();
-        final Iterator<Side> leftSide = eastTile.left.iterator();
+        final Iterator<Side> leftItr = westTile.right.iterator();
+        final Iterator<Side> rightItr = eastTile.left.iterator();
 
         // Find the previous two Side nodes.
         Side northSide;
@@ -136,31 +136,65 @@ public class VectorTileGroup {
         Side se;
 
         if (northWestRightPoint != null && northTile != null) {
+
+            // --------------------------------------------------------------------------------
+            // FIXME - consider skipping this if body to debug.
+            // That is, don't stitch the Four Corners square.
+            // --------------------------------------------------------------------------------
+
+            // If there is a Four Corners square, set up to stitch it.
             nw = northWestRightPoint;
+
+            // The previous stitchNorthSouth() call set the points for this.
             ne = northTile.left.getTail();
-            sw = rightSide.next();
-            se = leftSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+            ne.swapPoints();
+
+            sw = leftItr.next();
+            se = rightItr.next();
+
+            northSide = northWestBottomPoint;
+
             yOffset++;
 
-            // Stitch points in nw and se.
-            nw.setPoints(xOffset, yOffset, (byte)1, (byte)0, nw.cell, sw.cell);
-            ne.setPoints(xOffset, yOffset, (byte)3, (byte)0, se.cell, ne.cell);
         } else {
-            nw = rightSide.next();
-            ne = leftSide.next();
-            sw = rightSide.next();
-            se = leftSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            northSide = Side.buildArtificialSide(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
-            yOffset += 2;
+            nw = leftItr.next();
+            ne = rightItr.next();
+            sw = leftItr.next();
+            se = rightItr.next();
+
+            yOffset += 1;
+
+            // The north side has no points in it. We must build those with setPoints.
+            northSide = westTile.top.getTail();
+            northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
+
+            yOffset += 1;
         }
 
+        // FIXME
+        // NorthSouth should be OK. WestEast, start looking here.
+        // FIXME
 
         while (true) {
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+
+            final Side southSide;
+
+            if (leftItr.hasNext()) {
+                if (nw == northWestRightPoint) {
+                    // The first time through *and* we are stitching the Four Corners square.
+                    southSide = westTile.top.getTail();
+                    southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                }
+                else {
+                    // Most cases end up here. Make an artificial side.
+                    southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                }
+            }
+            else {
+                // Finally, the last side.
+                southSide = westTile.bottom.getTail();
+                southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+            }
 
             // Zip with the northern tile.
             final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
@@ -170,24 +204,18 @@ public class VectorTileGroup {
 
             linkSides(iso, sides);
 
-            if (!leftSide.hasNext()) {
-                final Side lastSide = westTile.bottom.getTail();
-                assert(lastSide.beginPoint == null);
-                assert(lastSide.endPoint == null);
-                lastSide.beginPoint = southSide.endPoint;
-                lastSide.endPoint = southSide.beginPoint;
-            }
+            northSide = southSide;
+            northSide.swapPoints();
 
-            if (!leftSide.hasNext() || !rightSide.hasNext()) {
+            if (!leftItr.hasNext() || !rightItr.hasNext()) {
                 break;
             }
 
             nw = sw;
             ne = se;
-            sw = rightSide.next();
-            se = leftSide.next();
-            northSide = southSide;
-            northSide.swapPoints();
+            sw = leftItr.next();
+            se = rightItr.next();
+
             yOffset++;
         }
 
@@ -217,75 +245,77 @@ public class VectorTileGroup {
     }
 
     /**
-     * Stitch the southern tiles to the northern tiles.
+     * Stitch the southern tiles to the northern tiles starting with the first cell, not the previous cell.
+     *
+     * The previous cell is stitched by the east-west function.
      *
      * @param northTile The tile to the North. We want the bottom row.
      * @param southTile The tile to the South. We want the top row.
      */
     private void stitchNorthSouth(final VectorTile northTile, final VectorTile southTile) {
-        final Iterator<Side> bottomSide = northTile.bottom.iterator();
-        final Iterator<Side> topSide = southTile.top.iterator();
+        final Iterator<Side> topItr = northTile.bottom.iterator();
+        final Iterator<Side> bottomItr = southTile.top.iterator();
 
-        // Find the previous two Side nodes.
-        Side nw;
-        Side sw;
-        Side ne;
-        Side se;
-        Side westSide;
+        // Get the four points aligned in the direction we are iterating.
+        // These are real sides that exist in the tile. They have points from when they
+        // where isobanded and contoured. Their perspective is inside-out, as it were. That is,
+        // their edges point into the tile they are a part of. When we stitch things, it will be
+        // the reverse of how it normally is done.
+        Side nw = topItr.next();
+        Side sw = bottomItr.next();
+        Side ne = topItr.next();
+        Side se = bottomItr.next();
 
-        if (northWestBottomPoint != null) {
-            nw = northWestBottomPoint;
-            sw = westTile.top.getTail();
-            ne = bottomSide.next();
-            se = topSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
-            xOffset++;
+        // This is a side that has never had points assigned to it.
+        // Notice we setPoints() as if this is on side 1, not 3. Recall our perspective is
+        // reflected because we are between tiles.
+        Side westSide = northTile.left.getTail();
+        westSide.setPoints(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
 
-            // Stitch points in nw and se.
-            nw.setPoints(xOffset, yOffset, (byte)2, (byte)0, ne.cell, nw.cell);
-            sw.setPoints(xOffset, yOffset, (byte)0, (byte)0, sw.cell, se.cell);
-        } else {
-            nw = bottomSide.next();
-            sw = topSide.next();
-            ne = bottomSide.next();
-            se = topSide.next();
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            westSide = Side.buildArtificialSide(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
-            xOffset += 2;
-        }
-
+        xOffset += 2;
 
         while (true) {
 
-            // NOTE: To gain the perspective of the neighboring cell, we use a reflected side.
-            final Side eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
-
-            // Zip with the northern tile.
-            final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
-
-            final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
-
-            linkSides(iso, sides);
-
-            if (!topSide.hasNext()) {
-                final Side lastSide = northTile.right.getTail();
-                assert(lastSide.beginPoint == null);
-                assert(lastSide.endPoint == null);
-                lastSide.beginPoint = eastSide.endPoint;
-                lastSide.endPoint = eastSide.beginPoint;
+            final Side eastSide;
+            if (topItr.hasNext()) {
+                // If this is not the last edge, build an artificial side from the east-to-west sides's cell values.
+                eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+            } else {
+                // If this is the last edge, we still must set points, but we use the actual Side object from the
+                // north tile.
+                eastSide = northTile.right.getTail();
+                eastSide.setPoints(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
             }
 
-            if (!bottomSide.hasNext() || !topSide.hasNext()) {
+
+            // Zip with the northern tile of the four points.
+            final IsobandContours iso = new IsobandContours(nw.cell, ne.cell, se.cell, sw.cell);
+
+            // Build a list of the sides that correspond with the points.
+            final Side[] sides = new Side[]{ nw, eastSide, sw, westSide };
+
+            // Link the sides together.
+            linkSides(iso, sides);
+
+            // Advance the sides and swap the points.
+            // Yes, we do this before the possible break.
+            westSide = eastSide;
+
+            // Reflect the perspective.
+            // NOTE: This leaves the last side pointing into the tiles we are stitching. We want this.
+            //       This is correct for when we stitch the Four Corners squares.
+            westSide.swapPoints();
+
+            if (!bottomItr.hasNext() || !topItr.hasNext()) {
                 break;
             }
 
+            // If we have not exited, walk to the east and continue.
             nw = ne;
             sw = se;
-            ne = bottomSide.next();
-            se = topSide.next();
-            westSide = eastSide;
-            westSide.swapPoints();
+            ne = topItr.next();
+            se = bottomItr.next();
+
             xOffset++;
         }
 
