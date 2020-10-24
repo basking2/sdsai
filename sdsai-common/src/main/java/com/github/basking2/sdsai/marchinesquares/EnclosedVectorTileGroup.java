@@ -14,7 +14,7 @@ public class EnclosedVectorTileGroup implements Closeable {
 
     private final VectorTileGroup vectorTileGroup;
 
-    private final static int buffer = 3;
+    private final static int buffer = 2;
 
     boolean topRow;
     boolean leftCol;
@@ -32,53 +32,85 @@ public class EnclosedVectorTileGroup implements Closeable {
         this.vectorTileGroup = new VectorTileGroup(featureFactory);
         this.northernWidths = new ArrayList<>();
         this.firstRow = new ArrayList<>();
-
     }
 
     public void addEast(final VectorTile east) {
 
-        northernWidths.add(east.bottom.size());
 
         if (topRow) {
-            lastTileHeight = buffer;
             if (leftCol) {
                 leftCol = false;
-                vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+                northernWidths.clear();
+                addCornerTile();
             }
 
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, east.top.size()));
+            lastTileHeight = buffer;
+            northernWidths.add(east.bottom.size());
+            addHorizontalBorder(east.top.size());
             firstRow.add(east);
         }
         else if (leftCol) {
             leftCol = false;
+            northernWidths.clear();
             lastTileHeight = east.right.size();
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
+            addVerticalBorder(east.left.size());
+            northernWidths.add(east.bottom.size());
             vectorTileGroup.addEast(east);
         }
         else {
             lastTileHeight = east.right.size();
+            northernWidths.add(east.bottom.size());
             vectorTileGroup.addEast(east);
         }
     }
 
+    private void addCornerTile() {
+        vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+    }
+
+    private void addVerticalBorder(final int height) {
+        vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, height, buffer));
+    }
+
+    private void addHorizontalBorder(final int width) {
+        vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, width));
+    }
+
     public void addNewRow() {
-        if (topRow) {
-            topRow = false;
-            // Top-right corner.
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+        if (!leftCol) {
+            // Only add a new row if the current row is not empty.
+
+            if (topRow) {
+                // When we go from the top row to the next row, fill in the borders.
+                topRow = false;
+
+                // Top-right corner.
+                addCornerTile();
+
+                // Next row.
+                vectorTileGroup.addNewRow();
+
+                // West-most tile.
+                addVerticalBorder(firstRow.get(0).left.size());
+
+                // Add the actual first row.
+                for (final VectorTile vt : firstRow) {
+                    vectorTileGroup.addEast(vt);
+                }
+
+                lastTileHeight = firstRow.get(firstRow.size()-1).right.size();
+
+                // We are done with the buffered first row of tiles. Allow them to be garbage collected.
+                firstRow.clear();
+            }
+
+            // Add the east-most border.
+            addVerticalBorder(lastTileHeight);
+
             vectorTileGroup.addNewRow();
 
-            // West-most tile.
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
-            for (final VectorTile vt: firstRow) {
-                vectorTileGroup.addEast(vt);
-            }
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, lastTileHeight, buffer));
-            firstRow.clear();
+            leftCol = true;
         }
-
-        vectorTileGroup.addNewRow();
-        leftCol = true;
     }
 
     public void addNewRow(final VectorTile newTile) {
@@ -107,15 +139,16 @@ public class EnclosedVectorTileGroup implements Closeable {
     public void close() {
         if (!closed) {
             closed = true;
+
             addNewRow();
 
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+            addCornerTile();
 
             for (int i : northernWidths) {
-                vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, i));
+                addHorizontalBorder(i);
             }
 
-            vectorTileGroup.addEast(VectorTileBuilder.buildConstantTile(cell, buffer, buffer));
+            addCornerTile();
         }
     }
 }

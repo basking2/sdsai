@@ -3,7 +3,6 @@ package com.github.basking2.sdsai.marchinesquares;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
