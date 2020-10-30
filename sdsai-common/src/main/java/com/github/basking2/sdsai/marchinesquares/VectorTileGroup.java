@@ -3,6 +3,7 @@ package com.github.basking2.sdsai.marchinesquares;
 import java.util.Iterator;
 
 import static com.github.basking2.sdsai.marchinesquares.Colors.*;
+import static com.github.basking2.sdsai.marchinesquares.Point.*;
 
 /**
  * A vector tile group connects many {@link Tile} objects so they may be
@@ -137,11 +138,6 @@ public class VectorTileGroup {
 
         if (northWestRightPoint != null && northTile != null) {
 
-            // --------------------------------------------------------------------------------
-            // FIXME - consider skipping this if body to debug.
-            // That is, don't stitch the Four Corners square.
-            // --------------------------------------------------------------------------------
-
             // If there is a Four Corners square, set up to stitch it.
             nw = northWestRightPoint;
 
@@ -154,8 +150,6 @@ public class VectorTileGroup {
 
             northSide = northWestBottomPoint;
 
-            yOffset++;
-
         } else {
             nw = leftItr.next();
             ne = rightItr.next();
@@ -163,17 +157,12 @@ public class VectorTileGroup {
             se = rightItr.next();
 
             yOffset += 1;
+            xOffset += 1;
 
             // The north side has no points in it. We must build those with setPoints.
             northSide = westTile.top.getTail();
-            northSide.setPoints(xOffset, yOffset, (byte)2, STITCH_COLOR, ne.cell, nw.cell);
-
-            yOffset += 1;
+            northSide.setPoints(xOffset, yOffset, BOTTOM, STITCH_COLOR, ne.cell, nw.cell);
         }
-
-        // FIXME
-        // NorthSouth should be OK. WestEast, start looking here.
-        // FIXME
 
         while (true) {
 
@@ -183,17 +172,17 @@ public class VectorTileGroup {
                 if (nw == northWestRightPoint) {
                     // The first time through *and* we are stitching the Four Corners square.
                     southSide = westTile.top.getTail();
-                    southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                    southSide.setPoints(xOffset, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
                 }
                 else {
                     // Most cases end up here. Make an artificial side.
-                    southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                    southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, TOP, STITCH_COLOR, sw.cell, se.cell);
                 }
             }
             else {
                 // Finally, the last side.
                 southSide = westTile.bottom.getTail();
-                southSide.setPoints(xOffset, yOffset, (byte)0, STITCH_COLOR, sw.cell, se.cell);
+                southSide.setPoints(xOffset, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
             }
 
             // Zip with the northern tile.
@@ -270,7 +259,7 @@ public class VectorTileGroup {
         // Notice we setPoints() as if this is on side 1, not 3. Recall our perspective is
         // reflected because we are between tiles.
         Side westSide = northTile.left.getTail();
-        westSide.setPoints(xOffset, yOffset, (byte)1, STITCH_COLOR, nw.cell, sw.cell);
+        westSide.setPoints(xOffset, yOffset, RIGHT, STITCH_COLOR, nw.cell, sw.cell);
 
         xOffset += 2;
 
@@ -279,12 +268,12 @@ public class VectorTileGroup {
             final Side eastSide;
             if (topItr.hasNext()) {
                 // If this is not the last edge, build an artificial side from the east-to-west sides's cell values.
-                eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+                eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             } else {
                 // If this is the last edge, we still must set points, but we use the actual Side object from the
                 // north tile.
                 eastSide = northTile.right.getTail();
-                eastSide.setPoints(xOffset-1, yOffset-1, (byte)3, STITCH_COLOR, se.cell, ne.cell);
+                eastSide.setPoints(xOffset-1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             }
 
 

@@ -1,6 +1,34 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 public class Point {
+    /**
+     * A point exists on a side of a square between two corner values.
+     *
+     * If a Point's side field is set to TOP then the point is between the two top corners.
+     */
+    public static final byte TOP = 0;
+
+    /**
+     * A point exists on a side of a square between two corner values.
+     *
+     * If a Point's side field is set to RIGHT then the point is between the two right corners.
+     */
+    public static final byte RIGHT = 1;
+
+    /**
+     * A point exists on a side of a square between two corner values.
+     *
+     * If a Point's side field is set to BOTTOM then the point is between the two bottom corners.
+     */
+    public static final byte BOTTOM = 2;
+
+    /**
+     * A point exists on a side of a square between two corner values.
+     *
+     * If a Point's side field is set to LEFT then the point is between the two left corners.
+     */
+    public static final byte LEFT = 3;
+
     public double x;
     public double y;
     public byte side;
