@@ -12,6 +12,11 @@ public class VectorTileBuilder {
     private final FeatureFactory featureFactory;
 
     /**
+     * Prevent a second call to {@link #build()}.
+     */
+    private boolean built;
+
+    /**
      * Feature field is indexed by [y][x][line] where the line is always a starting point connected to
      * an exiting edge.
      *
@@ -26,6 +31,7 @@ public class VectorTileBuilder {
         this.WIDTH = tile.width - 1;
         this.featureField = new LinkedList.Node[HEIGHT][WIDTH][];
         this.featureFactory = featureFactory;
+        this.built = false;
     }
     /**
      * Runs {@link Tile#isoband()} and calls {@link #build()}.
@@ -48,6 +54,12 @@ public class VectorTileBuilder {
      * @throws RuntimeException on errors that prevent object construction.
      */
     public VectorTile build() {
+        if (built) {
+            throw new IllegalStateException("build() may only be called once.");
+        }
+
+        built = true;
+
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 final int i = y * WIDTH + x;
