@@ -264,19 +264,19 @@ public class VectorTileGroup {
         // Notice we setPoints() as if this is on side 1, not 3. Recall our perspective is
         // reflected because we are between tiles.
         Side westSide = northTile.left.getTail();
-        westSide.setPoints(xOffset+1, yOffset-1, RIGHT, STITCH_COLOR, nw.cell, sw.cell);
+        westSide.setPoints(xOffset-1, yOffset-1, RIGHT, STITCH_COLOR, nw.cell, sw.cell);
 
         while (true) {
 
             final Side eastSide;
             if (topItr.hasNext()) {
                 // If this is not the last edge, build an artificial side from the east-to-west sides's cell values.
-                eastSide = Side.buildArtificialSide(xOffset+1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
+                eastSide = Side.buildArtificialSide(xOffset, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             } else {
                 // If this is the last edge, we still must set points, but we use the actual Side object from the
                 // north tile.
                 eastSide = northTile.right.getTail();
-                eastSide.setPoints(xOffset+1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
+                eastSide.setPoints(xOffset, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             }
 
 
