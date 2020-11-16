@@ -67,6 +67,7 @@ public class VectorTileGroup {
     }
 
     public void addEast(final VectorTile eastTile) {
+
         for (final Feature feature: eastTile.features) {
             feature.translate(xOffset, yOffset);
             tile.features.add(feature);
@@ -136,6 +137,9 @@ public class VectorTileGroup {
         Side sw;
         Side se;
 
+        // Reset yOffset for the next tile after this work is done.
+        final int previousYOffset = yOffset;
+
         if (northWestRightPoint != null && northTile != null) {
 
             // If there is a Four Corners square, set up to stitch it.
@@ -156,12 +160,11 @@ public class VectorTileGroup {
             sw = leftItr.next();
             se = rightItr.next();
 
-            yOffset += 1;
-            xOffset += 1;
-
             // The north side has no points in it. We must build those with setPoints.
             northSide = westTile.top.getTail();
-            northSide.setPoints(xOffset, yOffset, BOTTOM, STITCH_COLOR, ne.cell, nw.cell);
+            northSide.setPoints(xOffset-1, yOffset-1, BOTTOM, STITCH_COLOR, ne.cell, nw.cell);
+
+            yOffset++;
         }
 
         while (true) {
@@ -172,17 +175,17 @@ public class VectorTileGroup {
                 if (nw == northWestRightPoint) {
                     // The first time through *and* we are stitching the Four Corners square.
                     southSide = westTile.top.getTail();
-                    southSide.setPoints(xOffset, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
+                    southSide.setPoints(xOffset-1, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
                 }
                 else {
                     // Most cases end up here. Make an artificial side.
-                    southSide = Side.buildArtificialSide(xOffset-1, yOffset-1, TOP, STITCH_COLOR, sw.cell, se.cell);
+                    southSide = Side.buildArtificialSide(xOffset-1, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
                 }
             }
             else {
                 // Finally, the last side.
                 southSide = westTile.bottom.getTail();
-                southSide.setPoints(xOffset, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
+                southSide.setPoints(xOffset-1, yOffset, TOP, STITCH_COLOR, sw.cell, se.cell);
             }
 
             // Zip with the northern tile.
@@ -210,7 +213,7 @@ public class VectorTileGroup {
 
 
         // Put the yOffset back where we found it.
-        yOffset -= westTile.right.size();
+        yOffset = previousYOffset;
     }
 
     private void linkSides(final IsobandContours iso, final Side[] sides) {
@@ -245,6 +248,8 @@ public class VectorTileGroup {
         final Iterator<Side> topItr = northTile.bottom.iterator();
         final Iterator<Side> bottomItr = southTile.top.iterator();
 
+        final int previousXOffset = xOffset;
+
         // Get the four points aligned in the direction we are iterating.
         // These are real sides that exist in the tile. They have points from when they
         // where isobanded and contoured. Their perspective is inside-out, as it were. That is,
@@ -259,21 +264,19 @@ public class VectorTileGroup {
         // Notice we setPoints() as if this is on side 1, not 3. Recall our perspective is
         // reflected because we are between tiles.
         Side westSide = northTile.left.getTail();
-        westSide.setPoints(xOffset, yOffset, RIGHT, STITCH_COLOR, nw.cell, sw.cell);
-
-        xOffset += 2;
+        westSide.setPoints(xOffset+1, yOffset-1, RIGHT, STITCH_COLOR, nw.cell, sw.cell);
 
         while (true) {
 
             final Side eastSide;
             if (topItr.hasNext()) {
                 // If this is not the last edge, build an artificial side from the east-to-west sides's cell values.
-                eastSide = Side.buildArtificialSide(xOffset-1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
+                eastSide = Side.buildArtificialSide(xOffset+1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             } else {
                 // If this is the last edge, we still must set points, but we use the actual Side object from the
                 // north tile.
                 eastSide = northTile.right.getTail();
-                eastSide.setPoints(xOffset-1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
+                eastSide.setPoints(xOffset+1, yOffset-1, LEFT, STITCH_COLOR, se.cell, ne.cell);
             }
 
 
@@ -309,7 +312,7 @@ public class VectorTileGroup {
         }
 
         // Put the xOffset back where we found it.
-        xOffset -= northTile.bottom.size();
+        xOffset = previousXOffset;
     }
 
     public void addNewRow() {

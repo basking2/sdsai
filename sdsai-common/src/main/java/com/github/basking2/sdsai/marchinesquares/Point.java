@@ -77,13 +77,13 @@ public class Point {
      */
     public static LinkedList.Node<Point> buildPointLineNode(double x, double y, byte side) {
         switch (side) {
-            case 0:
+            case TOP:
                 return new LinkedList.Node(new Point(x + 0.5, y, side), null);
-            case 1:
+            case RIGHT:
                 return new LinkedList.Node(new Point(x + 1.0, y+0.5, side), null);
-            case 2:
+            case BOTTOM:
                 return new LinkedList.Node(new Point(x + 0.5, y+1.0, side), null);
-            case 3:
+            case LEFT:
                 return new LinkedList.Node(new Point(x, y+0.5, side), null);
             default:
                 throw new IllegalStateException("Side value must be 0, 1, 2, or 3 for nw, ne, se, or sw.");
