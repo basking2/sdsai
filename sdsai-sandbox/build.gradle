@@ -5,11 +5,12 @@ plugins {
   id 'maven'
   id 'signing'
   id 'eclipse'
-  id 'net.researchgate.release' version '2.6.0'
+  id 'net.researchgate.release' version '2.8.1'
 }
 
 release {
   tagTemplate = '${name}-${version}'
+  requireBranch = 'main'
 }  
 
 dependencies {

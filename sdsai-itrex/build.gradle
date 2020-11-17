@@ -6,7 +6,7 @@ plugins {
   id 'maven'
   id 'signing'
   id "org.asciidoctor.convert" version "2.3.0"
-  id 'net.researchgate.release' version '2.6.0'
+  id 'net.researchgate.release' version '2.8.1'
 }
 
 compileJava {
@@ -30,6 +30,7 @@ dependencies {
 
 release {
   tagTemplate = '${name}-${version}'
+  requireBranch = 'main'
 }
 
 task javadocJar(type: Jar) {
