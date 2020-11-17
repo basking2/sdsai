@@ -6,7 +6,7 @@ import java.util.Map;
  * A very naive method to build a simple GeoJSON object.
  */
 public class SimpleGeoJson {
-    public static String write(final VectorTile tile, double height, double width) {
+    public static String write(final VectorTile tile, double maxHeight, double maxWidth) {
 
         final StringBuilder sb = new StringBuilder();
         sb.append("{\n");
@@ -24,8 +24,8 @@ public class SimpleGeoJson {
 
             sb.append("\"coordinates\": [ [ \n ");
             for (final Point p : f.points) {
-                final double x = p.x * 360d / width - 180d;
-                final double y = (height - p.y) * 180d / height - 90d;
+                final double x = p.x * 360d / maxWidth - 180d;
+                final double y = (maxHeight - p.y) * 180d / maxHeight - 90d;
                 if (!Double.isNaN(x) && !Double.isNaN(y)) {
                     sb.append("[")
                             .append(x)

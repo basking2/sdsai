@@ -53,6 +53,8 @@ public class VectorTileGroup {
     private LinkedList<VectorTile> currentRow;
     private int xOffset = 0;
     private int yOffset = 0;
+    private int maxXOffset = 0;
+    private int maxYOffset = 0;
 
     private final FeatureFactory featureFactory;
 
@@ -111,6 +113,9 @@ public class VectorTileGroup {
 
         // The xOffset has permanently changed.
         this.xOffset += eastTile.top.size();
+        if (this.xOffset > this.maxXOffset) {
+            this.maxXOffset = this.xOffset;
+        }
 
         // The one stored west tile is updated.
         this.westTile = eastTile;
@@ -319,6 +324,9 @@ public class VectorTileGroup {
         // Drop to a new row.
         if (westTile != null) {
             this.yOffset += westTile.right.size();
+            if (this.yOffset > this.maxYOffset) {
+                this.maxYOffset = this.yOffset;
+            }
         }
         this.xOffset = 0;
         this.northTiles = this.currentRow.iterator();
@@ -339,6 +347,14 @@ public class VectorTileGroup {
 
     public void setStitchTiles(final boolean stitchTiles) {
         this.stitchTiles = stitchTiles;
+    }
+
+    public int getXOffset() {
+        return this.xOffset;
+    }
+
+    public int getYOffset() {
+        return this.yOffset;
     }
 
     private void translateSide(final Side s) {
@@ -393,5 +409,21 @@ public class VectorTileGroup {
                 stop = stop.next;
             }
         }
+    }
+
+    /**
+     * Return the largest Y offset observed. This may be used to inform the height of the resulting shape.
+     * @return the largest Y offset.
+     */
+    public int getMaxYOffset() {
+        return this.maxYOffset;
+    }
+
+    /**
+     * Return the largest X offset observed. This may be used to inform the width of the resulting shape.
+     * @return the largest X offset.
+     */
+    public int getMaxXOffset() {
+        return this.maxXOffset;
     }
 }

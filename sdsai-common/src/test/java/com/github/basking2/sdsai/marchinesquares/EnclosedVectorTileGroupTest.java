@@ -92,8 +92,6 @@ public class EnclosedVectorTileGroupTest {
         };
 
         try (final EnclosedVectorTileGroup vectorTileGroup = new EnclosedVectorTileGroup((byte) -1, FeatureFactory.uuidProperty())) {
-            vectorTileGroup.setStitchTiles(true);
-
             for (int i = 0; i < map.length; i++) {
                 for (int j = 0; j < map[i].length; j++) {
                     checkVectorTile(map[i][j]);
@@ -102,7 +100,9 @@ public class EnclosedVectorTileGroupTest {
                 vectorTileGroup.addNewRow();
             }
 
-            final String geoJson = SimpleGeoJson.write(vectorTileGroup.getVectorTile());
+            final VectorTile v = vectorTileGroup.getVectorTile();
+
+            final String geoJson = SimpleGeoJson.write(v, vectorTileGroup.getMaxYOffset()-1, vectorTileGroup.getMaxXOffset()-1);
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + ".geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -135,7 +135,9 @@ public class EnclosedVectorTileGroupTest {
             g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
             g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
+            final VectorTile v = g.getVectorTile();
+
+            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x1.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -165,7 +167,9 @@ public class EnclosedVectorTileGroupTest {
             g.addNewRow();
             g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 4);
+            final VectorTile v = g.getVectorTile();
+
+            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "1x2.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -207,7 +211,9 @@ public class EnclosedVectorTileGroupTest {
             g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
             g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
 
-            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 5, 5);
+            final VectorTile v = g.getVectorTile();
+
+            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x2.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -236,7 +242,7 @@ public class EnclosedVectorTileGroupTest {
         final VectorTile vt = g.getVectorTile();
 
         Assert.assertTrue(vt.features.size() > 0);
-        final String geoJson = SimpleGeoJson.write(vt, 5, 5);
+        final String geoJson = SimpleGeoJson.write(vt, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "simple_edges.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -282,7 +288,7 @@ public class EnclosedVectorTileGroupTest {
         final VectorTile vt = g.getVectorTile();
 
         Assert.assertTrue(vt.features.size() > 0);
-        final String geoJson = SimpleGeoJson.write(vt, 5, 5);
+        final String geoJson = SimpleGeoJson.write(vt, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "_edges.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -320,7 +326,9 @@ public class EnclosedVectorTileGroupTest {
                 System.out.println("P " + pt.x + " " + pt.y);
             }
 
-            final String geoJson = SimpleGeoJson.write(g.getVectorTile(), 4, 5);
+            final VectorTile v = g.getVectorTile();
+
+            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "swizzle.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));

@@ -149,6 +149,23 @@ public class EnclosedVectorTileGroup implements Closeable {
             }
 
             addCornerTile();
+
         }
+    }
+
+    public int getMaxXOffset() {
+        if (!closed) {
+            throw new IllegalStateException("This must be closed before this offset if valid.");
+        }
+        return vectorTileGroup.getMaxXOffset();
+    }
+
+    public int getMaxYOffset() {
+        if (!closed) {
+            throw new IllegalStateException("This must be closed before this offset if valid.");
+        }
+
+        // Account for the lower border that the vector tile never observes.
+        return buffer + vectorTileGroup.getMaxYOffset();
     }
 }
