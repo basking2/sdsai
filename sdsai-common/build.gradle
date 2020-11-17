@@ -10,7 +10,9 @@ plugins {
 
 release {
   tagTemplate = '${name}-${version}'
-  requireBranch = 'main'
+  git {
+    requireBranch = 'main'
+  }
 }  
 
 dependencies {

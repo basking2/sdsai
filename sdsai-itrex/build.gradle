@@ -30,7 +30,9 @@ dependencies {
 
 release {
   tagTemplate = '${name}-${version}'
-  requireBranch = 'main'
+  git {
+    requireBranch = 'main'
+  }
 }
 
 task javadocJar(type: Jar) {
