@@ -102,7 +102,7 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = vectorTileGroup.getVectorTile();
 
-            final String geoJson = SimpleGeoJson.write(v, vectorTileGroup.getMaxYOffset()-1, vectorTileGroup.getMaxXOffset()-1);
+            final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(vectorTileGroup.getMaxXOffset()-1, vectorTileGroup.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + ".geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -137,7 +137,7 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
-            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+            final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x1.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -169,7 +169,7 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
-            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+            final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "1x2.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -213,7 +213,7 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
-            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+            final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x2.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
@@ -242,7 +242,7 @@ public class EnclosedVectorTileGroupTest {
         final VectorTile vt = g.getVectorTile();
 
         Assert.assertTrue(vt.features.size() > 0);
-        final String geoJson = SimpleGeoJson.write(vt, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+        final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "simple_edges.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -288,7 +288,7 @@ public class EnclosedVectorTileGroupTest {
         final VectorTile vt = g.getVectorTile();
 
         Assert.assertTrue(vt.features.size() > 0);
-        final String geoJson = SimpleGeoJson.write(vt, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+        final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "_edges.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -328,7 +328,7 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
-            final String geoJson = SimpleGeoJson.write(v, g.getMaxYOffset()-1, g.getMaxXOffset()-1);
+            final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "swizzle.geojson")) {
                 os.write(geoJson.getBytes("UTF-8"));
