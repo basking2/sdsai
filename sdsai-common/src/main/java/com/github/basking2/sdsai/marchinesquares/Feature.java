@@ -1,6 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -24,9 +25,12 @@ public class Feature {
      */
     public final LinkedList.Node<Point> points;
 
+    public final LinkedList<LinkedList.Node<Point>> holes;
+
     public Feature(final LinkedList.Node<Point> points) {
         this.points = points;
         this.properties = new HashMap<>();
+        this.holes = new LinkedList();
     }
 
     /**
@@ -40,5 +44,33 @@ public class Feature {
             point.x += xOffset;
             point.y += yOffset;
         }
+    }
+
+    /**
+     * O(n) test if the polygon represented by this feature is wound counter-clockwise.
+     *
+     * Counter-clockwise polygons are external. Clockwise wound polygons must be
+     * in a {@link Feature} as holes.
+     *
+     * @return
+     */
+    public boolean isCounterClockwise() {
+        final Iterator<Point> itr = points.iterator();
+
+        double sum = 0;
+
+        if (itr.hasNext()) {
+            Point p1 = itr.next();
+
+            while (itr.hasNext()) {
+                final Point p2 = itr.next();
+                sum += (p2.x - p1.x) * (p2.y + p1.y);
+                p1 = p2;
+            }
+        }
+
+        // Negative is counter clockwise, positive is clockwise.
+        // We give the tie (0) to counter clockwise.
+        return sum <= 0;
     }
 }

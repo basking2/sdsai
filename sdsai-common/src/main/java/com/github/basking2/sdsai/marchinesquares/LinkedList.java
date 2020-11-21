@@ -135,5 +135,18 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
             return "" + value + " color " + color + ((next == null) ? " no next ":" has next")
                     ;
         }
+
+        public Node<VALUE> reverse() {
+            Node<VALUE> prev = null;
+            Node<VALUE> curr = this;
+            while (curr != null) {
+                final Node<VALUE> next = curr.next;
+                curr.next = prev;
+                prev = curr;
+                curr = next;
+            }
+
+            return prev;
+        }
     }
 }
