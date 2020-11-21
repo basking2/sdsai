@@ -55,22 +55,6 @@ public class Feature {
      * @return
      */
     public boolean isCounterClockwise() {
-        final Iterator<Point> itr = points.iterator();
-
-        double sum = 0;
-
-        if (itr.hasNext()) {
-            Point p1 = itr.next();
-
-            while (itr.hasNext()) {
-                final Point p2 = itr.next();
-                sum += (p2.x - p1.x) * (p2.y + p1.y);
-                p1 = p2;
-            }
-        }
-
-        // Negative is counter clockwise, positive is clockwise.
-        // We give the tie (0) to counter clockwise.
-        return sum <= 0;
+        return Point.isCounterClockwise(points.iterator());
     }
 }

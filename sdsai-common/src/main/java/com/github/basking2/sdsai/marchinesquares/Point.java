@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai.marchinesquares;
 
+import java.util.Iterator;
+
 public class Point {
     /**
      * A point exists on a side of a square between two corner values.
@@ -90,4 +92,23 @@ public class Point {
         }
     }
 
+    public static boolean isCounterClockwise(final Iterator<Point> points) {
+
+        double sum = 0;
+
+        if (points.hasNext()) {
+            Point p1 = points.next();
+
+            while (points.hasNext()) {
+                final Point p2 = points.next();
+                sum += (p2.x - p1.x) * (p2.y + p1.y);
+                p1 = p2;
+            }
+        }
+
+        // Negative is counter clockwise, positive is clockwise.
+        // We give the tie (0) to counter clockwise.
+        return sum <= 0;
+    }
 }
+
