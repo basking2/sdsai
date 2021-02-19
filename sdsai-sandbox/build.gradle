@@ -5,15 +5,7 @@ plugins {
   id 'maven'
   id 'signing'
   id 'eclipse'
-  id 'net.researchgate.release' version '2.8.1'
 }
-
-release {
-  tagTemplate = '${name}-${version}'
-  git {
-    requireBranch = 'main'
-  }
-}  
 
 dependencies {
   implementation project(':sdsai-common')
