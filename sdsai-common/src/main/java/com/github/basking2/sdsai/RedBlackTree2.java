@@ -1,5 +1,7 @@
 package com.github.basking2.sdsai;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -542,23 +544,9 @@ public class RedBlackTree2<K extends Comparable<K>, V>
                 return curr.key;
             }
 
-            /**
-             * This currently does nothing.
-             * This is not yet implemented because of a problem with
-             * handling duplicate keys. There is no way, currently, to
-             * find the successor or the predecessor of the node that will
-             * actually be deleted.
-             */
             public void remove()
             {
-                /* Do not delete the RBNULL node. */
-                if ( curr != RBNULL ) {
-                    _del_node(curr);
-
-                    curr = RBNULL;
-                } else {
-                    throw new IllegalStateException();
-                }
+                throw new NotImplementedException();
             }
         };
     }
