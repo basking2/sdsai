@@ -1,7 +1,5 @@
 package com.github.basking2.sdsai;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,7 +40,6 @@ public class RedBlackTree2<K extends Comparable<K>, V>
         protected RBNode parent;
         protected RBNode left;
         protected RBNode right;
-        protected RedBlackTree2<K, V> source;
 
         protected RBNode(final boolean b) {
             isBlack = b;
@@ -546,7 +543,7 @@ public class RedBlackTree2<K extends Comparable<K>, V>
 
             public void remove()
             {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
         };
     }

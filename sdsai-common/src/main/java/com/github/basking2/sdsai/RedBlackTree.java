@@ -60,7 +60,6 @@ public class RedBlackTree<E> implements Iterable<Key<E>>
     protected RBNode          parent;
     protected RBNode          left;
     protected RBNode          right;
-    protected RedBlackTree<E> source;
 
     protected RBNode(boolean b)
     { isBlack = b; left=RBNULL; right=RBNULL; parent=RBNULL; }
@@ -665,23 +664,9 @@ public class RedBlackTree<E> implements Iterable<Key<E>>
         return curr.key;
       }
 
-     /**
-      * This currently does nothing. 
-      * This is not yet implemented because of a problem with 
-      * handling duplicate keys. There is no way, currently, to
-      * find the successor or the predecessor of the node that will 
-      * actually be deleted.
-      */
       public void remove()
       {
-        /* Do not delete the RBNULL node. */
-        if ( curr != RBNULL ) {
-          _del_node(curr);
-
-          curr = RBNULL;
-        } else {
-          throw new IllegalStateException();
-        }
+        throw new UnsupportedOperationException();
       }
     };
   }
