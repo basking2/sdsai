@@ -1,7 +1,5 @@
 package com.github.basking2.sdsai;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.Iterator;
 
 /**
@@ -42,8 +40,27 @@ public class IntervalTree<K extends Comparable<K>, V>
      */
     public class RBNode {
         protected boolean isBlack; /* we insert red nodes */
+
+        /**
+         * The {@link Interval#getMin()} value used to order and index nodes in the Red Black tree.
+         */
         protected K key;
+
+        /**
+         * This is the largest value in the sub-tree.
+         */
+        protected K max;
+
+        /**
+         * This is effectively the key, though order and indexing is done through {@link Interval#getMin()}.
+         */
+        protected Interval<K> interval;
+
+        /**
+         * A value associated with the interval.
+         */
         protected V value;
+
         protected RBNode parent;
         protected RBNode left;
         protected RBNode right;
@@ -55,12 +72,28 @@ public class IntervalTree<K extends Comparable<K>, V>
             parent = RBNULL;
         }
 
-        protected RBNode(final K key, final V value, final RBNode parent) {
-            this.key = key;
+        protected RBNode(final Interval<K> interval, final V value, final RBNode parent) {
+            this.key = interval.getMin();
+            this.max = interval.getMax();
             this.value = value;
             left = RBNULL;
             right = RBNULL;
             this.parent = parent;
+        }
+
+        /**
+         * Copy data members (not tree structure members) from another RBNode.
+         *
+         * NOTE: This may make the {@link #max} invalid. The function {@link #updateMax()} should be called.
+         *
+         * @param that The node to copy data from.
+         * @see #updateMax()
+         */
+        public void copyData(final RBNode that) {
+            this.max = that.max;
+            this.value = that.value;
+            this.key = that.key;
+            this.interval = that.interval;
         }
 
         public void print(String s) {
@@ -160,6 +193,10 @@ public class IntervalTree<K extends Comparable<K>, V>
                 left = left.right; /* take over my new subtree */
                 left.parent = this; /* let subtree know I'm the parent */
                 parent.right = this; /* let parent know I'm its child */
+
+                // Fix max value after the rotation.
+                max = left.max(right).max;
+                parent.max = parent.left.max(parent.right).max;
             }
         }
 
@@ -182,6 +219,10 @@ public class IntervalTree<K extends Comparable<K>, V>
                 right = right.left; /* take over my new subtree */
                 right.parent = this; /* let subtree know I'm the parent */
                 parent.left = this; /* let parent know I'm its child */
+
+                // Fix max value after the rotation.
+                max = left.max(right).max;
+                parent.max = parent.left.max(parent.right).max;
             }
         }
 
@@ -285,7 +326,67 @@ public class IntervalTree<K extends Comparable<K>, V>
 
             n.isBlack = true;
         }
+
+        /**
+         * Return the node with the greater max value.
+         *
+         * @param that The other node.
+         * @return The node, this or that, that is not RBNULL and has the greater max value.
+         */
+        public RBNode max(final RBNode that) {
+            if (this == RBNULL) {
+                return that;
+            }
+
+            if (that == RBNULL) {
+                return this;
+            }
+
+            return (this.max.compareTo(that.max) >= 0) ? this : that;
+        }
+
+        /**
+         * Update the {@link #max} value for this node, considering children that are not RBNULL and the interval.
+         *
+         * If this node is also RBNULL, this does nothing.
+         */
+        public void updateMax() {
+            if (this != RBNULL) {
+                K currentMax = interval.getMax();
+
+                // Is the left subtree larger than the currentMax?
+                if (left != RBNULL && currentMax.compareTo(left.max) < 0) {
+                    currentMax = left.max;
+                }
+
+                // Is the right subtree larger than the currentMax?
+                if (right != RBNULL && currentMax.compareTo(right.max) < 0) {
+                    currentMax = right.max;
+                }
+
+                // Set the max in this subtree.
+                max = currentMax;
+            }
+        }
+
+        /**
+         * Walk up the tree until we are at an RBNULL node and update the {@link #max} value.
+         *
+         * @see #updateMax()
+         */
+        public void updateMaxAncestry() {
+            RBNode n = this;
+
+            while (n != RBNULL) {
+
+                n.updateMax();;
+
+                // Walk up the tree.
+                n = n.parent;
+            }
+        }
     }
+
     /**************** CLOSE INTERNAL CLASS ********************/
 
     public RBNode RBNULL;
@@ -320,27 +421,37 @@ public class IntervalTree<K extends Comparable<K>, V>
     protected int size;
 
     /**
-     * Put the object v in the tree under key k. If a value is already there, it is returned.
+     * Add the object v in the tree under interval i using the minimum value as the tree key and tracking the maximum value for the subtree containing the interval.
+     *
+     * Duplicate intervals take O(n), where n is the number of intervals with the same minimum value, to
+     * find. Because of this we do not define put() but add() and allow for duplicate intervals.
      *
      * @param i The interval to insert bounded by keys.
      * @param v The value to insert.
-     * @return The previous value or null if none.
      */
-    public V put(final Interval<K> i, final V v)
+    public void add(final Interval<K> i, final V v)
     {
         if(size==0) {
-            root = new RBNode(k, v, RBNULL);
+            root = new RBNode(i, v, RBNULL);
             root.isBlack = true;
         } else {
             RBNode prev   = RBNULL;
             RBNode node   = root;       /* name of the node we want to insert */
 
             int cmp = 0;
+            final K mink = i.getMin();
+            final K maxk = i.getMax();
 
             while (node != RBNULL) {
-                cmp = k.compareTo(node.key);
-                if (cmp < 0) {
-                    // The new key is to the left.
+                // First, update the max key in the node we are considering.
+                if (node.max.compareTo(maxk) < 0) {
+                    node.max = maxk;
+                }
+
+                // Second, check the minimum value and find the next child key.
+                cmp = mink.compareTo(node.key);
+                if (cmp <= 0) {
+                    // The new key is to the left or equal (in which case we insert to the left).
                     prev = node;
                     node = node.left;
                 }
@@ -349,16 +460,10 @@ public class IntervalTree<K extends Comparable<K>, V>
                     prev = node;
                     node = node.right;
                 }
-                else {
-                    // Keys are equal. We found the node.
-                    final V previousValue = node.value;
-                    node.value = v;
-                    return previousValue;
-                }
             }
 
             /* Make the new node! */
-            node = new RBNode(k, v, prev);
+            node = new RBNode(i, v, prev);
 
             /* Insert it at the right or left point of the tree */
             if (cmp < 0) {
@@ -367,12 +472,12 @@ public class IntervalTree<K extends Comparable<K>, V>
                 prev.right = node;
             }
 
-            /** OK, we inserted... now fix the mess we have made! **/
+            // OK, we inserted... now fix the mess we have made!
+            // Note, we've updated the max values during the walk down the tree. Those are OK!
             node.insertFixup();
         }
 
         size++;
-        return null;
     }
 
     /**
@@ -385,29 +490,74 @@ public class IntervalTree<K extends Comparable<K>, V>
     }
 
     /**
-     * Calls del(o.getKey());
+     *
+     * Remove the interval that matches. This is O(log(n) + m) where n is the size of the tree and m is the number of other intervals with the same minimum.
+     *
+     * If there are duplicate intervals, only one of the duplicates is removed.
+     *
+     * @param i The interval to remove.
+     * @return The value associated with the removed interval or null if the interval is not found.
      */
-    public V remove(K k)
+    public V remove(final Interval<K> i)
     {
         /**** FIND THE NODE ****/
         if (size==0) {
             return null;
         }
 
-        RBNode n = root;
+        return remove(i, root);
+    }
+
+    private V remove(final Interval<K> i, RBNode n)
+    {
+
+        final K mink = i.getMin();
+        final K maxk = i.getMax();
 
         while ( n != RBNULL ) {
-            final int cmp = k.compareTo(n.key);
+            final int cmp = mink.compareTo(n.key);
             if (cmp < 0) {
                 n = n.left;
             } else if (cmp > 0) {
                 n = n.right;
             }
             else {
-                // Found it!
-                V v = n.value;
-                _del_node(n);
-                return v;
+                final int maxcmp = maxk.compareTo(n.max);
+
+                if (maxcmp <= 0) {
+
+                    // This subtree can contain the interval.
+                    if (maxk.compareTo(n.interval.getMax()) == 0) {
+                        // The current node matches.
+                        final V v = n.value;
+                        _del_node(n);
+                        return v;
+                    } else {
+                        // The current min value matches, but the max does not. Search child trees.
+
+                        if (maxk.compareTo(n.left.max) <= 0) {
+                            // Recursively try left tree.
+                            final V v = remove(i, n.left);
+                            if (v != null) {
+                                return v;
+                            }
+                        }
+
+                        if (maxk.compareTo(n.right.max) <= 0) {
+                            // Recursively try right tree.
+                            final V v = remove(i, n.right);
+                            if (v != null) {
+                                return v;
+                            }
+                        }
+
+                        return null;
+                    }
+                }
+                else {
+                    // This subtree does not have any node with at least the given max. Not found.
+                    return null;
+                }
             }
 
         }
@@ -416,37 +566,61 @@ public class IntervalTree<K extends Comparable<K>, V>
     }
 
     /**
-     * Given a node n in this RedBlackTree2, this method does the work of
+     * Given a node n in this Interval Tree, this method does the work of
      * removing the node and fixing the tree. This method is broken out of
      * del(Key<E>) so that it can be reused in the remove() call of this
      * structure's iterator.
      */
-    private void _del_node(RBNode n)
-    {
+    private void _del_node(RBNode n) {
+        // FIXME - repair max  values.
         RBNode y; /* value from text book used in delete */
         RBNode x; /* value from text book used in delete */
 
-        if(n.left == RBNULL || n.right == RBNULL)
-            y = n;
-        else
-            y = n.successor();
+        // Assign the node to remove to y.
+        // If n has one or zero children, we'll remove n.
+        // If n has both children, remove it's successor which will have one child or be a leaf node.
+        y  = (n.left == RBNULL || n.right == RBNULL) ? n : n.successor();
 
-        x = (y.left != RBNULL)? y.left : y.right;
+        // Y is a leaf node. Set the one child (or RBNULL if no children) as x.
+        x = (y.left != RBNULL) ? y.left : y.right;
 
+        // X points at y's parent. We're moving y.
         x.parent = y.parent;
 
-        if(y.parent==RBNULL)        root           = x;
-        else if(y == y.parent.left) y.parent.left  = x;
-        else                        y.parent.right = x;
+        // Point the parent at x, skipping over y.
+        // Since y has at most 1 child, this is a simple operation.
+        if (y.parent == RBNULL) {
+            // If y was root, x is now root and has no max changes.
+            // Y's parent, RBNULL, also has no max change.
+            root = x;
+        }
+        else if (y == y.parent.left) {
+            // Y is the left child, so point that to x. The parent needs a max update.
+            y.parent.left = x;
+        }
+        else {
+            // Y is the right child, so point that to x. The parent needs a max update.
+            y.parent.right = x;
+        }
 
-        if(y!=n)      n.key = y.key;
+        if (y != n) {
+            // We removed n's successor. Before we discard y, copy its data into n.
+            // N's max key is updated if y's interval is bigger.
+            n.copyData(y);
+        }
 
-        if(y.isBlack) {
+        // This should be sufficient because...
+        // If n had two children, it's successor, y, must be a descendant.
+        // Otherwise, n is aliased to y and is removed. X is promoted to n's place in the tree. X and y both point to the same parent.
+        y.parent.updateMaxAncestry();
+
+        if (y.isBlack) {
             x.deleteFixup();
         }
 
         size--;
     }
+
 
     public boolean empty(){ return size==0; }
 
@@ -550,7 +724,7 @@ public class IntervalTree<K extends Comparable<K>, V>
 
             public void remove()
             {
-                throw new NotImplementedException();
+                throw new UnsupportedOperationException();
             }
         };
     }

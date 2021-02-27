@@ -131,4 +131,12 @@ public class Interval<K extends Comparable<K>> {
     public boolean above(final Interval<K> that) {
         return this.min.compareTo(that.max) >= 0;
     }
+
+    public K getMin() {
+        return min;
+    }
+
+    public K getMax() {
+        return max;
+    }
 }

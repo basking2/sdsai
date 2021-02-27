@@ -432,7 +432,10 @@ public class RedBlackTree2<K extends Comparable<K>, V>
         else if(y == y.parent.left) y.parent.left  = x;
         else                        y.parent.right = x;
 
-        if(y!=n)      n.key = y.key;
+        if(y!=n) {
+            n.key = y.key;
+            n.value = y.value;
+        }
 
         if(y.isBlack) {
             x.deleteFixup();
