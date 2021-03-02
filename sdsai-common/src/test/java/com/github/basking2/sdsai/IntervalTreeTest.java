@@ -2,7 +2,9 @@ package com.github.basking2.sdsai;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Iterator;
+
+import static org.junit.Assert.*;
 
 public class IntervalTreeTest {
     @Test
@@ -26,6 +28,14 @@ public class IntervalTreeTest {
         for (int i = 0; i < 100; i++) {
             it.add(new Interval<>(i, i+2), i+1);
         }
+
+        Iterator<Integer> keys = it.keys();
+        for (int i = 0; i < 100; i++) {
+            assertTrue(keys.hasNext());
+            final Integer j = keys.next();
+            assertEquals(Integer.valueOf(i), j);
+        }
+        assertFalse(keys.hasNext());
 
         int size = it.size();
 

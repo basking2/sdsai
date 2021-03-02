@@ -92,7 +92,6 @@ public class IntervalTree<K extends Comparable<K>, V>
          */
         public void copyData(final RBNode that) {
             this.max = that.max;
-            assert(this.max != null);
             this.value = that.value;
             this.key = that.key;
             this.interval = that.interval;
@@ -122,7 +121,6 @@ public class IntervalTree<K extends Comparable<K>, V>
         }
 
         protected void setMax(final K max) {
-            assert(max != null);
             this.max = max;
         }
 
@@ -335,24 +333,6 @@ public class IntervalTree<K extends Comparable<K>, V>
         }
 
         /**
-         * Return the node with the greater max value.
-         *
-         * @param that The other node.
-         * @return The node, this or that, that is not RBNULL and has the greater max value.
-         */
-        public RBNode max(final RBNode that) {
-            if (this == RBNULL) {
-                return that;
-            }
-
-            if (that == RBNULL) {
-                return this;
-            }
-
-            return (this.max.compareTo(that.max) >= 0) ? this : that;
-        }
-
-        /**
          * Update the {@link #max} value for this node, considering children that are not RBNULL and the interval.
          *
          * If this node is also RBNULL, this does nothing.
@@ -372,7 +352,6 @@ public class IntervalTree<K extends Comparable<K>, V>
                 }
 
                 // Set the max in this subtree.
-                assert(currentMax != null);
                 this.max = currentMax;
             }
         }
@@ -729,6 +708,58 @@ public class IntervalTree<K extends Comparable<K>, V>
                 curr = next;
                 next = next.successor();
                 return curr.key;
+            }
+
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public Iterator<Interval<K>> intervals()
+    {
+        return new Iterator<>()
+        {
+            protected RBNode curr = RBNULL;
+            protected RBNode next = root.min();
+
+            public boolean hasNext()
+            {
+                return next != RBNULL;
+            }
+
+            public Interval<K> next()
+            {
+                curr = next;
+                next = next.successor();
+                return curr.interval;
+            }
+
+            public void remove()
+            {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    public Iterator<V> values()
+    {
+        return new Iterator<>()
+        {
+            protected RBNode curr = RBNULL;
+            protected RBNode next = root.min();
+
+            public boolean hasNext()
+            {
+                return next != RBNULL;
+            }
+
+            public V next()
+            {
+                curr = next;
+                next = next.successor();
+                return curr.value;
             }
 
             public void remove()
