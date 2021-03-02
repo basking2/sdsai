@@ -721,7 +721,7 @@ public class IntervalTree<K extends Comparable<K>, V>
 
     public Iterator<Interval<K>> intervals()
     {
-        return new Iterator<>()
+        return new Iterator<Interval<K>>()
         {
             protected RBNode curr = RBNULL;
             protected RBNode next = root.min();
