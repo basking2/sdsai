@@ -747,7 +747,7 @@ public class IntervalTree<K extends Comparable<K>, V>
 
     public Iterator<V> values()
     {
-        return new Iterator<>()
+        return new Iterator<V>()
         {
             protected RBNode curr = RBNULL;
             protected RBNode next = root.min();
