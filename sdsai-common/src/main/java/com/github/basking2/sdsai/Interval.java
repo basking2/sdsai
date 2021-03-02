@@ -85,6 +85,30 @@ public class Interval<K extends Comparable<K>> {
         return false;
     }
 
+    /**
+     * If the point is contained in this range.
+     * @param pt The point.
+     * @return True of the point is in the range. Recall that the max is exclusive.
+     */
+    public boolean contains(final K pt) {
+        if (pt == null) {
+            return false;
+        }
+
+        int cmp = this.min.compareTo(pt);
+
+        if (cmp <= 0) {
+            // This min is lower or equal.
+            cmp = this.max.compareTo(pt);
+            if (cmp > 0) {
+                // This max is higher.
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (o == null) {

@@ -55,4 +55,13 @@ public class IntervalTest {
         assertFalse(n3.below(n1));
         assertFalse(n3.below(n2));
     }
+
+    @Test
+    public void testPoint() {
+        Interval<Integer> i = new Interval<>(1, 2);
+
+        assertTrue(i.contains(1));
+        assertFalse(i.contains(0));
+        assertFalse(i.contains(2));
+    }
 }

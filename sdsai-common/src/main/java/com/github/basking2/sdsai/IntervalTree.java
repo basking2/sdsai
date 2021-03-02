@@ -1,6 +1,8 @@
 package com.github.basking2.sdsai;
 
 import java.util.Iterator;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * An implementation of a Augmented Interval Tree backed by a Red Black Tree.
@@ -767,6 +769,28 @@ public class IntervalTree<K extends Comparable<K>, V>
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    /**
+     * Find all entries for which the entry interval intersects with the given interval i.
+     *
+     * @param i The interval to intersect with.
+     * @param f The consumer.
+     */
+    public void findIntersecting(final Interval<K> i, final BiConsumer<Interval<K>, V> f) {
+        // Find the lowest bound.
+        RBNode node = root;
+
+        final K mink = i.getMin();
+        final K maxk = i.getMax();
+
+        while (node != RBNULL) {
+            int cmp = maxk.compareTo(node.key);
+            if (cmp <= 0) {
+                // Find the node that we most closely cross into.
+                node = node.left;
+            }
+        }
     }
 }
 
