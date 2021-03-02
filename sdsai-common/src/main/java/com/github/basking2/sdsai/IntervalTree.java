@@ -49,7 +49,7 @@ public class IntervalTree<K extends Comparable<K>, V>
         /**
          * This is the largest value in the sub-tree.
          */
-        protected K max;
+        private K max;
 
         /**
          * This is effectively the key, though order and indexing is done through {@link Interval#getMin()}.
@@ -76,6 +76,7 @@ public class IntervalTree<K extends Comparable<K>, V>
             this.key = interval.getMin();
             this.max = interval.getMax();
             this.value = value;
+            this.interval = interval;
             left = RBNULL;
             right = RBNULL;
             this.parent = parent;
@@ -91,6 +92,7 @@ public class IntervalTree<K extends Comparable<K>, V>
          */
         public void copyData(final RBNode that) {
             this.max = that.max;
+            assert(this.max != null);
             this.value = that.value;
             this.key = that.key;
             this.interval = that.interval;
@@ -117,6 +119,11 @@ public class IntervalTree<K extends Comparable<K>, V>
             while (n.right != RBNULL)
                 n = n.right;
             return n;
+        }
+
+        protected void setMax(final K max) {
+            assert(max != null);
+            this.max = max;
         }
 
         /**
@@ -195,8 +202,8 @@ public class IntervalTree<K extends Comparable<K>, V>
                 parent.right = this; /* let parent know I'm its child */
 
                 // Fix max value after the rotation.
-                max = left.max(right).max;
-                parent.max = parent.left.max(parent.right).max;
+                updateMax();
+                parent.updateMax();
             }
         }
 
@@ -221,8 +228,8 @@ public class IntervalTree<K extends Comparable<K>, V>
                 parent.left = this; /* let parent know I'm its child */
 
                 // Fix max value after the rotation.
-                max = left.max(right).max;
-                parent.max = parent.left.max(parent.right).max;
+                updateMax();
+                parent.updateMax();
             }
         }
 
@@ -365,7 +372,8 @@ public class IntervalTree<K extends Comparable<K>, V>
                 }
 
                 // Set the max in this subtree.
-                max = currentMax;
+                assert(currentMax != null);
+                this.max = currentMax;
             }
         }
 
@@ -429,53 +437,54 @@ public class IntervalTree<K extends Comparable<K>, V>
      * @param i The interval to insert bounded by keys.
      * @param v The value to insert.
      */
-    public void add(final Interval<K> i, final V v)
-    {
-        if(size==0) {
+    public void add(final Interval<K> i, final V v) {
+        if (size == 0) {
             root = new RBNode(i, v, RBNULL);
             root.isBlack = true;
-        } else {
-            RBNode prev   = RBNULL;
-            RBNode node   = root;       /* name of the node we want to insert */
-
-            int cmp = 0;
-            final K mink = i.getMin();
-            final K maxk = i.getMax();
-
-            while (node != RBNULL) {
-                // First, update the max key in the node we are considering.
-                if (node.max.compareTo(maxk) < 0) {
-                    node.max = maxk;
-                }
-
-                // Second, check the minimum value and find the next child key.
-                cmp = mink.compareTo(node.key);
-                if (cmp <= 0) {
-                    // The new key is to the left or equal (in which case we insert to the left).
-                    prev = node;
-                    node = node.left;
-                }
-                else if (cmp > 0) {
-                    // The new key is to the right.
-                    prev = node;
-                    node = node.right;
-                }
-            }
-
-            /* Make the new node! */
-            node = new RBNode(i, v, prev);
-
-            /* Insert it at the right or left point of the tree */
-            if (cmp < 0) {
-                prev.left = node;
-            } else {
-                prev.right = node;
-            }
-
-            // OK, we inserted... now fix the mess we have made!
-            // Note, we've updated the max values during the walk down the tree. Those are OK!
-            node.insertFixup();
+            size = 1;
+            return;
         }
+
+
+        RBNode prev = RBNULL;
+        RBNode node = root;       /* name of the node we want to insert */
+
+        int cmp = 0;
+        final K mink = i.getMin();
+        final K maxk = i.getMax();
+
+        while (node != RBNULL) {
+            // First, update the max key in the node we are considering.
+            if (node.max.compareTo(maxk) < 0) {
+                node.setMax(maxk);
+            }
+
+            // Second, check the minimum value and find the next child key.
+            cmp = mink.compareTo(node.key);
+            if (cmp <= 0) {
+                // The new key is to the left or equal (in which case we insert to the left).
+                prev = node;
+                node = node.left;
+            } else if (cmp > 0) {
+                // The new key is to the right.
+                prev = node;
+                node = node.right;
+            }
+        }
+
+        /* Make the new node! */
+        node = new RBNode(i, v, prev);
+
+        /* Insert it at the right or left point of the tree */
+        if (cmp < 0) {
+            prev.left = node;
+        } else {
+            prev.right = node;
+        }
+
+        // OK, we inserted... now fix the mess we have made!
+        // Note, we've updated the max values during the walk down the tree. Those are OK!
+        node.insertFixup();
 
         size++;
     }
