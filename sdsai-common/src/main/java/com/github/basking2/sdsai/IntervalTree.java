@@ -782,13 +782,16 @@ public class IntervalTree<K extends Comparable<K>, V>
         RBNode node = root;
 
         while (true) {
-            if (i.below(node.key, node.max) && node.left != RBNULL) {
+            if (i.below(node.key, node.max)) {
+                if (node.left == RBNULL) {
+                    break;
+                }
                 node = node.left;
-            } else if (node.right != RBNULL) {
-                node = node.right;
             } else {
-                // Stepping down would set node to RBNULL.
-                break;
+                if (node.right == RBNULL) {
+                    break;
+                }
+                node = node.right;
             }
         }
 
