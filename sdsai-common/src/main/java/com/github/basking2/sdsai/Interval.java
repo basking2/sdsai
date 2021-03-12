@@ -158,15 +158,6 @@ public class Interval<K extends Comparable<K>> {
     }
 
     /**
-     * Return true if this interval's max value is equal to or less than the point k.
-     * @param k The point to compare to.
-     * @return true if this interval's max value is equal to or less than the point k.
-     */
-    public boolean below(final K k) {
-        return this.max.compareTo(k) <= 0;
-    }
-
-    /**
      * Is this Node fully above the given node?
      *
      * That is, is the min of this node equal to or higher than the max of the given node?
@@ -180,15 +171,6 @@ public class Interval<K extends Comparable<K>> {
 
     public boolean above(final K min, final K max) {
         return this.min.compareTo(max) >= 0;
-    }
-
-    /**
-     * Return true of this interval's min value is greater than the point k.
-     * @param k The point to compare to.
-     * @return true of this interval's min value is greater than the point k.
-     */
-    public boolean above(final K k) {
-        return this.min.compareTo(k) > 0;
     }
 
     public K getMin() {
