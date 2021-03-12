@@ -1,5 +1,14 @@
 package com.github.basking2.sdsai;
 
+/**
+ * A half-open interval the starts at point a and continues until point b but excluding point b.
+ *
+ * Because of this, the interval [1, 2) is above the interval [0, 1) but is not above the point 1.
+ * This is because the end value, 1, in the interval [0, 1) is excluded while when comparing the point 1
+ * to the start of the interval [1, 2), point 1 is included.
+ *
+ * @param <K>
+ */
 public class Interval<K extends Comparable<K>> {
     private K min;
     private K max;
@@ -141,7 +150,20 @@ public class Interval<K extends Comparable<K>> {
      * @return True if the max of this node is equal to or lower than the min of the given node.
      */
     public boolean below(final Interval<K> that) {
-        return this.max.compareTo(that.min) <= 0;
+        return below(that.min, that.max);
+    }
+
+    public boolean below(final K min, final K max) {
+        return this.max.compareTo(min) <= 0;
+    }
+
+    /**
+     * Return true if this interval's max value is equal to or less than the point k.
+     * @param k The point to compare to.
+     * @return true if this interval's max value is equal to or less than the point k.
+     */
+    public boolean below(final K k) {
+        return this.max.compareTo(k) <= 0;
     }
 
     /**
@@ -153,7 +175,20 @@ public class Interval<K extends Comparable<K>> {
      * @return True if the min of this node is equal to or higher than the max of the given node.
      */
     public boolean above(final Interval<K> that) {
-        return this.min.compareTo(that.max) >= 0;
+        return above(that.min, that.max);
+    }
+
+    public boolean above(final K min, final K max) {
+        return this.min.compareTo(max) >= 0;
+    }
+
+    /**
+     * Return true of this interval's min value is greater than the point k.
+     * @param k The point to compare to.
+     * @return true of this interval's min value is greater than the point k.
+     */
+    public boolean above(final K k) {
+        return this.min.compareTo(k) > 0;
     }
 
     public K getMin() {
@@ -162,5 +197,10 @@ public class Interval<K extends Comparable<K>> {
 
     public K getMax() {
         return max;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + min + " - " + max + ")";
     }
 }

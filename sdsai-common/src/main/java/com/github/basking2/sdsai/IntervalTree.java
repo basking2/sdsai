@@ -781,14 +781,48 @@ public class IntervalTree<K extends Comparable<K>, V>
         // Find the lowest bound.
         RBNode node = root;
 
-        final K mink = i.getMin();
-        final K maxk = i.getMax();
-
-        while (node != RBNULL) {
-            int cmp = maxk.compareTo(node.key);
-            if (cmp <= 0) {
-                // Find the node that we most closely cross into.
+        while (true) {
+            if (i.below(node.key, node.max) && node.left != RBNULL) {
                 node = node.left;
+            } else if (node.right != RBNULL) {
+                node = node.right;
+            } else {
+                // Stepping down would set node to RBNULL.
+                break;
+            }
+        }
+
+        // Here the given interval's max is as close to the given node as is possible.
+        while (true) {
+            if (i.overlaps(node.interval)) {
+                // If the current node overlaps, give it to the user for processing.
+                f.accept(node.interval, node.value);
+            }
+
+            // Walk backwards, lowering the min (nod.key) value. The max value may or may not change.
+            node = node.predecessor();
+
+            if (node == RBNULL) {
+                // If null, we're all done.
+                return;
+            }
+
+            if (i.above(node.key, node.max)) {
+
+                // When this loop terminates, node is the root or the right child of some node.
+                while (node.parent != RBNULL && node == node.parent.left) {
+                    node = node.parent;
+                }
+
+                if (node.parent == RBNULL) {
+                    // The root. If node began as root, then our interval is above the whole tree and we're done.
+                    // If node was a left-child of root and stepped up to root, we're also done.
+                    // We would only step backwards back into the left child.
+                    return;
+                } else {
+                    // If node is not root, then it is the right-child of some sub tree. Step up and continue.
+                    node = node.parent;
+                }
             }
         }
     }
