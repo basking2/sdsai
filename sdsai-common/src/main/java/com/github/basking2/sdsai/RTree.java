@@ -1,7 +1,9 @@
 package com.github.basking2.sdsai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class RTree<D extends Comparable<D>, T> {
     /**
@@ -35,6 +37,18 @@ public class RTree<D extends Comparable<D>, T> {
             this. t = t;
             this.children = new ArrayList<>();
         }
+
+        public T getT() {
+            return this.t;
+        }
+
+        public D[][] getDimensions() {
+            return this.dimensions;
+        }
+
+        public List<Node> getChildren() {
+            return Collections.unmodifiableList(this.children);
+        }
     }
 
     private List<Node> roots;
@@ -49,9 +63,9 @@ public class RTree<D extends Comparable<D>, T> {
      * Collect the T values that are {@link #INSIDE} the given dimensions.
      *
      * @param dimensions The dimensions.
-     * @param found The list of found T values.
+     * @param found A function to consume the found nodes.
      */
-    public void findEnclosed(final D[][] dimensions, final List<T> found) {
+    public void findEnclosed(final D[][] dimensions, final Consumer<Node> found) {
         List<Node> nodes = this.roots;
 
         whiletrue: while (true) {
@@ -63,7 +77,7 @@ public class RTree<D extends Comparable<D>, T> {
                     break whiletrue;
                 } else if (rel == INSIDE) {
                     // Dimensions are enclosed! Add this, the subtree, and keep searching in this list.
-                    addAll(n, found);
+                    consumeAll(n, found);
                 }
 
                 // Else, keep walking for other INSIDE match types.
@@ -80,16 +94,16 @@ public class RTree<D extends Comparable<D>, T> {
      * Note that "outside" means that the dimensions are enclosed by the other object's dimensions.
      *
      * @param dimensions The dimensions.
-     * @param found The list of found T values.
+     * @param found A function to consume the found nodes.
      */
-    public void findEnclosing(final D[][] dimensions, final List<T> found) {
+    public void findEnclosing(final D[][] dimensions, final Consumer<Node> found) {
         List<Node> nodes = this.roots;
 
         whiletrue: while (true) {
             for (final Node n : nodes) {
                 int rel = isInside(n.dimensions, dimensions);
                 if (rel == OUTSIDE) {
-                    found.add(n.t);
+                    found.accept(n);
                     nodes = n.children;
                     break whiletrue;
                 } else if (rel == INSIDE) {
@@ -106,16 +120,68 @@ public class RTree<D extends Comparable<D>, T> {
         }
     }
 
+    public Node find(final D[][] dimensions) {
+        List<Node> nodes = this.roots;
+
+        whiletrue: while (true) {
+            for (final Node n : nodes) {
+                final int rel = isInside(dimensions, n.dimensions);
+                if (rel == INSIDE) {
+                    if (equalDimensions(dimensions, n.dimensions)) {
+                        return n;
+                    }
+                    else {
+                        nodes = n.children;
+                        break whiletrue;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public T delete(final D[][] dimensions) {
+        List<Node> nodes = this.roots;
+
+        Node parent = null;
+
+        whiletrue: while (true) {
+            for (final Node n : nodes) {
+                final int rel = isInside(dimensions, n.dimensions);
+                if (rel == INSIDE) {
+                    if (equalDimensions(dimensions, n.dimensions)) {
+                        if (n.children.size() > 0) {
+                            if (parent == null) {
+                                roots.addAll(n.children);
+                            } else {
+                                parent.children.addAll(n.children);
+                            }
+                            n.children.clear();
+                        }
+                        nodes.remove(n);
+                        return n.t;
+                    }
+                    else {
+                        parent = n;
+                        nodes = n.children;
+                        break whiletrue;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Add all T values in the tree (Node) to the list.
      * @param n The root to start att.
      * @param l The list to add to.
      */
-    private void addAll(Node n, final List<T> l) {
-        l.add(n.t);
+    private void consumeAll(Node n, final Consumer<Node> l) {
+        l.accept(n);
 
         for (final Node child: n.children) {
-            addAll(child, l);
+            consumeAll(child, l);
         }
     }
 
@@ -212,5 +278,17 @@ public class RTree<D extends Comparable<D>, T> {
                 return SAME;
             }
         }
+    }
+
+    protected boolean equalDimensions(final D[][] d1, final D[][] d2) {
+        final int len = d1.length < d2.length ? d1.length : d2.length;
+
+        for (int i = 0; i < len; ++i) {
+            if ( d1[i][0].compareTo(d2[i][0]) != 0 || d1[i][1].compareTo(d2[i][1]) != 0 ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
