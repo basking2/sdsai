@@ -138,9 +138,12 @@ public class RTree<D extends Comparable<D>, T> {
             int rel = isInside(n.dimensions, dimensions);
             if (rel == OUTSIDE) {
                 boolean keepGoing = found.apply(n);
-                if (keepGoing) {
-                    return findEnclosing(dimensions, found, n.children);
-                } else {
+                if (!keepGoing) {
+                    return false;
+                }
+
+                keepGoing = findEnclosing(dimensions, found, n.children);
+                if (!keepGoing) {
                     return false;
                 }
             }
