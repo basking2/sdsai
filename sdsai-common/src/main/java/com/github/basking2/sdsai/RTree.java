@@ -13,6 +13,8 @@ public class RTree<D extends Comparable<D>, T> {
      */
     public static final int INSIDE = -1;
 
+    public static final int EQUAL = -2;
+
     /**
      * Returned if a segment is on the same level as another segment and so will be placed at the same level in the tree.
      *
@@ -49,6 +51,17 @@ public class RTree<D extends Comparable<D>, T> {
         public List<Node> getChildren() {
             return Collections.unmodifiableList(this.children);
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+
+            for (final D[] darr : dimensions) {
+                sb.append("(").append(darr[0].toString()).append(", ").append(darr[1].toString()).append(") ");
+            }
+
+            return sb.toString();
+        }
     }
 
     private List<Node> roots;
@@ -68,13 +81,13 @@ public class RTree<D extends Comparable<D>, T> {
     public void findEnclosed(final D[][] dimensions, final Consumer<Node> found) {
         List<Node> nodes = this.roots;
 
-        whiletrue: while (true) {
+        while (!nodes.isEmpty()) {
             for (final Node n : nodes) {
                 int rel = isInside(n.dimensions, dimensions);
                 if (rel == OUTSIDE) {
                     // Dimensions are inside this. Descend the tree.
                     nodes = n.children;
-                    break whiletrue;
+                    break;
                 } else if (rel == INSIDE) {
                     // Dimensions are enclosed! Add this, the subtree, and keep searching in this list.
                     consumeAll(n, found);
@@ -82,9 +95,6 @@ public class RTree<D extends Comparable<D>, T> {
 
                 // Else, keep walking for other INSIDE match types.
             }
-
-            // If we ever get here, we are done.
-            return;
         }
     }
 
@@ -99,13 +109,12 @@ public class RTree<D extends Comparable<D>, T> {
     public void findEnclosing(final D[][] dimensions, final Consumer<Node> found) {
         List<Node> nodes = this.roots;
 
-        whiletrue: while (true) {
+        while (!nodes.isEmpty()) {
             for (final Node n : nodes) {
                 int rel = isInside(n.dimensions, dimensions);
                 if (rel == OUTSIDE) {
                     found.accept(n);
                     nodes = n.children;
-                    break whiletrue;
                 } else if (rel == INSIDE) {
                     // Anything enclosing us would also enclose this node. If we find a node that is within us,
                     // the search is over. There are no nodes left.
@@ -114,61 +123,67 @@ public class RTree<D extends Comparable<D>, T> {
 
                 // Else, keep walking for other INSIDE match types.
             }
-
-            // If we ever get here, we are done.
-            return;
         }
     }
 
     public Node find(final D[][] dimensions) {
-        List<Node> nodes = this.roots;
+        return find(dimensions, roots);
+    }
 
-        whiletrue: while (true) {
-            for (final Node n : nodes) {
-                final int rel = isInside(dimensions, n.dimensions);
-                if (rel == INSIDE) {
-                    if (equalDimensions(dimensions, n.dimensions)) {
-                        return n;
-                    }
-                    else {
-                        nodes = n.children;
-                        break whiletrue;
+    private Node find(final D[][] dimensions, final List<Node> nodes) {
+        if (nodes.isEmpty()) {
+            return null;
+        }
+
+        for (final Node n : nodes) {
+            final int rel = isInside(dimensions, n.dimensions);
+            if (rel == INSIDE) {
+                if (equalDimensions(dimensions, n.dimensions)) {
+                    return n;
+                } else {
+                    final Node foundIt = find(dimensions, n.children);
+                    if (foundIt != null) {
+                        return foundIt;
                     }
                 }
             }
         }
+
         return null;
     }
 
     public T delete(final D[][] dimensions) {
-        List<Node> nodes = this.roots;
+        return delete(dimensions, roots);
+    }
 
-        Node parent = null;
+    private T delete(final D[][] dimensions, final List<Node> nodes) {
+        if (nodes.isEmpty()) {
+            return null;
+        }
 
-        whiletrue: while (true) {
-            for (final Node n : nodes) {
-                final int rel = isInside(dimensions, n.dimensions);
-                if (rel == INSIDE) {
-                    if (equalDimensions(dimensions, n.dimensions)) {
-                        if (n.children.size() > 0) {
-                            if (parent == null) {
-                                roots.addAll(n.children);
-                            } else {
-                                parent.children.addAll(n.children);
-                            }
-                            n.children.clear();
-                        }
-                        nodes.remove(n);
-                        return n.t;
+        for (final Node n : nodes) {
+            final int rel = isInside(dimensions, n.dimensions);
+            if (rel == INSIDE) {
+                if (equalDimensions(dimensions, n.dimensions)) {
+                    if (n.children.size() > 0) {
+                        nodes.addAll(n.children);
+                        n.children.clear();
                     }
-                    else {
-                        parent = n;
-                        nodes = n.children;
-                        break whiletrue;
+                    nodes.remove(n);
+                    size--;
+                    return n.t;
+                } else {
+                    // If a node is "inside" another but is not equal, recurse.
+                    final T t = delete(dimensions, n.children);
+
+                    // If deleted from the subtree, return. We are done. Else, check the next node.
+                    if (t != null) {
+                        return t;
                     }
                 }
             }
         }
+
         return null;
     }
 
@@ -189,25 +204,40 @@ public class RTree<D extends Comparable<D>, T> {
 
         List<Node> nodes = roots;
 
-        whiletrue: while (true) {
-            for (Node potentialParent : nodes) {
-                int relation = isInside(dimensions, potentialParent.dimensions);
+        while (!nodes.isEmpty()) {
+            boolean foundInside = false;
+            for (final Node potentialParent : nodes) {
+                final int relation = isInside(dimensions, potentialParent.dimensions);
                 if (relation == INSIDE) {
+                    // New node will be inside this node. Descend.
                     nodes = potentialParent.children;
-                    break whiletrue;
+                    foundInside = true;
+                    break;
                 } else if (relation == OUTSIDE) {
+                    // New node contains this node. Make it the parent.
                     final Node newNode = new Node(dimensions, t);
                     newNode.children.add(potentialParent);
                     nodes.remove(potentialParent);
                     nodes.add(newNode);
-                    return;
-                } else {
-                    final Node newNode = new Node(dimensions, t);
-                    nodes.add(newNode);
+                    size++;
                     return;
                 }
             }
+
+            if (!foundInside) {
+                // We exit the above loop from finding an INSIDE relationship, take no action.
+                // If we did _not_ find a subtree to insert into, append to nodes and exit.
+                nodes.add(new Node(dimensions, t));
+                size++;
+                return;
+            }
+
         }
+
+        // Base case, empty node lists get any added node.
+        nodes.add(new Node(dimensions, t));
+        size++;
+
     }
 
     /**
@@ -230,7 +260,7 @@ public class RTree<D extends Comparable<D>, T> {
         }
 
         // Initialize results to the first relationship.
-        final int result = isInside(d1[0], d2[0]);
+        int result = isInside(d1[0], d2[0]);
         // If the first pair of dimensions is SAME, this will never change. Return.
         if (result == SAME) {
             return SAME;
@@ -242,11 +272,16 @@ public class RTree<D extends Comparable<D>, T> {
             final int r = isInside(d1[i], d2[i]);
 
             if (result != r) {
-                return SAME;
+                if (result == EQUAL) {
+                    result = r;
+                } else {
+                    return SAME;
+                }
             }
         }
 
-        return result;
+        // If the result is EQUAL, then default to INSIDE.
+        return result==EQUAL? INSIDE : result;
     }
 
     /**
@@ -265,13 +300,26 @@ public class RTree<D extends Comparable<D>, T> {
         final int lowerCmp = d1[0].compareTo(d2[0]);
         final int upperCmp = d1[1].compareTo(d2[1]);
 
-        if (lowerCmp >= 0) {
+        if (lowerCmp > 0) {
             if (upperCmp <= 0) {
                 return INSIDE;
-            } else {
+            }
+            else {
                 return SAME;
             }
-        } else {
+        }
+        else if (lowerCmp == 0) {
+            if (upperCmp < 0) {
+                return INSIDE;
+            }
+            else if (upperCmp == 0) {
+                return EQUAL;
+            }
+            else {
+                return OUTSIDE;
+            }
+        }
+        else {
             if (upperCmp >= 0) {
                 return OUTSIDE;
             } else {
@@ -290,5 +338,9 @@ public class RTree<D extends Comparable<D>, T> {
         }
 
         return true;
+    }
+
+    public int getSize() {
+        return this.size;
     }
 }
