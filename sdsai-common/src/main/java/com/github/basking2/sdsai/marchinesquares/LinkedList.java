@@ -149,4 +149,10 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
             return prev;
         }
     }
+
+    public void clear() {
+        this.size = 0;
+        this.head = null;
+        this.tail = null;
+    }
 }
