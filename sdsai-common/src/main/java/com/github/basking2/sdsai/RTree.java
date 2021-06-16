@@ -62,6 +62,19 @@ public class RTree<D extends Comparable<D>, T> {
 
             return sb.toString();
         }
+
+        /**
+         * Return the size of this subtree.
+         *
+         * @return the size of this subtree.
+         */
+        public int computeSize() {
+            int s = 1;
+            for (final Node n : children) {
+                s += n.computeSize();
+            }
+            return s;
+        }
     }
 
     private List<Node> roots;
@@ -143,6 +156,48 @@ public class RTree<D extends Comparable<D>, T> {
                     final Node foundIt = find(dimensions, n.children);
                     if (foundIt != null) {
                         return foundIt;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Similar to {@link #delete(Comparable[][])}, but this will remove an entire subtree and return it to the caller.
+     *
+     * Where as {@link #delete(Comparable[][])} promotes all child nodes of a deleted node to the parent node,
+     * this simply removes the entire tree and returns it.
+     *
+     * This is O(n) where n is the size of the subtree. This is required to accurately adjust the collection size.
+     *
+     * @param dimensions The dimensions of a node to remove along with all it's children.
+     * @return The removed node.
+     */
+    public Node deleteSubtree(final D[][] dimensions) {
+        return deleteSubtree(dimensions, this.roots);
+    }
+
+    private Node deleteSubtree(final D[][] dimensions, final List<Node> nodes) {
+        if (nodes.isEmpty()) {
+            return null;
+        }
+
+        for (final Node n : nodes) {
+            final int rel = isInside(dimensions, n.dimensions);
+            if (rel == INSIDE) {
+                if (equalDimensions(dimensions, n.dimensions)) {
+                    nodes.remove(n);
+                    size -= n.computeSize();
+                    return n;
+                } else {
+                    // If a node is "inside" another but is not equal, recurse.
+                    final Node deletedNode = deleteSubtree(dimensions, n.children);
+
+                    // If deleted from the subtree, return. We are done. Else, check the next node.
+                    if (deletedNode != null) {
+                        return deletedNode;
                     }
                 }
             }

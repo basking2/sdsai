@@ -9,6 +9,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 public class RTreeTest {
 
@@ -121,5 +123,27 @@ public class RTreeTest {
         rtree.findEnclosed(new Integer[][]{{0, 10}, {0,11}}, v -> l.add(v.getT()));
         assertEquals(5, l.size());
         l.clear();
+    }
+
+    @Test
+    public void testDeleteSubtree() {
+        final RTree<Integer, Integer> rtree = new RTree<>();
+
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 0);
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 1);
+        rtree.add(new Integer[][]{{1, 9}, {1, 9}}, 2);
+        rtree.add(new Integer[][]{{0, 10}, {1, 11}}, 3);
+        rtree.add(new Integer[][]{{0, 10}, {0, 11}}, 4);
+
+        RTree<Integer, Integer>.Node n = rtree.deleteSubtree(new Integer[][]{{1, 8}, {1,8}});
+        assertNull(n);
+
+        n = rtree.deleteSubtree(new Integer[][]{{0, 10}, {0,10}});
+        assertNotNull(n);
+        assertEquals(3, n.computeSize());
+        assertEquals(2, rtree.getSize());
+
+        assertEquals(Integer.valueOf(3), rtree.find(new Integer[][]{{0, 10}, {1, 11}}).getT());
+        assertEquals(Integer.valueOf(4), rtree.find(new Integer[][]{{0, 10}, {0, 11}}).getT());
     }
 }
