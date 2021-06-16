@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import org.hamcrest.CoreMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -64,5 +67,59 @@ public class RTreeTest {
         assertEquals(1, rtree.getSize());
         assertEquals(Integer.valueOf(4), rtree.delete(new Integer[][]{ { 0, 10 }, { 0, 11 }}));
         assertEquals(0, rtree.getSize());
+    }
+
+    @Test
+    public void testFindEnclosing() {
+        final RTree<Integer, Integer> rtree = new RTree<>();
+
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 0);
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 1);
+        rtree.add(new Integer[][]{{1, 9}, {1, 9}}, 2);
+        rtree.add(new Integer[][]{{0, 10}, {1, 11}}, 3);
+        rtree.add(new Integer[][]{{0, 10}, {0, 11}}, 4);
+
+        final List<Integer> l = new ArrayList<>();
+
+        rtree.findEnclosing(new Integer[][]{{0, 11}, {0,11}}, v -> l.add(v.getT()));
+        assertEquals(0, l.size());
+        l.clear();
+
+        rtree.findEnclosing(new Integer[][]{{1, 9}, {0,10}}, v -> l.add(v.getT()));
+        assertEquals(1, l.size());
+        l.clear();
+
+        rtree.findEnclosing(new Integer[][]{{1, 9}, {1,9}}, v -> l.add(v.getT()));
+        assertEquals(4, l.size());
+        l.clear();
+
+        rtree.findEnclosing(new Integer[][]{{1, 8}, {1,8}}, v -> l.add(v.getT()));
+        assertEquals(5, l.size());
+        l.clear();
+    }
+
+    @Test
+    public void testFindEnclosed() {
+        final RTree<Integer, Integer> rtree = new RTree<>();
+
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 0);
+        rtree.add(new Integer[][]{{0, 10}, {0, 10}}, 1);
+        rtree.add(new Integer[][]{{1, 9}, {1, 9}}, 2);
+        rtree.add(new Integer[][]{{0, 10}, {1, 11}}, 3);
+        rtree.add(new Integer[][]{{0, 10}, {0, 11}}, 4);
+
+        final List<Integer> l = new ArrayList<>();
+
+        rtree.findEnclosed(new Integer[][]{{1, 8}, {1,8}}, v -> l.add(v.getT()));
+        assertEquals(0, l.size());
+        l.clear();
+
+        rtree.findEnclosed(new Integer[][]{{0, 10}, {0,10}}, v -> l.add(v.getT()));
+        assertEquals(3, l.size());
+        l.clear();
+
+        rtree.findEnclosed(new Integer[][]{{0, 10}, {0,11}}, v -> l.add(v.getT()));
+        assertEquals(5, l.size());
+        l.clear();
     }
 }

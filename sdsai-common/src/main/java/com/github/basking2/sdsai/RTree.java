@@ -79,21 +79,22 @@ public class RTree<D extends Comparable<D>, T> {
      * @param found A function to consume the found nodes.
      */
     public void findEnclosed(final D[][] dimensions, final Consumer<Node> found) {
-        List<Node> nodes = this.roots;
+        findEnclosed(dimensions, found, roots);
+    }
 
-        while (!nodes.isEmpty()) {
-            for (final Node n : nodes) {
-                int rel = isInside(n.dimensions, dimensions);
-                if (rel == OUTSIDE) {
-                    // Dimensions are inside this. Descend the tree.
-                    nodes = n.children;
-                    break;
-                } else if (rel == INSIDE) {
-                    // Dimensions are enclosed! Add this, the subtree, and keep searching in this list.
-                    consumeAll(n, found);
-                }
+    private void findEnclosed(final D[][] dimensions, final Consumer<Node> found, final List<Node> nodes) {
+        if (nodes.isEmpty()) {
+            return;
+        }
 
-                // Else, keep walking for other INSIDE match types.
+        for (final Node n : nodes) {
+            int rel = isInside(n.dimensions, dimensions);
+            if (rel == OUTSIDE) {
+                // Dimensions are inside this. Descend the tree.
+                findEnclosed(dimensions, found, n.children);
+            } else if (rel == INSIDE) {
+                // Dimensions are enclosed! Add this, the subtree, and keep searching in this list.
+                consumeAll(n, found);
             }
         }
     }
@@ -107,21 +108,19 @@ public class RTree<D extends Comparable<D>, T> {
      * @param found A function to consume the found nodes.
      */
     public void findEnclosing(final D[][] dimensions, final Consumer<Node> found) {
-        List<Node> nodes = this.roots;
+        findEnclosing(dimensions, found, roots);
+    }
 
-        while (!nodes.isEmpty()) {
-            for (final Node n : nodes) {
-                int rel = isInside(n.dimensions, dimensions);
-                if (rel == OUTSIDE) {
-                    found.accept(n);
-                    nodes = n.children;
-                } else if (rel == INSIDE) {
-                    // Anything enclosing us would also enclose this node. If we find a node that is within us,
-                    // the search is over. There are no nodes left.
-                    return;
-                }
+    private void findEnclosing(final D[][] dimensions, final Consumer<Node> found, final List<Node> nodes) {
+        if (nodes.isEmpty()) {
+            return;
+        }
 
-                // Else, keep walking for other INSIDE match types.
+        for (final Node n : nodes) {
+            int rel = isInside(n.dimensions, dimensions);
+            if (rel == OUTSIDE) {
+                found.accept(n);
+                findEnclosing(dimensions, found, n.children);
             }
         }
     }
