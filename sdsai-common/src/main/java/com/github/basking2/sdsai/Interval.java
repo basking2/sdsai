@@ -95,9 +95,42 @@ public class Interval<K extends Comparable<K>> {
     }
 
     /**
-     * If the point is contained in this range.
+     * Return true if the point equals the min or falls within the range of [min, max).
+     *
+     * This differs from {@link #contains(Comparable)} when the interval's min and max are the same value.
+     * For these intervals if the point is equal to the min, it is considered "equal" and true is returned.
+     *
+     * @param point The point to check.
+     * @return true if the point equals the min or falls within the range of [min, max).
+     */
+    public boolean containsOrEqual(final K point) {
+        if (point == null) {
+            return false;
+        }
+
+        int cmp = this.min.compareTo(point);
+
+        if (cmp == 0) {
+            return true;
+        } else if (cmp < 0) {
+            // This min is lower.
+            cmp = this.max.compareTo(point);
+            if (cmp > 0) {
+                // This max is higher.
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return true if the point falls within the range of [min, max).
+     *
+     * If the interval has a min and a max that are equal, the point is considered not contained.
+     *
      * @param pt The point.
-     * @return True of the point is in the range. Recall that the max is exclusive.
+     * @return true if the point falls within the range of [min, max).
      */
     public boolean contains(final K pt) {
         if (pt == null) {
