@@ -1,9 +1,6 @@
 package com.github.basking2.sdsai;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.*;
 
 public class RTree<D extends Comparable<D>, T> {
     /**
@@ -91,25 +88,33 @@ public class RTree<D extends Comparable<D>, T> {
      * @param dimensions The dimensions.
      * @param found A function to consume the found nodes.
      */
-    public void findEnclosed(final D[][] dimensions, final Consumer<Node> found) {
+    public void findEnclosed(final D[][] dimensions, final ConsumeNode<T> found) {
         findEnclosed(dimensions, found, roots);
     }
 
-    private void findEnclosed(final D[][] dimensions, final Consumer<Node> found, final List<Node> nodes) {
+    private boolean findEnclosed(final D[][] dimensions, final ConsumeNode<T> found, final List<Node> nodes) {
         if (nodes.isEmpty()) {
-            return;
+            return true;
         }
 
         for (final Node n : nodes) {
             int rel = isInside(n.dimensions, dimensions);
             if (rel == OUTSIDE) {
                 // Dimensions are inside this. Descend the tree.
-                findEnclosed(dimensions, found, n.children);
+                final boolean keepGoing = findEnclosed(dimensions, found, n.children);
+                if (!keepGoing) {
+                    return false;
+                }
             } else if (rel == INSIDE) {
                 // Dimensions are enclosed! Add this, the subtree, and keep searching in this list.
-                consumeAll(n, found);
+                final boolean keepGoing = consumeAll(n, found);
+                if (!keepGoing) {
+                    return false;
+                }
             }
         }
+
+        return true;
     }
 
     /**
@@ -120,22 +125,28 @@ public class RTree<D extends Comparable<D>, T> {
      * @param dimensions The dimensions.
      * @param found A function to consume the found nodes.
      */
-    public void findEnclosing(final D[][] dimensions, final Consumer<Node> found) {
+    public void findEnclosing(final D[][] dimensions, final ConsumeNode<T> found) {
         findEnclosing(dimensions, found, roots);
     }
 
-    private void findEnclosing(final D[][] dimensions, final Consumer<Node> found, final List<Node> nodes) {
+    private boolean findEnclosing(final D[][] dimensions, final ConsumeNode<T> found, final List<Node> nodes) {
         if (nodes.isEmpty()) {
-            return;
+            return true;
         }
 
         for (final Node n : nodes) {
             int rel = isInside(n.dimensions, dimensions);
             if (rel == OUTSIDE) {
-                found.accept(n);
-                findEnclosing(dimensions, found, n.children);
+                boolean keepGoing = found.apply(n);
+                if (keepGoing) {
+                    return findEnclosing(dimensions, found, n.children);
+                } else {
+                    return false;
+                }
             }
         }
+
+        return true;
     }
 
     public Node find(final D[][] dimensions) {
@@ -241,17 +252,31 @@ public class RTree<D extends Comparable<D>, T> {
         return null;
     }
 
+    public void forEach(final ConsumeNode<T> l) {
+        for (final Node n: roots) {
+            consumeAll(n, l);
+        }
+    }
+
     /**
      * Add all T values in the tree (Node) to the list.
      * @param n The root to start att.
      * @param l The list to add to.
      */
-    private void consumeAll(Node n, final Consumer<Node> l) {
-        l.accept(n);
+    private boolean consumeAll(Node n, final ConsumeNode<T> l) {
+        boolean keepGoing = l.apply(n);
+        if (!keepGoing) {
+            return false;
+        }
 
         for (final Node child: n.children) {
-            consumeAll(child, l);
+            keepGoing = consumeAll(child, l);
+            if (!keepGoing) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     public void add(final D[][] dimensions, final T t) {
@@ -396,5 +421,21 @@ public class RTree<D extends Comparable<D>, T> {
 
     public int getSize() {
         return this.size;
+    }
+
+    /**
+     * A closure that allows searching to be stopped by the caller of a function.
+     *
+     * @param <T> The type nodes hold.
+     */
+    @FunctionalInterface
+    public interface ConsumeNode<T> {
+        /**
+         * Return true to continue searching or false to abort the search.
+         *
+         * @param n The node.
+         * @return true to continue searching or false to abort the search.
+         */
+        boolean apply(RTree<?, T>.Node n);
     }
 }
