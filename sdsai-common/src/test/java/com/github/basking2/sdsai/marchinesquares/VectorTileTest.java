@@ -2,12 +2,13 @@ package com.github.basking2.sdsai.marchinesquares;
 
 import org.junit.Test;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class VectorTileTest {
     @Test
@@ -25,6 +26,9 @@ public class VectorTileTest {
         hole = new LinkedList.Node<>(new Point(-5, -5, (byte) 0), hole);
         hole = new LinkedList.Node<>(new Point(5, -5, (byte) 0), hole);
         hole = new LinkedList.Node<>(new Point(5, 5, (byte) 0), hole);
+
+        assertTrue(Point.isCounterClockwise(poly.iterator()));
+        assertFalse(Point.isCounterClockwise(hole.iterator()));
 
         vt.features.add(new Feature(poly));
         vt.features.add(new Feature(hole));
