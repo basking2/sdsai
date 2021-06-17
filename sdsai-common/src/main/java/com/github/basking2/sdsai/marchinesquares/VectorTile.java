@@ -77,7 +77,7 @@ public class VectorTile {
     /**
      * Put negative features, polygons that are holes, inside features that are positive polygons.
      */
-    public void collateHoles() {
+    public VectorTile collateHoles() {
 
         final RTree<Double, Feature> rtree = new RTree();
 
@@ -113,5 +113,7 @@ public class VectorTile {
             this.features.add(node.getT());
             return true;
         });
+
+        return this;
     }
 }

@@ -102,6 +102,8 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = vectorTileGroup.getVectorTile();
 
+            v.collateHoles();
+
             final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(vectorTileGroup.getMaxXOffset()-1, vectorTileGroup.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + ".geojson")) {
@@ -137,6 +139,8 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
+            v.collateHoles();
+
             final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x1.geojson")) {
@@ -168,6 +172,8 @@ public class EnclosedVectorTileGroupTest {
             g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
             final VectorTile v = g.getVectorTile();
+
+            v.collateHoles();
 
             final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
@@ -213,6 +219,8 @@ public class EnclosedVectorTileGroupTest {
 
             final VectorTile v = g.getVectorTile();
 
+            v.collateHoles();
+
             final String geoJson = SimpleGeoJson.write(v, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
             try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "2x2.geojson")) {
@@ -229,17 +237,19 @@ public class EnclosedVectorTileGroupTest {
 
         final Tile[] tiles = {
                 new Tile(new byte[]{
-                        0, 0, 0,
-                        0, 0, 0,
-                        0, 0, 0}, 3)
+                        n, n, n,
+                        n, n, n,
+                        n, n, n}, 3)
         };
 
         final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup(n, featureFactory);
+        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)0, featureFactory);
         g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
 
         final VectorTile vt = g.getVectorTile();
+
+        vt.collateHoles();
 
         Assert.assertTrue(vt.features.size() > 0);
         final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
@@ -286,6 +296,8 @@ public class EnclosedVectorTileGroupTest {
 
         g.close();
         final VectorTile vt = g.getVectorTile();
+
+        vt.collateHoles();
 
         Assert.assertTrue(vt.features.size() > 0);
         final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));

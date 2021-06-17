@@ -108,7 +108,7 @@ public class VectorTileBuilderTest {
         final Tile t = new Tile(array, width);
 
         t.isoband();
-        final VectorTile vectorTile = new VectorTileBuilder(t, FeatureFactory.uuidProperty()).build();
+        final VectorTile vectorTile = new VectorTileBuilder(t, FeatureFactory.uuidProperty()).build().collateHoles();
 
         final String geoJson = SimpleGeoJson.write(vectorTile);
 
@@ -132,7 +132,9 @@ public class VectorTileBuilderTest {
                         0, 0, 0, 0, 0 , 0,
                 }, 6);
 
-        final String geoJson = SimpleGeoJson.write(new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
+        final VectorTile vt = new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband();
+        vt.collateHoles();
+        final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
 
         try (final OutputStream os = new FileOutputStream("build/" +getClass().getSimpleName()  + "2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
