@@ -1,0 +1,12 @@
+for holes, compute if a ring is clock-wise or counter-clockwise.
+
+> Sum over the edges, (x2 − x1)(y2 + y1). If the result is positive the curve is clockwise, if it's negative the curve is counter-clockwise. (The result is twice the enclosed area, with a +/- convention.)
+
+
+Holes are clockwise.
+FROM https://tools.ietf.org/html/rfc7946#page-9
+   o  A linear ring MUST follow the right-hand rule with respect to the
+      area it bounds, i.e., exterior rings are counterclockwise, and
+      holes are clockwise.
+
+

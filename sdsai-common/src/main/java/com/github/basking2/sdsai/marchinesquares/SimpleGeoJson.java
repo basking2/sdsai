@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -62,11 +63,36 @@ public class SimpleGeoJson {
         out.write("\"type\": \"Polygon\",\n".getBytes(utf8));
 
         out.write("\"coordinates\": [ [ \n ".getBytes(utf8));
-        writePoints(out, f, gridToWorld);
-        out.write("] ]\n".getBytes(utf8));
+        writePoints(out, f.points.iterator(), gridToWorld);
+        out.write("]\n".getBytes(utf8));
+
+        writeHoles(out, f, gridToWorld);
+
+        // Close coordinates.
+        out.write("]\n".getBytes(utf8));
 
         out.write("}\n".getBytes(utf8));
         out.write("}".getBytes(utf8));
+    }
+
+    private static void writeHoles(final OutputStream out, final Feature f, final GridToWorld gridToWorld) throws IOException {
+        final Iterator<LinkedList.Node<Point>> holes = f.holes.iterator();
+
+        if (holes.hasNext()) {
+            out.write(",\n".getBytes(utf8));
+        }
+
+        while (holes.hasNext()) {
+            final LinkedList.Node<Point> hole = holes.next();
+            out.write("[\n".getBytes(utf8));
+            writePoints(out, hole.iterator(), gridToWorld);
+
+            out.write("]\n".getBytes(utf8));
+            if (holes.hasNext()) {
+                out.write(",".getBytes(utf8));
+            }
+        }
+
     }
 
     private static void writePoint(final OutputStream out, final Point p, final GridToWorld gridToWorld) throws IOException {
@@ -80,9 +106,7 @@ public class SimpleGeoJson {
         }
     }
 
-    private static void writePoints(final OutputStream out, final Feature f, final GridToWorld gridToWorld) throws IOException {
-        final Iterator<Point> itr = f.points.iterator();
-
+    private static void writePoints(final OutputStream out, Iterator<Point> itr, final GridToWorld gridToWorld) throws IOException {
         if (itr.hasNext()) {
             Point p = itr.next();
 
@@ -183,7 +207,7 @@ public class SimpleGeoJson {
 
         /**
          * @param xOffset Added to X before conversion.
-         * @param yOffset Added to Y before converion.
+         * @param yOffset Added to Y before conversion.
          * @param maxWidth The size in the X dimension.
          * @param maxHeight The size in the Y dimension.
          */

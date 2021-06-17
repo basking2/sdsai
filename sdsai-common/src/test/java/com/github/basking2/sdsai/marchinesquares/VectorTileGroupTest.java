@@ -100,7 +100,9 @@ public class VectorTileGroupTest {
             vectorTileGroup.addNewRow();
         }
 
-        final String geoJson = SimpleGeoJson.write(vectorTileGroup.getVectorTile());
+        final VectorTile vt = vectorTileGroup.getVectorTile().collateHoles();
+
+        final String geoJson = SimpleGeoJson.write(vt);
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + ".geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -132,7 +134,7 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[0], FeatureFactory.uuidProperty()).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 4));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 4));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "2x1.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -161,7 +163,7 @@ public class VectorTileGroupTest {
         g.addNewRow();
         g.addEast(new VectorTileBuilder(tiles[1], FeatureFactory.uuidProperty()).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 4));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 4));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "1x2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -202,7 +204,7 @@ public class VectorTileGroupTest {
         g.addEast(new VectorTileBuilder(tiles[2], featureFactory).buildIsoband());
         g.addEast(new VectorTileBuilder(tiles[3], featureFactory).buildIsoband());
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "2x2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -240,7 +242,7 @@ public class VectorTileGroupTest {
             System.out.println("P "+pt.x+ " "+pt.y);
         }
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(5,4));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(5,4));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "swizzle.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -323,7 +325,7 @@ public class VectorTileGroupTest {
 
         Assert.assertTrue(g.getVectorTile().features.size() > 0);
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(9,9));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(9,9));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "_border.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
@@ -355,7 +357,7 @@ public class VectorTileGroupTest {
 
         Assert.assertTrue(g.getVectorTile().features.size() > 0);
 
-        final String geoJson = SimpleGeoJson.write(g.getVectorTile(), new SimpleGeoJson.LinearProportionalGridToWorld(9, 9));
+        final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(9, 9));
 
         try (final OutputStream os = new FileOutputStream("build/"+getClass().getSimpleName()  + "_border2.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
