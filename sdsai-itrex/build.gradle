@@ -6,6 +6,7 @@ plugins {
   id 'maven'
   id 'signing'
   id "org.asciidoctor.convert" version "2.3.0"
+  id 'net.researchgate.release' version '2.8.1'
 }
 
 compileJava {
@@ -25,6 +26,13 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.21'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.slf4j:slf4j-simple:1.7.21'
+}
+
+release {
+  tagTemplate = '${name}-${version}'
+  git {
+    requireBranch = 'main'
+  }
 }
 
 task javadocJar(type: Jar) {
