@@ -70,7 +70,7 @@ public class Feature {
      * If checkHoles is set, then the point must also not be contained in any of the holes of this polygon.
      */
     public boolean containsPoint(final Point p, final boolean checkHoles) {
-        if (!contains(p, this.points.iterator())) {
+        if (!Point.contains(p, this.points.iterator())) {
             return false;
         }
 
@@ -81,7 +81,7 @@ public class Feature {
 
         // If we get here, we must check the holes.
         for (final LinkedList.Node<Point> points : this.holes) {
-            if (contains(p, points.iterator())) {
+            if (Point.contains(p, points.iterator())) {
                 // False if a hole contains the point.
                 return false;
             }
@@ -90,37 +90,4 @@ public class Feature {
         // True if the outer polygon contains the point but no hole did.
         return true;
     }
-
-    public static boolean contains(final Point p, final Iterator<Point> points) {
-        boolean isInside = false;
-
-        if (!points.hasNext()) {
-            return false;
-        }
-        Point stopp = points.next();
-
-        while (points.hasNext()) {
-            final Point startp = stopp;
-            stopp = points.next();
-
-            if (
-                    // Line is note above us. We might intersect along the X axis.
-                    !(startp.y > p.y && stopp.y > p.y) &&
-
-                    // Line is not below us. We might intersect along the X axis.
-                    !(startp.y < p.y && stopp.y < p.y)
-            ) {
-                final double sx = startp.x + (startp.x - stopp.x) * ((p.y - stopp.y) / (startp.y - stopp.y));
-
-                // If we intersect, flip the isInside value.
-                if (p.x > sx) {
-                    isInside = !isInside;
-                }
-            }
-        }
-
-        return isInside;
-    }
-
-
 }

@@ -92,8 +92,21 @@ public class Point {
         }
     }
 
+    /**
+     * Determine if a polygon laid out in Raster order is wound counter clockwise or not.
+     *
+     * NOTE: The first point must be repeated as the last point to consider the last edge of the polygon.
+     * This is normal for GeoJSON polygons.
+     *
+     * The Raster order is important because as the Y value increases the point is lower
+     * on a rendered image. This flips the sign of the internal math. If you use this for
+     * points on a normal cartesian plane, you will have to flip the sign of the y values
+     * or invert the answer this method gives.
+     *
+     * @param points The list of points to consider.
+     * @return True of the points represent a polygon on a Raster grid make a polygon that winds counter clockwise.
+     */
     public static boolean isCounterClockwise(final Iterator<Point> points) {
-
         double sum = 0;
 
         if (points.hasNext()) {
@@ -101,7 +114,9 @@ public class Point {
 
             while (points.hasNext()) {
                 final Point p2 = points.next();
-                sum += (p2.x - p1.x) * (p2.y + p1.y);
+                // NOTE: This is classically sum+=, but we switch to sum-=
+                // because in this layout the y values are in the 4th quadrant.
+                sum -= (p2.x - p1.x) * (p2.y + p1.y);
                 p1 = p2;
             }
         }
@@ -109,6 +124,50 @@ public class Point {
         // Negative is counter clockwise, positive is clockwise.
         // We give the tie (0) to counter clockwise.
         return sum <= 0;
+    }
+
+    /**
+     * Consider if the point is inside the polygon represented by the iteration of points.
+     *
+     * The first point in the iteration must be repeated as the last element in the interation so
+     * all sides of the polygone are considered.
+     *
+     * This is computed by checking how often a ray from the point travelling along the X axis
+     * crosses sides to its left.
+     *
+     * @param p The point to consider.
+     * @param points The iteration of points.
+     * @return true if the given point is located inside the polygon.
+     */
+    public static boolean contains(final Point p, final Iterator<Point> points) {
+        boolean isInside = false;
+
+        if (!points.hasNext()) {
+            return false;
+        }
+        Point stopp = points.next();
+
+        while (points.hasNext()) {
+            final Point startp = stopp;
+            stopp = points.next();
+
+            if (
+                // If the line starts above us and terminates above or at us, do not consider it.
+                !(startp.y > p.y && stopp.y >= p.y) &&
+
+                // If the line starts below us and terminates below or at us, do not consider it.
+                !(startp.y < p.y && stopp.y <= p.y)
+            ) {
+                final double sx = startp.x + (stopp.x - startp.x) * ((p.y - startp.y) / (stopp.y - startp.y));
+
+                // If we intersect, flip the isInside value.
+                if (p.x > sx) {
+                    isInside = !isInside;
+                }
+            }
+        }
+
+        return isInside;
     }
 }
 

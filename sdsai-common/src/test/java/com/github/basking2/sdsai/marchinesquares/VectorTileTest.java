@@ -15,17 +15,18 @@ public class VectorTileTest {
     public void testCollateHoles() throws IOException {
         final VectorTile vt = new VectorTile();
 
-        LinkedList.Node<Point> poly = new LinkedList.Node<>(new Point(10, 10, (byte) 0), null);
-        poly = new LinkedList.Node<>(new Point(10, -10, (byte) 0), poly);
-        poly = new LinkedList.Node<>(new Point(-10, -10, (byte) 0), poly);
-        poly = new LinkedList.Node<>(new Point(-10, 10, (byte) 0), poly);
+        LinkedList.Node<Point> poly = new LinkedList.Node<>(new Point(10, -10, (byte) 0), null);
         poly = new LinkedList.Node<>(new Point(10, 10, (byte) 0), poly);
+        poly = new LinkedList.Node<>(new Point(-10, 10, (byte) 0), poly);
+        poly = new LinkedList.Node<>(new Point(-10, -10, (byte) 0), poly);
+        poly = new LinkedList.Node<>(new Point(10, -10, (byte) 0), poly);
 
-        LinkedList.Node<Point> hole = new LinkedList.Node<>(new Point(5, 5, (byte) 0), null);
-        hole = new LinkedList.Node<>(new Point(-5, 5, (byte) 0), hole);
+
+        LinkedList.Node<Point> hole = new LinkedList.Node<>(new Point(5, -5, (byte) 0), null);
         hole = new LinkedList.Node<>(new Point(-5, -5, (byte) 0), hole);
-        hole = new LinkedList.Node<>(new Point(5, -5, (byte) 0), hole);
+        hole = new LinkedList.Node<>(new Point(-5, 5, (byte) 0), hole);
         hole = new LinkedList.Node<>(new Point(5, 5, (byte) 0), hole);
+        hole = new LinkedList.Node<>(new Point(5, -5, (byte) 0), hole);
 
         assertTrue(Point.isCounterClockwise(poly.iterator()));
         assertFalse(Point.isCounterClockwise(hole.iterator()));

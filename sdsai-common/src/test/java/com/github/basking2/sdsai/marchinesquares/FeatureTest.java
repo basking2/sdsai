@@ -24,7 +24,7 @@ public class FeatureTest {
 
         final Feature f = new Feature(points);
 
-        assertFalse(f.isCounterClockwise());
+        assertTrue(f.isCounterClockwise());
     }
 
     @Test
@@ -44,55 +44,7 @@ public class FeatureTest {
 
         final Feature f = new Feature(points);
 
-        assertTrue(f.isCounterClockwise());
+        assertFalse(f.isCounterClockwise());
     }
 
-    @Test
-    public void testContains1() {
-        final Point p = new Point(0, 0, (byte) 0);
-
-        assertFalse(
-                Feature.contains(
-                        p,
-                        Arrays.asList(p).iterator()
-                )
-        );
-
-    }
-
-    @Test
-    public void testContains2() {
-        final Point p = new Point(0, 0, (byte) 0);
-
-        assertTrue(
-                Feature.contains(
-                        p,
-                        Arrays.asList(
-                                new Point(0, 1, (byte) 0),
-                                new Point(1, 0, (byte) 0),
-                                new Point(0, -1, (byte) 0),
-                                new Point(-1, 0, (byte) 0),
-                                new Point(0, 1, (byte) 0)
-                        ).iterator()
-                )
-        );
-    }
-
-    @Test
-    public void testContains3() {
-        final Point p = new Point(1, 1, (byte) 0);
-
-        assertFalse(
-                Feature.contains(
-                        p,
-                        Arrays.asList(
-                                new Point(0, 1, (byte) 0),
-                                new Point(1, 0, (byte) 0),
-                                new Point(0, -1, (byte) 0),
-                                new Point(-1, 0, (byte) 0),
-                                new Point(0, 1, (byte) 0)
-                        ).iterator()
-                )
-        );
-    }
 }

@@ -237,14 +237,14 @@ public class EnclosedVectorTileGroupTest {
 
         final Tile[] tiles = {
                 new Tile(new byte[]{
-                        n, n, n,
-                        n, n, n,
-                        n, n, n}, 3)
+                        0, 0, 0,
+                        0, 0, 0,
+                        0, 0, 0}, 3)
         };
 
         final FeatureFactory featureFactory = FeatureFactory.uuidProperty();
 
-        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup((byte)0, featureFactory);
+        final EnclosedVectorTileGroup g = new EnclosedVectorTileGroup(p, featureFactory);
         g.addEast(new VectorTileBuilder(tiles[0], featureFactory).buildIsoband());
 
         final VectorTile vt = g.getVectorTile();

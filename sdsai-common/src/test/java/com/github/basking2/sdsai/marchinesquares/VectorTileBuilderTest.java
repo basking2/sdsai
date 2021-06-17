@@ -124,12 +124,12 @@ public class VectorTileBuilderTest {
 
         final Tile tile =
                 new Tile(new byte[]{
-                        0, 0, 0, 0, 0 , 0,
+                        0, 0, 0, 0, 0, 0,
                         0, n, n, n, n, 0,
                         0, n, p, p, n, 0,
                         0, n, p, p, n, 0,
                         0, n, n, n, n, 0,
-                        0, 0, 0, 0, 0 , 0,
+                        0, 0, 0, 0, 0, 0,
                 }, 6);
 
         final VectorTile vt = new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband();
@@ -137,6 +137,31 @@ public class VectorTileBuilderTest {
         final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
 
         try (final OutputStream os = new FileOutputStream("build/" +getClass().getSimpleName()  + "2.geojson")) {
+            os.write(geoJson.getBytes("UTF-8"));
+        }
+    }
+
+    @Test
+    public void examineHoles() throws IOException {
+
+        final byte p = 1;
+        final byte n = -1;
+
+        final Tile tile =
+                new Tile(new byte[]{
+                        n, n, n, n, n, n,
+                        n, 0, 0, 0, 0, n,
+                        n, 0, p, p, 0, n,
+                        n, 0, p, p, 0, n,
+                        n, 0, 0, 0, 0, n,
+                        n, n, n, n, n, n,
+                }, 6);
+
+        final VectorTile vt = new VectorTileBuilder(tile, FeatureFactory.uuidProperty()).buildIsoband();
+        vt.collateHoles();
+        final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(5, 5));
+
+        try (final OutputStream os = new FileOutputStream("build/" +getClass().getSimpleName()  + "3.geojson")) {
             os.write(geoJson.getBytes("UTF-8"));
         }
     }
