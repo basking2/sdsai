@@ -85,7 +85,7 @@ public class SimpleGeoJson {
         while (holes.hasNext()) {
             final LinkedList.Node<Point> hole = holes.next();
             out.write("[\n".getBytes(utf8));
-            writePoints(out, f.points.iterator(), gridToWorld);
+            writePoints(out, hole.iterator(), gridToWorld);
 
             out.write("]\n".getBytes(utf8));
             if (holes.hasNext()) {
@@ -207,7 +207,7 @@ public class SimpleGeoJson {
 
         /**
          * @param xOffset Added to X before conversion.
-         * @param yOffset Added to Y before converion.
+         * @param yOffset Added to Y before conversion.
          * @param maxWidth The size in the X dimension.
          * @param maxHeight The size in the Y dimension.
          */
