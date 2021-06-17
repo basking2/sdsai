@@ -140,7 +140,8 @@ public class Point {
      * @return true if the given point is located inside the polygon.
      */
     public static boolean contains(final Point p, final Iterator<Point> points) {
-        boolean isInside = false;
+        boolean isInsideLeft = false;
+        boolean isInsideRight = false;
 
         if (!points.hasNext()) {
             return false;
@@ -162,12 +163,16 @@ public class Point {
 
                 // If we intersect, flip the isInside value.
                 if (p.x > sx) {
-                    isInside = !isInside;
+                    isInsideLeft = !isInsideLeft;
+                }
+
+                if (p.x < sx) {
+                    isInsideRight = !isInsideRight;
                 }
             }
         }
 
-        return isInside;
+        return isInsideLeft && isInsideRight;
     }
 }
 
