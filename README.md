@@ -39,6 +39,11 @@ produced by a unit test for the algorithm implementation.
 
 ![Marching Squares](./sdsai-common/src/docs/asciidoc/imgs/marching-squares01.png)
 
+This image was generated using GeoJson.io on one global temperature data
+being filtered for values over 300 Kelvin.
+
+![Marching Squares Temp Over 300k](./sdsai-common/src/docs/asciidoc/imgs/marching-squares-temp-over-300k.png)
+
 ## Links
 
 * GitHub
