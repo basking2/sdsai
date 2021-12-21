@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2018-2021 Sam Baskinger
+ */
 package com.github.basking2.sdsai;
 
 import java.util.ArrayList;

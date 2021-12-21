@@ -1,4 +1,8 @@
-/* $Id: RedBlackTree.java 762 2008-08-20 20:23:17Z sam $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: RedBlackTree.java 762 2008-08-20 20:23:17Z sam $
+ */
 
 package com.github.basking2.sdsai;
 

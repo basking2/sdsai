@@ -1,4 +1,8 @@
-/* $Id: TopBottomGraph.java 303 2006-04-04 01:30:15Z sam $ */
+/**
+ * Copyright (c) 2006-2021 Sam Baskinger
+ *
+ * $Id: TopBottomGraph.java 303 2006-04-04 01:30:15Z sam $
+ */
 
 package com.github.basking2.sdsai.gui;
 

@@ -1,4 +1,8 @@
-/* $Id: KeySelection.java 633 2008-04-21 18:34:01Z sbaskin $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: KeySelection.java 633 2008-04-21 18:34:01Z sbaskin $
+ */
 
 package com.github.basking2.sdsai;
 
@@ -8,5 +12,5 @@ package com.github.basking2.sdsai;
  */
 public interface KeySelection
 {
-  public boolean inSet(Key<? extends Object> k);
+  boolean inSet(Key<? extends Object> k);
 }

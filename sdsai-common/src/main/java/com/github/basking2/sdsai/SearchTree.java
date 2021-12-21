@@ -1,4 +1,8 @@
-/* $Id: SearchTree.java 313 2006-07-10 02:26:03Z sam $ */
+/**
+ * Copyright (c) 2006-2021 Sam Baskinger
+ *
+ *  $Id: SearchTree.java 313 2006-07-10 02:26:03Z sam $
+ */
 
 package com.github.basking2.sdsai;
 

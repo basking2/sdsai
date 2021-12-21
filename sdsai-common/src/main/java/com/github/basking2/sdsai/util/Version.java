@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2013-2021 Sam Baskinger
+ */
+
 package com.github.basking2.sdsai.util;
 
 /**

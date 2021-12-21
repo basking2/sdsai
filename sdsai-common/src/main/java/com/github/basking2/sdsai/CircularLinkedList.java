@@ -1,4 +1,8 @@
-/* $Id: CircularLinkedList.java 338 2007-07-05 20:13:16Z sam $ */
+/**
+ * Copyright (c) 2007-2021 Sam Baskinger
+ *
+ * $Id: CircularLinkedList.java 338 2007-07-05 20:13:16Z sam $
+ */
 
 package com.github.basking2.sdsai;
 

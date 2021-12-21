@@ -1,4 +1,8 @@
-/* $Id: JScrollingLog.java 752 2008-08-06 21:03:46Z sam $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: JScrollingLog.java 752 2008-08-06 21:03:46Z sam $
+ */
 
 package com.github.basking2.sdsai.gui;
 

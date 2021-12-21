@@ -1,4 +1,8 @@
-/* $Id: TrivialImageCanvas.java 670 2008-05-02 20:42:07Z sbaskin $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: TrivialImageCanvas.java 670 2008-05-02 20:42:07Z sbaskin $
+ */
 
 package com.github.basking2.sdsai.gui;
 

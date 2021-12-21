@@ -1,4 +1,8 @@
-/* $Id: JLineScrollingTextPane.java 770 2008-09-03 21:39:19Z sam $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: JLineScrollingTextPane.java 770 2008-09-03 21:39:19Z sam $
+ */
 
 package com.github.basking2.sdsai.gui;
 

@@ -1,4 +1,8 @@
-/* $Id: JScrollingTextPane.java 675 2008-05-13 21:41:02Z sbaskin $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: JScrollingTextPane.java 675 2008-05-13 21:41:02Z sbaskin $
+ */
 
 package com.github.basking2.sdsai.gui;
 

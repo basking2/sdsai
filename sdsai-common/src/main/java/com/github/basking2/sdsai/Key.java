@@ -1,4 +1,8 @@
-/* $Id: Key.java 666 2008-05-02 14:19:45Z sbaskin $ */
+/**
+ * Copyright (c) 2008-2021 Sam Baskinger
+ *
+ * $Id: Key.java 666 2008-05-02 14:19:45Z sbaskin $
+ */
 
 package com.github.basking2.sdsai;
 

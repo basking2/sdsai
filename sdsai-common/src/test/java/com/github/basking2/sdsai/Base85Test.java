@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2017-2021 Sam Baskinger
+ */
+
 package com.github.basking2.sdsai;
 
 import org.junit.Test;

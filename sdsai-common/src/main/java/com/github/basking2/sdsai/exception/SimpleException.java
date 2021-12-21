@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2020-2021 Sam Baskinger
+ */
 package com.github.basking2.sdsai.exception;
 
 /**

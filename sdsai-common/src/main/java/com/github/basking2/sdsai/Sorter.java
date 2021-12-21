@@ -1,4 +1,8 @@
-/* $Id: Sorter.java 281 2005-12-29 22:59:47Z sam $ */
+/**
+ * Copyright (c) 2005-2021 Sam Baskinger
+ *
+ * $Id: Sorter.java 281 2005-12-29 22:59:47Z sam $
+ */
 
 package com.github.basking2.sdsai;
 
@@ -13,5 +17,5 @@ public interface Sorter {
    * Note that sorting can be partial sorting.  Perhaps a better name for
    * this method would be "arrange."
    */
-  public void sort(EObject[] toSort);
+  void sort(EObject[] toSort);
 }
