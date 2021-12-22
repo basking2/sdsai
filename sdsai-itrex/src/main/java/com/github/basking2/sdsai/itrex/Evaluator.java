@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2016-2021 Sam Baskinger
+ */
+
 package com.github.basking2.sdsai.itrex;
 
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.EMPTY_ITERATOR;

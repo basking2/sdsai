@@ -1,6 +1,8 @@
-package com.github.basking2.sdsai.itrex.functions.bool;
+/**
+ * Copyright (c) 2016-2021 Sam Baskinger
+ */
 
-import com.github.basking2.sdsai.itrex.util.TwoTuple;
+package com.github.basking2.sdsai.itrex.functions.bool;
 
 /**
  */
