@@ -1,4 +1,8 @@
-/* $Id: GraphCopier.java 312 2006-07-03 22:20:47Z sam $ */
+/**
+ * Copyright (c) 2005-2021 Sam Baskinger
+ *
+ * $Id: GraphCopier.java 312 2006-07-03 22:20:47Z sam $
+ */
 
 /**
  * Copying an directed graph efficiently seemed 

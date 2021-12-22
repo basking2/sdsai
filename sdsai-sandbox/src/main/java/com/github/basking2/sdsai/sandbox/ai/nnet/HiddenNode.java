@@ -1,4 +1,8 @@
-/* $Id: HiddenNode.java 313 2006-07-10 02:26:03Z sam $ */
+/**
+ * Copyright (c) 2005-2021 Sam Baskinger
+ *
+ * $Id: HiddenNode.java 313 2006-07-10 02:26:03Z sam $
+ */
 
 package com.github.basking2.sdsai.sandbox.ai.nnet;
 

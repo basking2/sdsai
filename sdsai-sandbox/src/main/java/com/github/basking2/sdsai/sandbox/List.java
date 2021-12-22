@@ -1,4 +1,8 @@
-/* $Id: List.java 702 2008-05-27 21:53:19Z sbaskin $ */
+/**
+ * Copyright (c) 2005-2021 Sam Baskinger
+ *
+ * $Id: List.java 702 2008-05-27 21:53:19Z sbaskin $
+ */
 
 package com.github.basking2.sdsai.sandbox;
 

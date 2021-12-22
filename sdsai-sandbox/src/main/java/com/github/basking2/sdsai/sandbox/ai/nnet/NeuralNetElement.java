@@ -1,4 +1,8 @@
-/* $Id: NeuralNetElement.java 281 2005-12-29 22:59:47Z sam $ */
+/**
+ * Copyright (c) 2005-2021 Sam Baskinger
+ *
+ * $Id: NeuralNetElement.java 281 2005-12-29 22:59:47Z sam $
+ */
 
 package com.github.basking2.sdsai.sandbox.ai.nnet;
 
