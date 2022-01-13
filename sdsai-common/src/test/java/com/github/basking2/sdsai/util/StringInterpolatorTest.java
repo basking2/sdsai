@@ -26,16 +26,16 @@ public class StringInterpolatorTest {
         final Map<String, String> env = new HashMap<>();
         env.put("name", "Foo");
         Assert.assertEquals(
-                "Hi, Foo, how are things going? Did you know you are Foo with \\$name set to Foo?",
+                "Hi, Foo, how are things going? Did you know you are Foo with $name set to Foo?",
                 StringInterpolator.formatString("Hi, ${name}, how are things going? Did you know you are $name with \\$name set to Foo?", env));
         Assert.assertEquals(
-                "Hi, Foo, how are things going? Did you know you are Foo with \\\\$name set to Foo?",
+                "Hi, Foo, how are things going? Did you know you are Foo with \\Foo set to Foo?",
                 StringInterpolator.formatString("Hi, ${name}, how are things going? Did you know you are $name with \\\\$name set to Foo?", env));
         Assert.assertEquals(
-                "Hi, Foo, how are things going? Did you know you are Foo with \\\\$name set to Foo?",
-                StringInterpolator.formatString("Hi, ${name}, how are things going? Did you know you are $name with \\\\$name set to Foo?", env));
+                "Hi, Foo, how are things going? Did you know you are Foo with \\$name set to Foo?",
+                StringInterpolator.formatString("Hi, ${name}, how are things going? Did you know you are $name with \\\\\\$name set to Foo?", env));
         Assert.assertEquals(
-                "Hi, Foo, how are things going? Did you know you are Foo with \\\\\\\\$name set to Foo?",
+                "Hi, Foo, how are things going? Did you know you are Foo with \\\\Foo set to Foo?",
                 StringInterpolator.formatString("Hi, ${name}, how are things going? Did you know you are $name with \\\\\\\\$name set to Foo?", env));
     }
 

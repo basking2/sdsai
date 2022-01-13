@@ -38,32 +38,95 @@ public class StringInterpolator {
         return formatString(input, name -> environment.get(name));
     }
 
-    public static String formatString(final String input, final Function<String, ? extends Object> mapper) {
-        String output = "";
-        final Matcher matcher = matchFirstName.matcher(input);
+    /**
+     *
+     * @param src
+     * @param starti
+     * @return A 3-tuple int array of {-1, -1, -1} on error or {wordstart, wordend, nextchar-1}.
+     */
+    private static int[] findName(final char[] src, int starti) {
+        final boolean hasBraces;
 
-        int i = 0;
-        for (; matcher.find(i); i = matcher.end()) {
-            final String prefix = matcher.group(1);
-            final String name1 = matcher.group(2);
-            final String name2 = matcher.group(3);
+        // Skip '$'.
+        starti++;
 
-            if (matcher.start() > i) {
-                output += input.substring(i, matcher.end());
-            } else {
-                final String name = name1 != null ? name1 : name2;
-                final Object o = mapper.apply(name);
+        if (starti + 2 < src.length && src[starti] == '{') {
+            // {c} format.
+            starti += 1;
+            hasBraces = true;
+        } else {
+            hasBraces = false;
+        }
 
-                if (o == null) {
-                    throw new NoSuchElementException("Name " + name + " was not found.");
+        int i = starti + 1;
+        for (; i < src.length; i++) {
+            if (
+                    ('a' > src[i] || 'z' < src[i])
+                            && ('A' > src[i] || 'Z' < src[i])
+                            && ('0' > src[i] || '9' < src[i])
+                            && '.' != src[i]
+                            && '_' != src[i]
+            ) {
+                if (hasBraces) {
+                    if (i+1 >= src.length) {
+                        return new int[]{-1, -1, -1};
+                    } else {
+                        return new int[]{starti, i, i+1};
+                    }
+                } else {
+                    return new int[]{starti, i, i};
                 }
-
-                output += prefix + o;
             }
         }
 
-        output += input.substring(i);
+        if (hasBraces) {
+            return new int[]{-1, -1, -1};
+        } else {
+            return new int[]{starti, i, i};
+        }
+    }
 
-        return output;
+    public static String formatString(final String input, final Function<String, ? extends Object> mapper) {
+        final char[] src = input.toCharArray();
+        String dst = "";
+
+        boolean escaped = false;
+        int i = 0;
+        for (; i < src.length; i++) {
+            switch (src[i]) {
+                case '\\':
+                    if (escaped) {
+                        // Escaped slashes get appended.
+                        dst += src[i];
+                    }
+                    escaped = !escaped;
+                    break;
+                case '$':
+                    if (escaped) {
+                        // Escaped $ get appended.
+                        dst += '$';
+                        escaped = false;
+                    } else {
+                        final int[] is = findName(src, i);
+                        if (is[0] != -1) {
+                            final String name = new String(src, is[0], is[1] - is[0]);
+                            final Object value = mapper.apply(name);
+                            if (value == null) {
+                                throw new NoSuchElementException("Name " + name + " was not found.");
+                            }
+                            dst += value.toString();
+                            i = is[2]-1;
+                        }
+                    }
+                    break;
+                default:
+                    escaped = false;
+                    dst += src[i];
+            }
+        }
+
+        dst += new String(src, i, src.length-i);
+
+        return dst;
     }
 }
