@@ -7,28 +7,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class StringInterpolator {
-
-    /**
-     * Regular expression to get from the start of a string to a $ that signals the start of a variable name.
-     *
-     * We first must match from the beginning of the string
-     * all non \ and non $ characters or we match an even
-     * number of \ characters followed by a $.
-     *
-     * The first $ match following that sequence is the start of the name or
-     * the pattern {name}.
-     *
-     */
-    public static String startVariable = "(?:[^$\\\\]|(?:\\\\)+\\$)*";
-    public static String variableNameClass = "[a-zA-Z0-9_.]+";
-
-    static Pattern matchFirstName = Pattern.compile(
-            String.format("(%s)\\$(?:(%s)|\\{(%s)\\})", startVariable, variableNameClass, variableNameClass)
-    );
 
     public static String formatString(final String input, final Properties properties) {
         return formatString(input, name -> properties.get(name));
