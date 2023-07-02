@@ -1,25 +1,21 @@
 plugins {
-  id 'java-library'
-  // Sonatype's Nexus doensn't support the stronger cryptographic hashes.
-  // id 'maven-publish'
-  id 'maven'
-  id 'signing'
-  id 'eclipse'
-  id 'net.researchgate.release' version '2.8.1'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 release {
   tagTemplate = '${name}-${version}'
   git {
-    requireBranch = 'main'
+    requireBranch.set('main')
   }
 }  
 
 dependencies {
-  api 'org.slf4j:slf4j-api:1.7.29'
-  implementation 'org.apache.commons:commons-math3:3.6.1'
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.slf4j:slf4j-simple:1.7.21'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+    implementation 'org.apache.commons:commons-math3:3.6.1'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.21'
 }
 
 task javadocJar(type: Jar) {
@@ -34,57 +30,65 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
-artifacts {
-    archives javadocJar, sourcesJar
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-    signing {
-        sign configurations.archives
-    }
-
-    uploadArchives {
+    publishing {
         repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: releaseRepository) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+            maven {
+                authentication {
+                    basic(BasicAuthentication)
                 }
-
-                snapshotRepository(url: snapshotRepository) {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                credentials(PasswordCredentials) {
+                    username = ossrhUsername
+                    password = ossrhPassword
                 }
-
-                pom.project {
-                    name "SDSAI Common"
-                    // optionally artifactId can be defined here
+                url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
+            }
+        }
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                pom {
+                    name = "SDSAI Common"
                     description = 'Simple datastructures and algorithms.'
-                    url 'https://github.com/basking2/sdsai'
-                    packaging 'jar'
-
+                    url = 'https://github.com/basking2/sdsai'
+                    packaging = 'jar'
                     scm {
-                        connection 'scm:git:git@github.com:basking2/sdsai.git'
-                        developerConnection 'git@github.com:basking2/sdsai.git'
-                        url 'https://github.com/basking2/sdsai.git'
+                        connection = 'scm:git:git@github.com:basking2/sdsai.git'
+                        developerConnection = 'git@github.com:basking2/sdsai.git'
+                        url = 'https://github.com/basking2/sdsai.git'
                     }
-
                     licenses {
                         license {
-                            name 'MIT'
-                            url 'https://opensource.org/licenses/MIT'
+                            name = 'MIT'
+                            url = 'https://opensource.org/licenses/MIT'
                         }
                     }
 
                     developers {
                         developer {
-                            id 'basking2'
-                            name 'Sam'
-                            email 'basking2@yahoo.com'
+                            id = 'basking2'
+                            name = 'Sam'
+                            email = 'basking2@yahoo.com'
                         }
                     }
                 }
             }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
+    }
+
+
+    javadoc {
+        if(JavaVersion.current().isJava9Compatible()) {
+            options.addBooleanOption('html5', true)
         }
     }
 }

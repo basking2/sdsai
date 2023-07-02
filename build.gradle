@@ -1,5 +1,6 @@
 plugins {
-  id 'java-library'
+  id 'java'
+  id 'net.researchgate.release' version '3.0.2'
   id 'eclipse'
 }
 
@@ -12,10 +13,12 @@ allprojects {
   ext.releaseRepository = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
   ext.snapshotRepository = "https://oss.sonatype.org/content/repositories/snapshots/"
 
+
   repositories {
     mavenCentral()
     jcenter()
   }
+
 
   java {
     withJavadocJar()
