@@ -1,22 +1,25 @@
 /**
- * Copyright (c) 2019-2021 Sam Baskinger
+ * Copyright (c) 2019-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.stream.Stream;
 
-import org.junit.Ignore;
-import org.junit.runners.Parameterized;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Ignore
-@RunWith(Parameterized.class)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
+@Disabled("Takes a very long time to execute.")
 public class RateLimitedOutputStreamTest
 {
     private Logger _logger = LoggerFactory.getLogger(RateLimitedOutputStreamTest.class);
@@ -31,36 +34,30 @@ public class RateLimitedOutputStreamTest
         public void write(byte[] b, int off, int len) throws IOException { ; }
     };
 
-    final int rate;
-    final int time;
-    
-    public RateLimitedOutputStreamTest(final Integer rate, final Integer time)
-    {
-        this.rate = rate;
-        this.time = time;
+    public static Stream<Arguments> rateTestDP() {
+        return Stream.of(
+                new Integer[][]
+                        {
+                                // rate,             time
+                                //{  1024,               1  },
+                                //{  1024,               5  },
+                                {1024, 30},
+                                {10240, 30},
+                                {20480, 30},
+                                {51200, 30},
+                                {102400, 30},
+                                {102400000, 30},
+                                {1024000000, 30},
+                                {1, 10},
+                        }
+        ).map(o -> {
+            return arguments(o[0], o[1]);
+        });
     }
 
-    @Parameterized.Parameters
-    public static Object[][] rateTestDP()
-    {
-        return new Object[][]
-        {
-                        // rate,             time
-                        //{  1024,               1  },
-                        //{  1024,               5  },
-                        {  1024,               30 },
-                        {  10240,              30 },
-                        {  20480,              30 },
-                        {  51200,              30 },
-                        {  102400,             30 },
-                        {  102400000,          30 },
-                        {  1024000000,         30 }, 
-                        {  1,                  10 },
-        };
-    }
-    
-    @Test
-    public void rateTest() throws IOException
+    @ParameterizedTest
+    @MethodSource("rateTestDP")
+    public void rateTest(final Integer rate, final Integer time) throws IOException
     {
         byte[] buffer      = new byte[102400];
         long   written     = 0;
@@ -94,20 +91,18 @@ public class RateLimitedOutputStreamTest
         _logger.info(String.format("Apparent: %5.2f Instant: %5.2f Requested: %d", apparentRate, r.getRate(), rate));
         
         // Ensure that our overall computed value is close enough.
-        Assert.assertTrue(
-                "Err%: "+(Math.abs(apparentRate - rate)/(rate * allowedSkew))+"  Apparent("+apparentRate+") vs. "+rate,
-                Math.abs(apparentRate - rate) <= (rate * allowedSkew)
+        assertTrue(
+                Math.abs(apparentRate - rate) <= (rate * allowedSkew),
+                "Err%: "+(Math.abs(apparentRate - rate)/(rate * allowedSkew))+"  Apparent("+apparentRate+") vs. "+rate
         );
         
         // Ensure that our perceived rate in our class is close enough.
         // There are many real-world examples where this will trend much lower, but here it 
         // should be close.
-        Assert.assertTrue(
-                "Err%: "+(Math.abs(r.getRate()  - rate)/(rate * allowedSkew))+"  Computed("+r.getRate()+") vs. "+rate,
-                Math.abs(r.getRate()  - rate) <= (rate * allowedSkew)
+        assertTrue(
+                Math.abs(r.getRate()  - rate) <= (rate * allowedSkew),
+                "Err%: "+(Math.abs(r.getRate()  - rate)/(rate * allowedSkew))+"  Computed("+r.getRate()+") vs. "+rate
         );
-        
-        
     }
     
     /**
@@ -149,7 +144,7 @@ public class RateLimitedOutputStreamTest
         // aren't sending "too fast."
         if ( rate < apparentRate )
         {
-            Assert.assertTrue(
+            assertTrue(
                             Math.abs(apparentRate-rate) <= (rate*0.20)
                             );
         }
@@ -157,7 +152,7 @@ public class RateLimitedOutputStreamTest
         {
             // We should have sent at LEAST this fast, or assume there is
             // some logic error that is hanging the system.
-            Assert.assertTrue(apparentRate > 1024000000);
+            assertTrue(apparentRate > 1024000000);
         }
     }
 }

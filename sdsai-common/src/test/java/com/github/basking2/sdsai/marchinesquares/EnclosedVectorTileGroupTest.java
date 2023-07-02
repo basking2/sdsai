@@ -1,15 +1,16 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnclosedVectorTileGroupTest {
 
@@ -32,34 +33,34 @@ public class EnclosedVectorTileGroupTest {
     private void checkVectorTile(final VectorTile vectorTile) {
         for (final Side s : vectorTile.top) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.bottom) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.left) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.right) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
     }
@@ -255,7 +256,7 @@ public class EnclosedVectorTileGroupTest {
 
         vt.collateHoles();
 
-        Assert.assertTrue(vt.features.size() > 0);
+        assertTrue(vt.features.size() > 0);
         final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "simple_edges.geojson")) {
@@ -303,7 +304,7 @@ public class EnclosedVectorTileGroupTest {
 
         vt.collateHoles();
 
-        Assert.assertTrue(vt.features.size() > 0);
+        assertTrue(vt.features.size() > 0);
         final String geoJson = SimpleGeoJson.write(vt, new SimpleGeoJson.LinearProportionalGridToWorld(g.getMaxXOffset()-1, g.getMaxYOffset()-1));
 
         try (final OutputStream os = new FileOutputStream("build/" + getClass().getSimpleName() + "_edges.geojson")) {

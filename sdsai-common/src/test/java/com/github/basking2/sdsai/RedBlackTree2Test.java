@@ -1,16 +1,16 @@
 /**
- * Copyright (c) 2021 Sam Baskinger
+ * Copyright (c) 2021-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RedBlackTree2Test {
     @Test

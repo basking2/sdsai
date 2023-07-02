@@ -1,12 +1,13 @@
 /**
- * Copyright (c) 2009-2021 Sam Baskinger
+ * Copyright (c) 2009-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HeapTest {
     @Test

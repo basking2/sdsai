@@ -1,15 +1,17 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VectorTileBuilderTest {
     @Test
@@ -29,10 +31,10 @@ public class VectorTileBuilderTest {
 
         final VectorTile vectorTile = vtb.build();
 
-        Assert.assertTrue(vectorTile.bottom.size() == width);
-        Assert.assertTrue(vectorTile.top.size() == width);
-        Assert.assertTrue(vectorTile.right.size() == height);
-        Assert.assertTrue(vectorTile.left.size() == height);
+        assertTrue(vectorTile.bottom.size() == width);
+        assertTrue(vectorTile.top.size() == width);
+        assertTrue(vectorTile.right.size() == height);
+        assertTrue(vectorTile.left.size() == height);
 
     }
 
@@ -48,10 +50,10 @@ public class VectorTileBuilderTest {
 
         t.isoband();
 
-        Assert.assertEquals("(2->1)(1->2)", t.contours[0].toString());
-        Assert.assertEquals("(2->3)(3->2)", t.contours[1].toString());
-        Assert.assertEquals("(1->0)(0->1)", t.contours[2].toString());
-        Assert.assertEquals("(0->3)(3->0)", t.contours[3].toString());
+        assertEquals("(2->1)(1->2)", t.contours[0].toString());
+        assertEquals("(2->3)(3->2)", t.contours[1].toString());
+        assertEquals("(1->0)(0->1)", t.contours[2].toString());
+        assertEquals("(0->3)(3->0)", t.contours[3].toString());
 
         final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
         final VectorTile vectorTile = vtb.build();
@@ -69,10 +71,10 @@ public class VectorTileBuilderTest {
 
         t.isoband();
 
-        Assert.assertEquals("(1->2)", t.contours[0].toString());
-        Assert.assertEquals("(2->3)", t.contours[1].toString());
-        Assert.assertEquals("(0->1)", t.contours[2].toString());
-        Assert.assertEquals("(3->0)", t.contours[3].toString());
+        assertEquals("(1->2)", t.contours[0].toString());
+        assertEquals("(2->3)", t.contours[1].toString());
+        assertEquals("(0->1)", t.contours[2].toString());
+        assertEquals("(3->0)", t.contours[3].toString());
 
         final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
         final VectorTile vectorTile = vtb.build();
@@ -90,10 +92,10 @@ public class VectorTileBuilderTest {
 
         t.isoband();
 
-        Assert.assertEquals("(2->1)", t.contours[0].toString());
-        Assert.assertEquals("(3->2)", t.contours[1].toString());
-        Assert.assertEquals("(1->0)", t.contours[2].toString());
-        Assert.assertEquals("(0->3)", t.contours[3].toString());
+        assertEquals("(2->1)", t.contours[0].toString());
+        assertEquals("(3->2)", t.contours[1].toString());
+        assertEquals("(1->0)", t.contours[2].toString());
+        assertEquals("(0->3)", t.contours[3].toString());
 
          final VectorTileBuilder vtb = new VectorTileBuilder(t, FeatureFactory.uuidProperty());
          final VectorTile vectorTile = vtb.build();

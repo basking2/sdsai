@@ -1,11 +1,12 @@
 /**
- * Copyright (c) 2013-2021 Sam Baskinger
+ * Copyright (c) 2013-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.util;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VersionTest
 {

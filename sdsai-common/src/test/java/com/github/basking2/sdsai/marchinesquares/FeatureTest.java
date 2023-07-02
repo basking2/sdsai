@@ -1,14 +1,15 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FeatureTest {
     @Test

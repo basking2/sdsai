@@ -1,15 +1,16 @@
 /**
- * Copyright (c) 2019-2021 Sam Baskinger
+ * Copyright (c) 2019-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.file.Files;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class FileRingInputStreamTest {
     @Test

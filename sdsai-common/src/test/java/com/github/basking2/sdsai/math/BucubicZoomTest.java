@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2016-2021 Sam Baskinger
+ * Copyright (c) 2016-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.math;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

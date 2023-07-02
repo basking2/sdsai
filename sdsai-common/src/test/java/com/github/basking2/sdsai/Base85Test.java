@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2017-2021 Sam Baskinger
+ * Copyright (c) 2017-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */

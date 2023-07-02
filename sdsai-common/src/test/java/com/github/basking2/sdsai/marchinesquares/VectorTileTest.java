@@ -1,18 +1,16 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VectorTileTest {
     @Test

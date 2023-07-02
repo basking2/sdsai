@@ -1,17 +1,17 @@
 /**
- * Copyright (c) 2021 Sam Baskinger
+ * Copyright (c) 2021-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IntervalTest {
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testIntervalNodesInvalidInterval() {
-        new Interval<Integer>(2, 1);
+        assertThrows(IllegalStateException.class, () -> new Interval<>(2, 1));
     }
 
     @Test
@@ -28,8 +28,8 @@ public class IntervalTest {
         Interval<Integer> n2 = new Interval<>(0, 0);
         assertTrue(n1.containsOrEqual(n2));
         assertTrue(n2.containsOrEqual(n1));
-        assertTrue(n1.equals(n2));
-        assertTrue(n2.equals(n1));
+        assertEquals(n1, n2);
+        assertEquals(n2, n1);
     }
 
     @Test

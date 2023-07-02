@@ -1,20 +1,15 @@
 /**
- * Copyright (c) 2021 Sam Baskinger
+ * Copyright (c) 2021-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
-
-import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RTreeTest {
 
@@ -41,7 +36,7 @@ public class RTreeTest {
 
         Integer i = rtree.find(new Integer[][]{ { 0, 10 }, { 0, 10 }}).getT();
 
-        assertThat(i, CoreMatchers.either(CoreMatchers.equalTo(Integer.valueOf(0))).or(CoreMatchers.equalTo(Integer.valueOf(1))));
+        assertTrue(i == 0 || i == 1);
 
         assertEquals(Integer.valueOf(2), rtree.find(new Integer[][]{ { 1, 9 }, { 1, 9 }}).getT());
         assertEquals(Integer.valueOf(3), rtree.find(new Integer[][]{ { 0, 10 }, { 1, 11 }}).getT());
@@ -61,10 +56,12 @@ public class RTreeTest {
         assertEquals(5, rtree.getSize());
 
         Integer i = rtree.delete(new Integer[][]{ { 0, 10 }, { 0, 10 }});
-        assertThat(i, CoreMatchers.either(CoreMatchers.equalTo(Integer.valueOf(0))).or(CoreMatchers.equalTo(Integer.valueOf(1))));
+
+        assertTrue(i == 0 || i == 1);
+
         assertEquals(4, rtree.getSize());
         i = rtree.delete(new Integer[][]{ { 0, 10 }, { 0, 10 }});
-        assertThat(i, CoreMatchers.either(CoreMatchers.equalTo(Integer.valueOf(0))).or(CoreMatchers.equalTo(Integer.valueOf(1))));
+        assertTrue(i == 0 || i == 1);
         assertEquals(3, rtree.getSize());
 
         assertEquals(Integer.valueOf(2), rtree.delete(new Integer[][]{ { 1, 9 }, { 1, 9 }}));

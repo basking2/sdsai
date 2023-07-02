@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2009-2021 Sam Baskinger
+ * Copyright (c) 2009-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;

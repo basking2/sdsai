@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.selectiontree;
 
-import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GroupingFilterTest {
     @Test

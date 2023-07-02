@@ -15,8 +15,9 @@ allprojects {
     }
   }
 
-  ext.junitVersion = '4.13.2'
   ext.slf4jVersion = '2.0.7'
+  ext.junitVersion = '4.13.2'
+  ext.junit5Version = '5.10.0-M1'
   ext.releaseRepository = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
   ext.snapshotRepository = "https://oss.sonatype.org/content/repositories/snapshots/"
 

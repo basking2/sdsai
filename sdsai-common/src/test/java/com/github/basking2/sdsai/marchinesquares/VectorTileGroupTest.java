@@ -1,15 +1,16 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VectorTileGroupTest {
 
@@ -32,34 +33,34 @@ public class VectorTileGroupTest {
     private void checkVectorTile(final VectorTile vectorTile) {
         for (final Side s : vectorTile.top) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.bottom) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.left) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
         for (final Side s : vectorTile.right) {
             if (s.endPoint != null) {
-                Assert.assertNull(s.endPoint.next);
+                assertNull(s.endPoint.next);
             }
             if (s.beginPoint != null) {
-                Assert.assertNotNull(s.beginPoint.next);
+                assertNotNull(s.beginPoint.next);
             }
         }
     }
@@ -327,7 +328,7 @@ public class VectorTileGroupTest {
             }
         }
 
-        Assert.assertTrue(g.getVectorTile().features.size() > 0);
+        assertTrue(g.getVectorTile().features.size() > 0);
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(9,9));
 
@@ -359,7 +360,7 @@ public class VectorTileGroupTest {
         g.addEast(VectorTileBuilder.buildConstantTile(n, 2,3));
         g.addEast(VectorTileBuilder.buildConstantTile(n, 2,2));
 
-        Assert.assertTrue(g.getVectorTile().features.size() > 0);
+        assertTrue(g.getVectorTile().features.size() > 0);
 
         final String geoJson = SimpleGeoJson.write(g.getVectorTile().collateHoles(), new SimpleGeoJson.LinearProportionalGridToWorld(9, 9));
 

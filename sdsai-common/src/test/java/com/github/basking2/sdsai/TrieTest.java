@@ -1,16 +1,16 @@
 /**
- * Copyright (c) 2018-2021 Sam Baskinger
+ * Copyright (c) 2018-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TrieTest {
 
@@ -53,13 +53,13 @@ public class TrieTest {
         }
 
         for (final String w : words1) {
-            assertEquals("Finding word "+w, w, trie.find(w));
+            assertEquals(w, trie.find(w), "Finding word "+w);
         }
 
         for (String w : words1) {
             w = w + w;
 
-            assertNull("Finding word "+w, trie.find(w));
+            assertNull(trie.find(w), "Finding word "+w);
         }
 
         for (String w: words1) {
@@ -69,7 +69,7 @@ public class TrieTest {
         trie.add("canary", "canary");
 
         for (final String w : words1) {
-            assertNull("Finding word "+w, trie.find(w));
+            assertNull(trie.find(w), "Finding word "+w);
         }
         assertEquals("canary", trie.find("canary"));
     }

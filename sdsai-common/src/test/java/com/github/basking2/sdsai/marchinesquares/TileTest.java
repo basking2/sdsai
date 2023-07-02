@@ -1,11 +1,13 @@
 /**
- * Copyright (c) 2020-2021 Sam Baskinger
+ * Copyright (c) 2020-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai.marchinesquares;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TileTest {
 
@@ -26,8 +28,8 @@ public class TileTest {
         for (int h = 0; h < height-1; h++) {
             for ( int w = 0; w < width-1; w++) {
                 final int i = h*(width-1)+w;
-                Assert.assertNotNull(t.contours[i]);
-                Assert.assertEquals(t.contours[i].lineCount, t.contours[i].lines.length/2);
+                assertNotNull(t.contours[i]);
+                assertEquals(t.contours[i].lineCount, t.contours[i].lines.length/2);
                 System.out.println(t.contours[i]);
             }
         }
