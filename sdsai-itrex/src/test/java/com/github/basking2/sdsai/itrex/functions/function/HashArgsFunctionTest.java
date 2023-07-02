@@ -1,13 +1,16 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.functions.function;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HashArgsFunctionTest {
     @Test
@@ -21,7 +24,7 @@ public class HashArgsFunctionTest {
                 ctx
         );
 
-        assertTrue(remainingArgs == ctx.getArguments());
+        assertSame(remainingArgs, ctx.getArguments());
         assertTrue(remainingArgs.hasNext());
         remainingArgs.next();
         assertFalse(remainingArgs.hasNext());

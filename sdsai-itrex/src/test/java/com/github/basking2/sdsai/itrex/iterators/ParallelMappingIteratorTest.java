@@ -1,13 +1,16 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.junit.Test;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ParallelMappingIteratorTest {
     @Test
@@ -30,6 +33,8 @@ public class ParallelMappingIteratorTest {
 
         final List<Integer> actualList = Iterators.toList(itr);
 
-        assertThat(actualList, hasItems(expectedList));
+        for (final Integer e : expectedList) {
+            assertTrue(actualList.contains(e));
+        }
     }
 }

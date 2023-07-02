@@ -1,16 +1,19 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.SimpleExpressionParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test {@link ThreadFunction} and {@link JoinFunction}.

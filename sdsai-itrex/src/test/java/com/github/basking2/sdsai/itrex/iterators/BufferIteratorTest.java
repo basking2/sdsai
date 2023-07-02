@@ -1,26 +1,30 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BufferIteratorTest {
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testEmpty() {
-        final BufferIterator bi = new BufferIterator(10, asList("a", "b", "c").iterator());
+        assertThrows(NoSuchElementException.class, () -> {
 
-        bi.next();
-        bi.next();
-        bi.next();
-        bi.next();
+            final BufferIterator bi = new BufferIterator(10, asList("a", "b", "c").iterator());
+
+            bi.next();
+            bi.next();
+            bi.next();
+            bi.next();
+        });
     }
 
     @Test

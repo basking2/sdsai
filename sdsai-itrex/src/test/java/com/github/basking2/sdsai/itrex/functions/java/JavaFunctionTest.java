@@ -1,18 +1,19 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.functions.java;
 
 import com.github.basking2.sdsai.itrex.EvaluationContext;
 import com.github.basking2.sdsai.itrex.Evaluator;
 
-import com.github.basking2.sdsai.itrex.SimpleExpressionParser;
 import com.github.basking2.sdsai.itrex.packages.JavaPackage;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
 import static com.github.basking2.sdsai.itrex.SimpleExpressionParser.parseExpression;
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JavaFunctionTest {
     @Test

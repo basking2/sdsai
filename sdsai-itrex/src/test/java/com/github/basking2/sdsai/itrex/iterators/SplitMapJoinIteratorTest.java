@@ -1,20 +1,19 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.function.Function;
 
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Test {@link Iterators#splitMapJoinIterator(ExecutorService, Iterator, Function, MappingIterator.Mapper)}.
+ * Test {@link Iterators#splitMapJoinIterator(Executor, Iterator, Function, MappingIterator.Mapper)}.
  */
 public class SplitMapJoinIteratorTest {
     @Test
@@ -31,10 +30,12 @@ public class SplitMapJoinIteratorTest {
             ));
 
             final Integer[] expectedList = Iterators.toList(
-                    new RangeIterator(0,10, 1)).toArray(new Integer[0]);
+                    new RangeIterator(0, 10, 1)).toArray(new Integer[0]);
 
-            assertThat(actualList, hasItems(expectedList));
-            return ;
+            for (final Integer e : expectedList) {
+                assertTrue(actualList.contains(e));
+            }
+            return;
         });
 
         f.get();
@@ -55,9 +56,11 @@ public class SplitMapJoinIteratorTest {
             ));
 
             final Integer[] expectedList = Iterators.toList(
-                    new RangeIterator(0,10, 1)).toArray(new Integer[0]);
+                    new RangeIterator(0, 10, 1)).toArray(new Integer[0]);
 
-            assertThat(actualList, hasItems(expectedList));
+            for (final Integer e : expectedList) {
+                assertTrue(actualList.contains(e));
+            }
             return;
         });
 
@@ -79,10 +82,12 @@ public class SplitMapJoinIteratorTest {
         ));
 
         final Integer[] expectedList = Iterators.toList(
-                new RangeIterator(0,10, 1)).toArray(new Integer[0]);
+                new RangeIterator(0, 10, 1)).toArray(new Integer[0]);
 
         es.shutdown();
 
-        assertThat(actualList, hasItems(expectedList));
+        for (final Integer e : expectedList) {
+            assertTrue(actualList.contains(e));
+        }
     }
 }

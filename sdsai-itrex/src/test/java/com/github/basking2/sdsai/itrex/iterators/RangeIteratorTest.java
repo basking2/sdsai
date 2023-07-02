@@ -1,34 +1,45 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RangeIteratorTest {
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInvalidRangeZeroStep() {
-        new RangeIterator(0, 0, 0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            new RangeIterator(0, 0, 0);
+        });
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testRangeUp() {
-        final Iterator<Integer> i = new RangeIterator(0, 3, 2);
+        assertThrows(NoSuchElementException.class, () -> {
 
-        assertEquals(Integer.valueOf(0), i.next());
-        assertEquals(Integer.valueOf(2), i.next());
-        i.next();
+            final Iterator<Integer> i = new RangeIterator(0, 3, 2);
+
+            assertEquals(Integer.valueOf(0), i.next());
+            assertEquals(Integer.valueOf(2), i.next());
+            i.next();
+        });
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testRangeDown() {
-        final Iterator<Integer> i = new RangeIterator(3, -2, -2);
+        assertThrows(NoSuchElementException.class, () -> {
+            final Iterator<Integer> i = new RangeIterator(3, -2, -2);
 
-        assertEquals(Integer.valueOf(3), i.next());
-        assertEquals(Integer.valueOf(1), i.next());
-        assertEquals(Integer.valueOf(-1), i.next());
-        i.next();
+            assertEquals(Integer.valueOf(3), i.next());
+            assertEquals(Integer.valueOf(1), i.next());
+            assertEquals(Integer.valueOf(-1), i.next());
+            i.next();
+        });
     }
 }

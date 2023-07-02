@@ -1,11 +1,13 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.functions;
 
 import com.github.basking2.sdsai.itrex.Evaluator;
-import com.github.basking2.sdsai.itrex.SimpleExpressionParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.basking2.sdsai.itrex.SimpleExpressionParser.parseExpression;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */

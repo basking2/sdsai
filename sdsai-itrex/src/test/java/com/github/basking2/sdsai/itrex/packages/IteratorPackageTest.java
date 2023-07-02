@@ -1,13 +1,15 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.packages;
 
-
 import com.github.basking2.sdsai.itrex.Evaluator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
 import static com.github.basking2.sdsai.itrex.iterators.Iterators.wrap;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */

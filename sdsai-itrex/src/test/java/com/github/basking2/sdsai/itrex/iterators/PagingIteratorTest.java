@@ -1,16 +1,16 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex.iterators;
 
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PagingIteratorTest {
     @Test
@@ -32,6 +32,8 @@ public class PagingIteratorTest {
         final Integer[] expectedList = Iterators.toList(
                 new RangeIterator(0,10, 1)).toArray(new Integer[0]);
 
-        assertThat(results, hasItems(expectedList));
+        for (final Integer e : expectedList) {
+            assertTrue(results.contains(e));
+        }
     }
 }

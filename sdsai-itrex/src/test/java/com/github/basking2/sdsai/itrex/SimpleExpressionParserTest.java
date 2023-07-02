@@ -1,13 +1,14 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex;
 
+import org.junit.jupiter.api.Test;
+
 import static com.github.basking2.sdsai.itrex.SimpleExpressionParser.parseExpression;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.junit.Test;
 
 /**
  *
@@ -106,7 +107,7 @@ public class SimpleExpressionParserTest {
         o = sep.parse();
         assertEquals("c", ((List<String>)o).get(0));
         o = sep.parse();
-        assertTrue(o == null);
+        assertNull(o);
         
     }
 

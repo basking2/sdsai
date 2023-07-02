@@ -1,11 +1,13 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.itrex;
 
-import com.github.basking2.sdsai.itrex.Evaluator;
 import com.github.basking2.sdsai.itrex.functions.LetFunction;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Because the {@link LetFunction} is complicated, we isolate its tests into a class.
