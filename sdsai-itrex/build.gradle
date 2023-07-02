@@ -14,6 +14,7 @@ release {
 
 asciidoctor {
     baseDirFollowsSourceDir()
+    attributes 'project-version': project.version
 }
 
 compileJava {
