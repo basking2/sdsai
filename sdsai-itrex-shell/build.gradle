@@ -31,8 +31,8 @@ dependencies {
     implementation project(':sdsai-itrex')
     implementation 'commons-cli:commons-cli:1.4'
     implementation 'org.jline:jline:3.4.0'
-    implementation 'org.slf4j:slf4j-simple:1.7.21'
-    testImplementation 'junit:junit:4.13.2'
+    implementation "org.slf4j:slf4j-simple:${slf4jVersion}"
+    testImplementation "junit:junit:${junitVersion}"
 }
 
 task javadocJar(type: Jar) {
