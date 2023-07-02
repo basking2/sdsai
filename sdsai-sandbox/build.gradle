@@ -12,9 +12,9 @@ release {
 }
 
 dependencies {
-  implementation project(':sdsai-common')
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.slf4j:slf4j-simple:1.7.21'
+    implementation project(':sdsai-common')
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.21'
 }
 
 task javadocJar(type: Jar) {
