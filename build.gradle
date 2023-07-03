@@ -13,6 +13,9 @@ allprojects {
     toolchain {
       languageVersion = JavaLanguageVersion.of(8)
     }
+
+    withJavadocJar()
+    withSourcesJar()
   }
 
   ext.slf4jVersion = '2.0.7'
@@ -28,9 +31,13 @@ allprojects {
     }
   }
 
-  java {
-    withJavadocJar()
-    withSourcesJar()
+  task writeProjectInfo(type: WriteProperties) {
+    destinationFile = new File("build", "info.properties")
+    property("version", project.version)
+    property("name", project.name)
+    property("group", project.group)
   }
+
+  compileJava.finalizedBy(writeProjectInfo)
 }
 
