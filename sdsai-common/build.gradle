@@ -15,8 +15,6 @@ dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     implementation 'org.apache.commons:commons-math3:3.6.1'
     testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
-
-    //testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter:${junit5Version}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
