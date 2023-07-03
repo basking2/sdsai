@@ -9,7 +9,17 @@ release {
   git {
     requireBranch.set('main')
   }
-}  
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+compileTestJava {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
+}
 
 dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"

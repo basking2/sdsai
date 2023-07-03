@@ -10,6 +10,7 @@ import com.github.basking2.sdsai.itrex.SExprRuntimeException;
 import com.github.basking2.sdsai.itrex.packages.Package;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 /**
@@ -74,15 +75,17 @@ public class ImportFunction implements FunctionInterface<String> {
     private String doImport(final Object o, final String destinationPackage) {
         if (o instanceof String) {
             try {
-                final Class<?> clazz = getClass().forName((String)o);
+                final Class<?> clazz = Class.forName((String)o);
 
                 if (Package.class.isAssignableFrom(clazz)) {
                     try {
-                        doImport(clazz.newInstance(), destinationPackage);
-                    } catch (InstantiationException e) {
+                        doImport(clazz.getConstructor().newInstance(), destinationPackage);
+                    } catch (final InstantiationException | IllegalAccessException e) {
                         throw new SExprRuntimeException("Creating "+((String) o), e);
-                    } catch (IllegalAccessException e) {
-                        throw new SExprRuntimeException("Creating "+((String) o), e);
+                    } catch (InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchMethodException e) {
+                        throw new RuntimeException(e);
                     }
                 }
                 else {
@@ -98,7 +101,8 @@ public class ImportFunction implements FunctionInterface<String> {
             p.importTo(evaluator, destinationPackage);
         }
         else if (o instanceof Class) {
-            return doImportStatics((Class)o, o, destinationPackage);
+            final Class<?> clazz = (Class<?>)o;
+            return doImportStatics(clazz, o, destinationPackage);
         }
         else {
             return doImportStatics(o.getClass(), o, destinationPackage);
@@ -134,7 +138,7 @@ public class ImportFunction implements FunctionInterface<String> {
             } catch (IllegalAccessException e) {
                 return e.getMessage();
             }
-            if (func != null && func instanceof FunctionInterface) {
+            if (func instanceof FunctionInterface) {
                 if (packageName == null || packageName.isEmpty()) {
                     evaluationContext.register(field.getName(), (FunctionInterface<?>) func);
                 }

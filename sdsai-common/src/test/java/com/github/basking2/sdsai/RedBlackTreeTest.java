@@ -12,13 +12,13 @@ public class RedBlackTreeTest
 {
   public static void main(String[] argv)
   {
-    RedBlackTree<Integer> rbt = new RedBlackTree<Integer>();
+    RedBlackTree<Integer> rbt = new RedBlackTree<>();
     RedBlackTree<Integer>.RBNode node;
 
     int rounds = 1000;
 
     for ( int i = 0; i < rounds; i++ ) {
-      rbt.add(new Key<Integer>(i, new Integer(i)));
+      rbt.add(new Key<>(i, i));
     }
 
     for ( Key<Integer> k : rbt ) { 
@@ -51,11 +51,11 @@ public class RedBlackTreeTest
     }
 
     for ( int i = 0; i < rounds; i++ ) {
-      rbt.add(new Key<Integer>(i, new Integer(i))); }
+      rbt.add(new Key<>(i, i)); }
     for ( int i = 0; i < rounds; i++ ) {
-      rbt.add(new Key<Integer>(i, new Integer(i))); }
+      rbt.add(new Key<>(i, i)); }
     for ( int i = 0; i < rounds; i++ ) {
-      rbt.add(new Key<Integer>(i, new Integer(i))); }
+      rbt.add(new Key<>(i, i)); }
 
     System.out.print("\n");
     node = rbt.first(new Key<Integer>(4));
@@ -74,7 +74,7 @@ public class RedBlackTreeTest
 
   public static void findalltest(RedBlackTree<Integer> rbt, int i)
   {
-    List<Key<Integer>> l = new LinkedList<Key<Integer>>();
+    List<Key<Integer>> l = new LinkedList<>();
 
     rbt.findAll(new Key<Integer>(i), l);
 

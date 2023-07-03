@@ -19,6 +19,7 @@ asciidoctor {
 
 compileJava {
 	options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
 }
 
 compileTestJava {
