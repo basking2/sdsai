@@ -5,6 +5,7 @@
 package com.github.basking2.sdsai.itrex;
 
 import org.apache.commons.cli.*;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.history.DefaultHistory;
@@ -21,9 +22,9 @@ import java.util.concurrent.Executors;
  */
 public class Shell {
 
-    private static String EXIT_OBJECT = "exiting...";
+    private static final String EXIT_OBJECT = "exiting...";
 
-    public static final void main(final String[] argv) throws IOException {
+    public static void main(final String[] argv) throws IOException {
         final CommandLineParser parser = new DefaultParser();
         final CommandLine commandLine;
 
@@ -102,16 +103,18 @@ public class Shell {
                     }
 
                     System.out.println(result.toString());
+                } catch (final EndOfFileException t) {
+                    run = false;
+                    System.out.println("End of input.");
                 } catch (final Throwable t) {
                     // Print exception to stdout. This prevents it interleaving w/ the prompt.
                     System.out.println(t.getMessage());
-                    //t.printStackTrace(System.out);
                 }
             }
         }
     }
 
-    public static final String collectExpression(final LineReader lineReader) throws IOException {
+    public static String collectExpression(final LineReader lineReader) {
         final StringBuilder sb = new StringBuilder();
 
         boolean parsed = false;

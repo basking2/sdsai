@@ -10,6 +10,15 @@ application {
     applicationName = 'itrex'
 }
 
+task 'itrex-shell'(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+
+    mainClass = 'com.github.basking2.sdsai.itrex.Shell'
+
+    standardInput = System.in
+}
+
+
 compileJava {
     options.compilerArgs << '-Xlint:unchecked'
 }
