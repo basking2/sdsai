@@ -31,11 +31,11 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
 
     public void add(final VALUE value) {
         if (head == null) {
-            tail = head = new Node(value, null);
+            tail = head = new Node<>(value, null);
             size = 1;
         }
         else {
-            tail.next = new Node(value, null);
+            tail.next = new Node<>(value, null);
             tail = tail.next;
             size++;
         }
@@ -43,11 +43,11 @@ public class LinkedList<VALUE> implements Iterable<VALUE> {
 
     public void addHead(final VALUE value) {
         if (head == null) {
-            tail = head = new Node(value, null);
+            tail = head = new Node<>(value, null);
             size = 1;
         }
         else {
-            head = new Node(value, head);
+            head = new Node<>(value, head);
             size++;
         }
     }

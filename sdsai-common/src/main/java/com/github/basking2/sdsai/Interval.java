@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021 Sam Baskinger
+ * Copyright (c) 2021-2023 Sam Baskinger
  */
 
 package com.github.basking2.sdsai;
@@ -165,6 +165,7 @@ public class Interval<K extends Comparable<K>> {
             return false;
         }
 
+        @SuppressWarnings("unchecked")
         final Interval<K> that = (Interval<K>) o;
 
         if (!this.min.equals(that.min)) {

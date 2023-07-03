@@ -152,7 +152,9 @@ public class SimpleGeoJson {
         out.write(("\""+key+"\": ").getBytes(utf8));
         if (value instanceof Map) {
             out.write("{\n".getBytes(utf8));
-            appendProperties(out, (Map<?, Object>)value);
+            @SuppressWarnings("unchecked")
+            final Map<?, Object> map = (Map<?, Object>)value;
+            appendProperties(out, map);
             out.write("}".getBytes(utf8));
         }
         else {
