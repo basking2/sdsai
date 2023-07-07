@@ -16,6 +16,9 @@ do
 
 	rm -fr "docs/$proj" || true
 	mv "$proj/build/asciidoc/html5" "docs/$proj" || true
+
+	rm -f "info.properties" || true
+	mv "$proj/build/info.properties" "$proj.properties" || true
 done
 
 echo Page updated. Make final edits.
