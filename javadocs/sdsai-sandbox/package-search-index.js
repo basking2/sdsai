@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.github.basking2.sdsai.sandbox"},{"l":"com.github.basking2.sdsai.sandbox.ai.nnet"},{"l":"com.github.basking2.sdsai.sandbox.graph"}]
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.basking2.sdsai.sandbox"},{"l":"com.github.basking2.sdsai.sandbox.ai.nnet"},{"l":"com.github.basking2.sdsai.sandbox.graph"}];updateSearchResults();
