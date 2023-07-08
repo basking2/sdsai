@@ -2,11 +2,10 @@
 
 # Publish the website.
 
-set -x
-set -e
+set -ex
 
 #git pull -r
-./gradlew clean check asciidoctor install
+./gradlew clean check javadocJar asciidoctor install
 git checkout gh-pages
 
 for proj in sdsai-common sdsai-itrex sdsai-itrex-shell sdsai-net sdsai-sandbox
