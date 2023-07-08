@@ -7,7 +7,7 @@ layout: default
     
     {% for p in site.data.projects %}
     <div class="tile">
-      <h2>{{p.name}}</h2>
+	    <h2>{{p.name}} {{site.data.properties[p.name]["version"]}}</h2>
       <div><a href="{{site.baseurl}}/javadocs/{{p.name}}/">Javadocs</a></div>
       {{p.description}}
     </div>

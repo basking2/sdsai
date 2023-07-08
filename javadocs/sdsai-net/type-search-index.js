@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"com.github.basking2.sdsai.net","l":"AppTcpPool"},{"p":"com.github.basking2.sdsai.net","l":"TcpPool.DefaultIdTranslator"},{"p":"com.github.basking2.sdsai.net","l":"TcpPool.IdTranslator"},{"p":"com.github.basking2.sdsai.net","l":"TcpPool.SocketHandler"},{"p":"com.github.basking2.sdsai.net","l":"TcpPool"}]
