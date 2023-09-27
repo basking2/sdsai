@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2023 Sam Baskinger
+ */
 package com.github.basking2.sdsai.util;
 
 import org.junit.jupiter.api.Disabled;
