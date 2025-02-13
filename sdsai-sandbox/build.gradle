@@ -1,8 +1,8 @@
 plugins {
-    id 'java-library'
-    id 'maven-publish'
-    id 'signing'
-    id 'org.asciidoctor.jvm.convert' version '4.0.4'
+    //id 'java-library'
+    //id 'maven-publish'
+    //id 'signing'
+    //id 'org.asciidoctor.jvm.convert' version '4.0.4'
     id 'sdsai.java-conventions'
 }
 

@@ -1,3 +1,16 @@
 plugins {
     id 'groovy-gradle-plugin'
 }
+
+
+repositories {
+    mavenCentral()
+    // jcenter()
+    maven {
+        url = "https://plugins.gradle.org/m2"
+    }
+}
+dependencies {
+    implementation("net.researchgate.release:net.researchgate.release.gradle.plugin:3.1.0")
+    implementation("org.asciidoctor.jvm.convert:org.asciidoctor.jvm.convert.gradle.plugin:4.0.4")
+}

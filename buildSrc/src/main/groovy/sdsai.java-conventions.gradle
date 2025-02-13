@@ -1,3 +1,13 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'net.researchgate.release'
+    id 'org.asciidoctor.jvm.convert'
+}
+
 release {
     tagTemplate = '${name}-${version}'
     git {
