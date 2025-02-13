@@ -2,5 +2,12 @@
 /build
 /*/build
 /*/.*
-/.*
 out
+
+/.classpath
+/.gradle/
+/.idea/
+/.project
+/.ruby-version
+/.sass-cache/
+/.settings/
