@@ -16,6 +16,10 @@ jobs:
           with:
             distribution: temurin
             java-version: 11
+        - name: Setup Gradle
+          uses: gradle/actions/setup-gradle@v4
+          with:
+            cache-disabled: false
         - name: Build
           env:
             OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
