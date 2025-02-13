@@ -3,7 +3,8 @@
 /*/build
 /*/.*
 out
-
+/_data
+/lib
 /.classpath
 /.gradle/
 /.idea/
