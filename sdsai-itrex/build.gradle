@@ -3,33 +3,9 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'org.asciidoctor.jvm.convert' version '4.0.4'
+    id 'sdsai.java-conventions'
 }
 
-release {
-    tagTemplate = '${name}-${version}'
-    git {
-        requireBranch.set('main')
-    }
-}
-
-asciidoctor {
-    baseDirFollowsSourceDir()
-    attributes 'project-version': project.version
-}
-
-compileJava {
-	options.compilerArgs << '-Xlint:unchecked'
-    options.compilerArgs << '-Xlint:deprecation'
-}
-
-compileTestJava {
-    options.compilerArgs << '-Xlint:unchecked'
-}
-
-processResources {
-    expand projectVersion: project.version,
-           projectName: project.name
-}
 
 dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
@@ -37,80 +13,5 @@ dependencies {
     testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
 }
 
-tasks.named('test', Test) {
-    useJUnitPlatform()
-}
 
-task javadocJar(type: Jar) {
-    archiveClassifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    archiveClassifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
-    publishing {
-        repositories {
-            maven {
-                authentication {
-                    basic(BasicAuthentication)
-                }
-                credentials(PasswordCredentials) {
-                    username = ossrhUsername
-                    password = ossrhPassword
-                }
-                url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
-            }
-        }
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                pom {
-                    name = "SDSAI Itrex"
-                    description = 'Simple datastructures and algorithms.'
-                    url = 'https://github.com/basking2/sdsai'
-                    packaging = 'jar'
-                    scm {
-                        connection = 'scm:git:git@github.com:basking2/sdsai.git'
-                        developerConnection = 'git@github.com:basking2/sdsai.git'
-                        url = 'https://github.com/basking2/sdsai.git'
-                    }
-                    licenses {
-                        license {
-                            name = 'MIT'
-                            url = 'https://opensource.org/licenses/MIT'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'basking2'
-                            name = 'Sam'
-                            email = 'basking2@yahoo.com'
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    signing {
-        sign publishing.publications.mavenJava
-    }
-
-
-    javadoc {
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.addBooleanOption('html5', true)
-        }
-    }
-}
 
