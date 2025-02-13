@@ -43,7 +43,18 @@ java {
     withJavadocJar()
     withSourcesJar()
 }
-if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+
+def publishUsername
+def publishPassword
+if (System.getenv("OSSRH_USERNAME") && System.getenv("OSSRH_PASSWORD")) {
+    publishUsername = System.getenv("OSSRH_USERNAME")
+    publishPassword = System.getenv("OSSRH_PASSWORD")
+} else if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+    publishUsername = ossrhUsername
+    publishPassword = ossrhPassword
+}
+
+if (publishUsername && publishPassword) {
     publishing {
         repositories {
             maven {
@@ -51,8 +62,8 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
                     basic(BasicAuthentication)
                 }
                 credentials(PasswordCredentials) {
-                    username = ossrhUsername
-                    password = ossrhPassword
+                    username = publishUsername
+                    password = publishPassword
                 }
                 url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
             }
@@ -88,16 +99,24 @@ if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
             }
         }
     }
+}
 
+
+if (System.getenv("SIGNING_KEY") && System.getenv("SIGNING_KEY_PASSPHRASE")) {
+    signing {
+        def signingKey = System.getenv("SIGNING_KEY")
+        def signingKeyPassphrase = System.getenv("SIGNING_KEY_PASSPHRASE")
+        useInMemoryPgpKeys(signingKey, signingKeyPassphrase)
+        sign publishing.publications.mavenJava
+    }
+} else if (project.hasProperty("signing.keyId") && project.hasProperty("signing.password") && project.hasProperty("signing.secretKeyRingFile")) {
     signing {
         sign publishing.publications.mavenJava
     }
-
-
-    javadoc {
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.addBooleanOption('html5', true)
-        }
-    }
 }
 
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
