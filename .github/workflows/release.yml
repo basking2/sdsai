@@ -1,4 +1,4 @@
-name: Build
+name: Release
 on:
   push:
     tags:
@@ -30,7 +30,8 @@ jobs:
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
         run: |
           eval $(echo "$TAG" | sed -E 's/(.*)-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*)/PROJ=\1;VERSION=\2/g')
-          ./gradlew "$PROJ:release" -Prelease.releaseVersion="$VERSION"
+          ./gradlew ":$PROJ:release" -Prelease.versionPropertyFile="$PROJ/gradle.properties" -Prelease.useAutomaticVersion=true -Prelease.releaseVersion="$VERSION"
+
 
           
 
