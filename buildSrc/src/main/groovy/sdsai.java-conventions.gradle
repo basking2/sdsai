@@ -1,7 +1,8 @@
 release {
     tagTemplate = '${name}-${version}'
     git {
-        //requireBranch.set('main')
+        // Ignore branch.
+        requireBranch.set('')
     }
 }
 
