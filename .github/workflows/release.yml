@@ -22,17 +22,17 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-disabled: false
-      - name: Release
-        env:
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-          SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
-        run: |
-          eval $(echo "$TAG" | sed -E 's/(.*)-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*)/PROJ=\1;VERSION=\2/g')
-          git config set user.name Sam\ Baskinger
-          git config set user.email basking2@yahoo.com
-          ./gradlew ":$PROJ:release" -Prelease.versionPropertyFile="$PROJ/gradle.properties" -Prelease.useAutomaticVersion=true -Prelease.releaseVersion="$VERSION"
+      #- name: Release
+      #  env:
+      #    OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+      #    OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+      #    SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      #    SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
+      #  run: |
+      #    eval $(echo "$TAG" | sed -E 's/(.*)-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*)/PROJ=\1;VERSION=\2/g')
+      #    git config set user.name Sam\ Baskinger
+      #    git config set user.email basking2@yahoo.com
+      #    ./gradlew ":$PROJ:release" -Prelease.versionPropertyFile="$PROJ/gradle.properties" -Prelease.useAutomaticVersion=true -Prelease.releaseVersion="$VERSION"
       - name: Publish
         env:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
@@ -40,7 +40,4 @@ jobs:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
         run: |
-          git checkout "$TAG"
-          git config set user.name Sam\ Baskinger
-          git config set user.email basking2@yahoo.com
           ./gradlew publish
