@@ -30,6 +30,8 @@ jobs:
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
         run: |
           eval $(echo "$TAG" | sed -E 's/(.*)-([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*)/PROJ=\1;VERSION=\2/g')
+          git config set user.name Sam\ Baskinger
+          git config set user.email basking2@yahoo.com
           ./gradlew ":$PROJ:release" -Prelease.versionPropertyFile="$PROJ/gradle.properties" -Prelease.useAutomaticVersion=true -Prelease.releaseVersion="$VERSION"
       - name: Publish
         env:
@@ -39,4 +41,6 @@ jobs:
           SIGNING_KEY_PASSPHRASE: ${{ secrets.SIGNING_KEY_PASSPHRASE }}
         run: |
           git checkout "$TAG"
+          git config set user.name Sam\ Baskinger
+          git config set user.email basking2@yahoo.com
           ./gradlew publish
