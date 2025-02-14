@@ -2,5 +2,13 @@
 /build
 /*/build
 /*/.*
-/.*
 out
+/_data
+/lib
+/.classpath
+/.gradle/
+/.idea/
+/.project
+/.ruby-version
+/.sass-cache/
+/.settings/

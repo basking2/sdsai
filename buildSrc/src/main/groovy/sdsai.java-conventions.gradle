@@ -1,0 +1,132 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+    id 'net.researchgate.release'
+    id 'org.asciidoctor.jvm.convert'
+}
+
+release {
+    tagTemplate = '${name}-${version}'
+    git {
+        // Ignore branch.
+        requireBranch.set('')
+    }
+}
+
+asciidoctor {
+    baseDirFollowsSourceDir()
+    attributes 'project-version': project.version
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked'
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+compileTestJava {
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+processResources {
+    expand projectVersion: project.version,
+            projectName: project.name
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+def publishUsername
+def publishPassword
+if (System.getenv("OSSRH_USERNAME") && System.getenv("OSSRH_PASSWORD")) {
+    publishUsername = System.getenv("OSSRH_USERNAME")
+    publishPassword = System.getenv("OSSRH_PASSWORD")
+} else if (project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')) {
+    publishUsername = ossrhUsername
+    publishPassword = ossrhPassword
+}
+
+if (publishUsername && publishPassword) {
+    publishing {
+        repositories {
+            maven {
+                authentication {
+                    basic(BasicAuthentication)
+                }
+                credentials(PasswordCredentials) {
+                    username = publishUsername
+                    password = publishPassword
+                }
+                url = version.endsWith('SNAPSHOT') ? snapshotRepository : releaseRepository
+            }
+        }
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                pom {
+                    name = project.pomName
+                    description = project.pomDescription
+                    url = 'https://github.com/basking2/sdsai'
+                    packaging = 'jar'
+                    scm {
+                        connection = 'scm:git:git@github.com:basking2/sdsai.git'
+                        developerConnection = 'git@github.com:basking2/sdsai.git'
+                        url = 'https://github.com/basking2/sdsai.git'
+                    }
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'basking2'
+                            name = 'Sam'
+                            email = 'basking2@yahoo.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+if (System.getenv("SIGNING_KEY") && System.getenv("SIGNING_KEY_PASSPHRASE")) {
+    signing {
+        def signingKey = System.getenv("SIGNING_KEY")
+        def signingKeyPassphrase = System.getenv("SIGNING_KEY_PASSPHRASE")
+        useInMemoryPgpKeys(signingKey, signingKeyPassphrase)
+        sign publishing.publications.mavenJava
+    }
+} else if (project.hasProperty("signing.keyId") && project.hasProperty("signing.password") && project.hasProperty("signing.secretKeyRingFile")) {
+    signing {
+        sign publishing.publications.mavenJava
+    }
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
