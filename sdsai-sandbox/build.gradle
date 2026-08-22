@@ -9,6 +9,6 @@ plugins {
 dependencies {
     implementation project(':sdsai-common')
     testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter:${junit5Version}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${jupiterVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

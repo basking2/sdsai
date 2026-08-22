@@ -9,6 +9,16 @@ plugins {
 dependencies {
     implementation "org.slf4j:slf4j-api:${slf4jVersion}"
     testImplementation "org.slf4j:slf4j-simple:${slf4jVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter:${junit5Version}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${jupiterVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+  // Enable the JUnit Platform for test execution
+  useJUnitPlatform()
+
+  // Optional: Stream test results directly into your terminal output
+  testLogging {
+      events "passed", "skipped", "failed"
+  }
 }

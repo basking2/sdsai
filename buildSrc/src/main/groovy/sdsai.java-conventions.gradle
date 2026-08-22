@@ -35,10 +35,6 @@ processResources {
             projectName: project.name
 }
 
-tasks.named('test', Test) {
-    useJUnitPlatform()
-}
-
 task javadocJar(type: Jar) {
     archiveClassifier = 'javadoc'
     from javadoc
